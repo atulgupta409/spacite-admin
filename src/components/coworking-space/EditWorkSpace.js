@@ -30,6 +30,7 @@ import {
   getBrandsData,
   getCategory,
 } from "./WorkSpaceService";
+import BASE_URL from "../../apiConfig";
 const initialValue = {
   name: "",
   description: "",
@@ -265,7 +266,7 @@ const EditWorkSpace = () => {
     e.preventDefault();
     try {
       const { data } = await axios.put(
-        `/api/workSpace/workSpaces/${id}`,
+        `${BASE_URL}/api/workSpace/workSpaces/${id}`,
         {
           name: name,
           description: footer_descrip,
@@ -352,7 +353,7 @@ const EditWorkSpace = () => {
     try {
       setLoading(true);
       const { data } = await axios.get(
-        `/api/workSpace/workSpaces/${id}`,
+        `${BASE_URL}/api/workSpace/workSpaces/${id}`,
         config
       );
 

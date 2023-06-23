@@ -29,6 +29,7 @@ import axios from "axios";
 import { GpState } from "../../context/context";
 import Delete from "../delete/Delete";
 import { config, postConfig } from "../../services/Services";
+import BASE_URL from "../../apiConfig";
 
 function City() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -69,7 +70,7 @@ function City() {
   const handleSaveCity = async () => {
     try {
       const { data } = await axios.post(
-        "/api/city/cities",
+        `${BASE_URL}/api/city/cities`,
         {
           name: cityfield.name,
           description: cityfield.description,
@@ -107,7 +108,7 @@ function City() {
   const getCity = async () => {
     try {
       setLoading(true);
-      const { data } = await axios.get("/api/city/cities", config);
+      const { data } = await axios.get(`${BASE_URL}/api/city/cities`, config);
       setLoading(false);
       setCities(data);
     } catch (error) {
@@ -120,7 +121,7 @@ function City() {
 
       await axios
         .post(
-          "/api/state/statesbycountry",
+          `${BASE_URL}/api/state/statesbycountry`,
           { country_id: countryId },
           postConfig
         )
@@ -138,7 +139,10 @@ function City() {
     try {
       setLoading(true);
 
-      const { data } = await axios.get("/api/allCountry/countries", config);
+      const { data } = await axios.get(
+        `${BASE_URL}/api/allCountry/countries`,
+        config
+      );
       setLoading(false);
       setCountry(data.country);
     } catch (error) {
@@ -147,7 +151,10 @@ function City() {
   };
   const handleDeleteCity = async (id) => {
     try {
-      const { data } = await axios.delete(`/api/city/delete/${id}`, config);
+      const { data } = await axios.delete(
+        `${BASE_URL}/api/city/delete/${id}`,
+        config
+      );
       setUpdateTable((prev) => !prev);
       toast({
         title: "Deleted Successfully!",

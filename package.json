@@ -2,7 +2,6 @@
   "name": "client",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://15.206.251.201",
   "dependencies": {
     "@chakra-ui/react": "^2.6.1",
     "@pqina/pintura": "^8.60.2",

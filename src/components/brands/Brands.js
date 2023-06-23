@@ -20,7 +20,7 @@ import { config } from "../../services/Services";
 import { GrFormPrevious, GrFormNext } from "react-icons/gr";
 import { BiSkipNext, BiSkipPrevious } from "react-icons/bi";
 import { AiOutlineEye } from "react-icons/ai";
-
+import BASE_URL from "../../apiConfig";
 const Brands = () => {
   const [loading, setLoading] = useState(false);
   const [brands, setBrands] = useState([]);
@@ -33,7 +33,7 @@ const Brands = () => {
   const getBrandsData = async () => {
     try {
       setLoading(true);
-      const { data } = await axios.get("/api/brand/brands", config);
+      const { data } = await axios.get(`${BASE_URL}/api/brand/brands`, config);
       setLoading(false);
       setBrands(data);
     } catch (error) {
@@ -46,7 +46,10 @@ const Brands = () => {
 
   const handleDeleteBrands = async (id) => {
     try {
-      const { data } = await axios.delete(`/api/brand/delete/${id}`, config);
+      const { data } = await axios.delete(
+        `${BASE_URL}/api/brand/delete/${id}`,
+        config
+      );
       setUpdateTable((prev) => !prev);
       toast({
         title: "Deleted Successfully!",

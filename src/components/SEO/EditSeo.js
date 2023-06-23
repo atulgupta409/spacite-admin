@@ -10,6 +10,7 @@ import { EditorState, convertToRaw, ContentState } from "draft-js";
 import { config, postConfig } from "../../services/Services";
 import Loader from "../loader/Loader";
 import { getSeoDataById } from "./SeoService";
+import BASE_URL from "../../apiConfig";
 
 const initialValue = {
   page_title: "",
@@ -73,7 +74,7 @@ const EditSeo = () => {
     e.preventDefault();
     try {
       const { data } = await axios.put(
-        `/api/seo/seos/${id}`,
+        `${BASE_URL}/api/seo/seos/${id}`,
         {
           id,
           title,

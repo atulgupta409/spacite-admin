@@ -9,7 +9,7 @@ import axios from "axios";
 import Select from "react-dropdown-select";
 import ImageUpload from "../../ImageUpload";
 import { config, postConfig } from "../../services/Services";
-
+import BASE_URL from "../../apiConfig";
 function Addbrand() {
   const toast = useToast();
   const [selectedOptions, setSelectedOptions] = useState([]);
@@ -49,7 +49,7 @@ function Addbrand() {
     e.preventDefault();
     try {
       const { data } = await axios.post(
-        "/api/brand/brands",
+        `${BASE_URL}/api/brand/brands`,
         {
           name: brand.name,
           order: brand.order,
@@ -115,7 +115,7 @@ function Addbrand() {
   const getCity = async () => {
     try {
       setLoading(true);
-      const { data } = await axios.get("/api/city/cities", config);
+      const { data } = await axios.get(`${BASE_URL}/api/city/cities`, config);
       setLoading(false);
       setCities(data);
     } catch (error) {

@@ -29,7 +29,7 @@ import Delete from "../delete/Delete";
 import { config, postConfig } from "../../services/Services";
 import { GrFormPrevious, GrFormNext } from "react-icons/gr";
 import { BiSkipNext, BiSkipPrevious } from "react-icons/bi";
-
+import BASE_URL from "../../apiConfig";
 function Amenities() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [name, setName] = useState("");
@@ -46,7 +46,7 @@ function Amenities() {
   const handleSaveAmenities = async () => {
     try {
       const { data } = await axios.post(
-        "/api/amenity/amenities",
+        `${BASE_URL}/api/amenity/amenities`,
         {
           name: name,
           icon: icon,
@@ -79,7 +79,10 @@ function Amenities() {
   const getAmenities = async () => {
     try {
       setLoading(true);
-      const { data } = await axios.get("/api/amenity/amenities", config);
+      const { data } = await axios.get(
+        `${BASE_URL}/api/amenity/amenities`,
+        config
+      );
       setLoading(false);
       setAmenities(data);
     } catch (error) {
@@ -88,7 +91,10 @@ function Amenities() {
   };
   const handleDeleteAmenities = async (id) => {
     try {
-      const { data } = await axios.delete(`/api/amenity/delete/${id}`, config);
+      const { data } = await axios.delete(
+        `${BASE_URL}/api/amenity/delete/${id}`,
+        config
+      );
       setUpdateTable((prev) => !prev);
       toast({
         title: "Deleted Successfully!",

@@ -14,6 +14,7 @@ import { getBrandsDataById, getCity } from "./BrandService";
 import Loader from "../loader/Loader";
 
 import Mainpanelnav from "../mainpanel-header/Mainpanelnav";
+import BASE_URL from "../../apiConfig";
 
 const initialValue = {
   name: "",
@@ -107,7 +108,7 @@ const EditBrand = () => {
     e.preventDefault();
     try {
       const { data } = await axios.put(
-        `/api/brand/brands/${id}`,
+        `${BASE_URL}/api/brand/brands/${id}`,
         {
           name,
           description,

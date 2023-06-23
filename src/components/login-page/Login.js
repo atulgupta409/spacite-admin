@@ -15,6 +15,7 @@ import {
   InputRightElement,
   VStack,
 } from "@chakra-ui/react";
+import BASE_URL from "../../apiConfig";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -30,7 +31,7 @@ function Login() {
   };
   const getAds = async () => {
     try {
-      const { data } = await axios.get(`/api/message`);
+      const { data } = await axios.get(`${BASE_URL}/api/message`);
       console.log(data);
     } catch (error) {
       console.log(error);
@@ -60,7 +61,7 @@ function Login() {
         },
       };
       const { data } = await axios.post(
-        "/api/user/login",
+        `${BASE_URL}/api/user/login`,
         { email, password },
         config
       );

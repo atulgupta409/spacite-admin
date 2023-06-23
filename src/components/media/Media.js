@@ -29,6 +29,7 @@ import {
 import ImageUpload from "../../ImageUpload";
 import Delete from "../delete/Delete";
 import { config, postConfig } from "../../services/Services";
+import BASE_URL from "../../apiConfig";
 
 function Media() {
   const [updateTable, setUpdateTable] = useState(false);
@@ -101,7 +102,7 @@ function Media() {
 
     try {
       const { data } = await axios.post(
-        "/api/image/multiple-upload",
+        `${BASE_URL}/api/image/multiple-upload`,
         {
           name: images[0],
           real_name: name,
@@ -135,7 +136,10 @@ function Media() {
   const getImages = async () => {
     try {
       setLoading(true);
-      const { data } = await axios.get("/api/image/getimages", config);
+      const { data } = await axios.get(
+        `${BASE_URL}/api/image/getimages`,
+        config
+      );
       setLoading(false);
       setImagedata(data);
     } catch (error) {
@@ -145,7 +149,10 @@ function Media() {
 
   const deleteImages = async (id) => {
     try {
-      const { data } = await axios.delete(`/api/image/delete/${id}`, config);
+      const { data } = await axios.delete(
+        `${BASE_URL}/api/image/delete/${id}`,
+        config
+      );
       setUpdateTable((prev) => !prev);
       toast({
         title: "Deleted Successfully!",
