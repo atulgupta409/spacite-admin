@@ -29,17 +29,6 @@ function Login() {
   const handleClick = () => {
     setShow(!show);
   };
-  const getAds = async () => {
-    try {
-      const { data } = await axios.get(`${BASE_URL}/api/message`);
-      console.log(data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  useEffect(() => {
-    getAds();
-  }, []);
   const submitHandle = async () => {
     setLoading(true);
     if (!email || !password) {
