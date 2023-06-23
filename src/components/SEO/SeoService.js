@@ -1,5 +1,6 @@
 import axios from "axios";
 import { config } from "../../services/Services";
+import BASE_URL from "../../apiConfig";
 
 export const getSeoDataById = async (
   setLoading,
@@ -10,7 +11,7 @@ export const getSeoDataById = async (
 ) => {
   try {
     setLoading(true);
-    const { data } = await axios.get(`/api/seo/seos/${id}`, config);
+    const { data } = await axios.get(`${BASE_URL}/api/seo/seos/${id}`, config);
     setIsChecked(data.index);
     setIndexed(data.robots);
     setLoading(false);
@@ -23,7 +24,7 @@ export const getSeoDataById = async (
 export const getSeoData = async (setLoading, setSeos) => {
   try {
     setLoading(true);
-    const { data } = await axios.get("/api/seo/seos", config);
+    const { data } = await axios.get(`${BASE_URL}/api/seo/seos`, config);
     setLoading(false);
     setSeos(data);
   } catch (error) {

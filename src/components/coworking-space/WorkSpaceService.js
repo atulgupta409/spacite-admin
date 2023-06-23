@@ -1,10 +1,10 @@
 import axios from "axios";
 import { config } from "../../services/Services";
-
+import BASE_URL from "../../apiConfig";
 export const getStateByCountry = async (countryId, setStates) => {
   try {
     const result = await axios.post(
-      "/api/state/statesbycountry",
+      `${BASE_URL}/api/state/statesbycountry`,
       { country_id: countryId },
       config
     );
@@ -16,7 +16,7 @@ export const getStateByCountry = async (countryId, setStates) => {
 export const getCityByState = async (stateId, setCities) => {
   try {
     await axios
-      .post("/api/city/citybystate", { state_id: stateId }, config)
+      .post(`${BASE_URL}/api/city/citybystate`, { state_id: stateId }, config)
       .then((result) => {
         setCities(result.data);
       });
@@ -28,7 +28,11 @@ export const getCityByState = async (stateId, setCities) => {
 export const getMicrolocationByCity = async (cityId, setMicrolocations) => {
   try {
     await axios
-      .post("/api/microlocation/microbycity", { city_id: cityId }, config)
+      .post(
+        `${BASE_URL}/api/microlocation/microbycity`,
+        { city_id: cityId },
+        config
+      )
       .then((result) => {
         setMicrolocations(result.data);
       });
@@ -39,7 +43,10 @@ export const getMicrolocationByCity = async (cityId, setMicrolocations) => {
 
 export const getCountry = async (setCountry) => {
   try {
-    const { data } = await axios.get("/api/allCountry/countries", config);
+    const { data } = await axios.get(
+      `${BASE_URL}/api/allCountry/countries`,
+      config
+    );
 
     setCountry(data.country);
   } catch (error) {
@@ -49,7 +56,7 @@ export const getCountry = async (setCountry) => {
 
 export const getBrandsData = async (setBrands) => {
   try {
-    const { data } = await axios.get("/api/brand/brands", config);
+    const { data } = await axios.get(`${BASE_URL}/api/brand/brands`, config);
     setBrands(data);
   } catch (error) {
     console.log(error);
@@ -57,7 +64,10 @@ export const getBrandsData = async (setBrands) => {
 };
 export const getAmenities = async (setAmenities) => {
   try {
-    const { data } = await axios.get("/api/amenity/amenities", config);
+    const { data } = await axios.get(
+      `${BASE_URL}/api/amenity/amenities`,
+      config
+    );
 
     setAmenities(data);
   } catch (error) {
@@ -66,7 +76,10 @@ export const getAmenities = async (setAmenities) => {
 };
 export const getCategory = async (setCategories) => {
   try {
-    const { data } = await axios.get("/api/propertyType/propertyTypes", config);
+    const { data } = await axios.get(
+      `${BASE_URL}/api/propertyType/propertyTypes`,
+      config
+    );
 
     setCategories(data);
   } catch (error) {
@@ -113,7 +126,10 @@ export const uploadFile = async (
 export const getWorkSpaceData = async (setLoading, setWorkSpaces) => {
   try {
     setLoading(true);
-    const { data } = await axios.get("/api/workSpace/workSpaces", config);
+    const { data } = await axios.get(
+      `${BASE_URL}/api/workSpace/workSpaces`,
+      config
+    );
     setLoading(false);
     setWorkSpaces(data);
   } catch (error) {
@@ -129,7 +145,7 @@ export const changeWorkSpaceStatus = async (
 ) => {
   try {
     const { data } = await axios.put(
-      `/api/workSpace/workSpaces/changeStatus/${id}`,
+      `${BASE_URL}/api/workSpace/workSpaces/changeStatus/${id}`,
       { status: action },
       config
     );

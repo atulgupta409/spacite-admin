@@ -25,6 +25,7 @@ import { config } from "../../services/Services";
 import { getWorkSpaceData } from "./WorkSpaceService";
 import Desable from "../delete/Desable";
 import Approve from "../delete/Approve";
+import BASE_URL from "../../apiConfig";
 function CoworkingSpace() {
   const [loading, setLoading] = useState(false);
   const [workSpaces, setWorkSpaces] = useState([]);
@@ -92,7 +93,7 @@ function CoworkingSpace() {
   const handleDeleteWorkSpaces = async (id) => {
     try {
       const { data } = await axios.delete(
-        `/api/workSpace/delete/${id}`,
+        `${BASE_URL}/api/workSpace/delete/${id}`,
         config
       );
       setUpdateTable((prev) => !prev);

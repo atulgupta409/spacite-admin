@@ -29,6 +29,7 @@ import axios from "axios";
 import { GpState } from "../../context/context";
 import Delete from "../delete/Delete";
 import { config, postConfig } from "../../services/Services";
+import BASE_URL from "../../apiConfig";
 
 function City() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -72,7 +73,7 @@ function City() {
   const handleSaveMicrolocations = async () => {
     try {
       const { data } = await axios.post(
-        "/api/microlocation/microlocations",
+        `${BASE_URL}/api/microlocation/microlocations`,
         {
           name: microlocationfield.name,
           description: microlocationfield.description,
@@ -113,7 +114,11 @@ function City() {
     try {
       setLoading(true);
       await axios
-        .post("/api/city/citybystate", { state_id: stateId }, postConfig)
+        .post(
+          `${BASE_URL}/api/city/citybystate`,
+          { state_id: stateId },
+          postConfig
+        )
         .then((result) => {
           console.log(result.data);
           setCities(result.data);
@@ -128,7 +133,7 @@ function City() {
       setLoading(true);
       await axios
         .post(
-          "/api/state/statesbycountry",
+          `${BASE_URL}/api/state/statesbycountry`,
           { country_id: countryId },
           postConfig
         )
@@ -144,7 +149,10 @@ function City() {
   const getCountry = async () => {
     try {
       setLoading(true);
-      const { data } = await axios.get("/api/allCountry/countries", config);
+      const { data } = await axios.get(
+        `${BASE_URL}/api/allCountry/countries`,
+        config
+      );
       setLoading(false);
       setCountry(data.country);
     } catch (error) {
@@ -155,7 +163,7 @@ function City() {
     try {
       setLoading(true);
       const { data } = await axios.get(
-        "/api/microlocation/microlocations",
+        `${BASE_URL}/api/microlocation/microlocations`,
         config
       );
       setLoading(false);
@@ -167,7 +175,7 @@ function City() {
   const handleDeleteMicrolocations = async (id) => {
     try {
       const { data } = await axios.delete(
-        `/api/microlocation/delete/${id}`,
+        `${BASE_URL}/api/microlocation/delete/${id}`,
         config
       );
       setUpdateTable((prev) => !prev);

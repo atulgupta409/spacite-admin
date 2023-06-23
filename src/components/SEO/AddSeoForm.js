@@ -7,6 +7,7 @@ import axios from "axios";
 import { useDisclosure, Spinner, useToast } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { postConfig } from "../../services/Services";
+import BASE_URL from "../../apiConfig";
 
 function AddSeoForm() {
   const toast = useToast();
@@ -42,7 +43,7 @@ function AddSeoForm() {
     e.preventDefault();
     try {
       const { data } = await axios.post(
-        "/api/seo/seos",
+        `${BASE_URL}/api/seo/seos`,
         {
           title: seo.heading,
           page_title: seo.title,

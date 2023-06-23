@@ -10,6 +10,7 @@ import Mainpanelnav from "../mainpanel-header/Mainpanelnav";
 import { useNavigate } from "react-router-dom";
 import { postConfig } from "../../services/Services";
 import Select from "react-dropdown-select";
+import BASE_URL from "../../apiConfig";
 
 import {
   getAmenities,
@@ -312,7 +313,7 @@ function AddWorkSpace() {
     e.preventDefault();
     try {
       const { data } = await axios.post(
-        "/api/workSpace/workSpaces",
+        `${BASE_URL}/api/workSpace/workSpaces`,
         {
           name: coSpace.name,
           description: footer_descript_value,

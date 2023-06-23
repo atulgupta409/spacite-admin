@@ -21,6 +21,7 @@ import { config } from "../../services/Services";
 import { getSeoData } from "./SeoService";
 import { GrFormPrevious, GrFormNext } from "react-icons/gr";
 import { BiSkipNext, BiSkipPrevious } from "react-icons/bi";
+import BASE_URL from "../../apiConfig";
 
 function Seo() {
   const [loading, setLoading] = useState(false);
@@ -40,7 +41,10 @@ function Seo() {
 
   const handleDeleteSeo = async (id) => {
     try {
-      const { data } = await axios.delete(`/api/seo/delete/${id}`, config);
+      const { data } = await axios.delete(
+        `${BASE_URL}/api/seo/delete/${id}`,
+        config
+      );
       setUpdateTable((prev) => !prev);
       toast({
         title: "Deleted Successfully!",

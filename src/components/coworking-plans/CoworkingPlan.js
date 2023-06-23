@@ -26,7 +26,7 @@ import {
 import axios from "axios";
 import { GpState } from "../../context/context";
 import Delete from "../delete/Delete";
-
+import BASE_URL from "../../apiConfig";
 function ResPropertyType() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [name, setName] = useState("");
@@ -46,7 +46,7 @@ function ResPropertyType() {
         },
       };
       const { data } = await axios.post(
-        "/api/propertyType/propertyTypes",
+        `${BASE_URL}/api/propertyType/propertyTypes`,
         {
           name: name,
         },
@@ -83,7 +83,7 @@ function ResPropertyType() {
         },
       };
       const { data } = await axios.get(
-        "/api/propertyType/propertyTypes",
+        `${BASE_URL}/api/propertyType/propertyTypes`,
         config
       );
       setLoading(false);
@@ -100,7 +100,7 @@ function ResPropertyType() {
         },
       };
       const { data } = await axios.delete(
-        `/api/propertyType/delete/${id}`,
+        `${BASE_URL}/api/propertyType/delete/${id}`,
         config
       );
       setUpdateTable((prev) => !prev);
