@@ -1,0 +1,48 @@
+/* .table_heading_row,
+.table_data_row {
+  display: flex;
+} */
+.table_heading_row th,
+.table_data_row td {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 14px 15px;
+}
+.name_heading {
+  width: 100% !important;
+  max-width: 200px !important;
+}
+.city_heading {
+  width: 100% !important;
+  max-width: 140px !important;
+}
+.micro_heading {
+  width: 100% !important;
+  max-width: 180px !important;
+}
+.time_heading {
+  width: 100% !important;
+  max-width: 150px !important;
+}
+.status_heading {
+  width: 100% !important;
+  max-width: 120px !important;
+}
+.edit_heading {
+  width: 100% !important;
+  max-width: 70px !important;
+}
+.preview_heading {
+  width: 100% !important;
+  max-width: 95px !important;
+}
+.action_heading {
+  width: 100% !important;
+  max-width: 120px !important;
+}
+.action_heading svg {
+  margin-right: 8px;
+}
+.action_heading svg:last-child {
+  margin-right: 0px;
+}

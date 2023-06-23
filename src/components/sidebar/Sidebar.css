@@ -1,0 +1,65 @@
+.logo-sidebar {
+  padding: 15px 8px;
+  margin: 0;
+  display: block;
+  position: relative;
+  z-index: 4;
+  box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px,
+    rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
+}
+.nav-menu-wrapper {
+  position: relative;
+  height: calc(100vh - 75px);
+  overflow: auto;
+  z-index: 4;
+  padding-bottom: 30px;
+}
+.nav {
+  margin-top: 20px;
+  display: block;
+}
+.nav-menu-wrapper .nav li a {
+  margin: 10px 15px 0;
+  border-radius: 3px;
+  color: #3c4858;
+  text-transform: capitalize;
+  font-size: 13px;
+  padding: 10px 15px;
+  text-decoration: none;
+  transition: all 150ms ease-in;
+  font-size: 15px;
+  width: 215px;
+  display: inline-block;
+}
+.nav-menu-wrapper .nav li a:hover {
+  background-color: rgba(235, 233, 233, 0.34);
+}
+.active {
+  background-color: #a55bea !important;
+  color: white !important;
+  box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.14),
+    0 7px 10px -5px rgba(0, 188, 212, 0.4);
+}
+.nav-item {
+  list-style: none;
+  margin: 9px 0;
+  width: 100%;
+}
+.icon {
+  width: 25px;
+  margin-right: 12px;
+  font-size: 23px;
+  display: inline-block;
+}
+.nav-menu-wrapper::-webkit-scrollbar {
+  display: none;
+  transition: 0.3s ease-in-out;
+}
+.nav-menu-wrapper:hover::-webkit-scrollbar {
+  display: block;
+  width: 8px;
+  background-color: white;
+}
+.nav-menu-wrapper:hover::-webkit-scrollbar-thumb {
+  background-color: #d7b4f8;
+}

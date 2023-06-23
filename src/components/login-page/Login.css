@@ -1,0 +1,47 @@
+.mainBox {
+  box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px,
+    rgba(0, 0, 0, 0.22) 0px 15px 12px;
+  width: 58%;
+  margin: auto;
+  border-radius: 14px;
+}
+input {
+  width: 100%;
+  padding: 8px 4px;
+  margin: 16px 0;
+}
+form {
+  text-align: center;
+}
+/* .btn {
+  width: 132px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  height: 46px;
+  text-align: center;
+  border: none;
+  background-size: 300% 100%;
+  border-radius: 50px;
+  -o-transition: all 0.4s ease-in-out;
+  -webkit-transition: all 0.4s ease-in-out;
+  transition: all 0.4s ease-in-out;
+  background-image: linear-gradient(
+    to right,
+    #6253e1,
+    #852d91,
+    #a3a1ff,
+    #f24645
+  );
+  box-shadow: 0 4px 15px 0 rgba(126, 52, 161, 0.75);
+}
+.btn:hover {
+  box-shadow: 0 4px 15px 0 rgb(95, 31, 124);
+  -o-transition: all 0.4s ease-in-out;
+  -webkit-transition: all 0.4s ease-in-out;
+  transition: all 0.4s ease-in-out;
+}
+.btn-hover:focus {
+  outline: none;
+} */
