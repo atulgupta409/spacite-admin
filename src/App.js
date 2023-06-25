@@ -10,7 +10,7 @@ import City from "./components/city/City";
 import Microlocation from "./components/microlocation/Microlocation";
 import Amenities from "./components/amenities/Amenities";
 import Login from "./components/login-page/Login";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { GpState } from "./context/context";
 import AddWorkSpace from "./components/coworking-space/AddWorkSpace";
 import CoworkingSpace from "./components/coworking-space/CoworkingSpace";
@@ -22,11 +22,9 @@ import Addbrand from "./components/brands/Addbrand";
 import EditBrand from "./components/brands/EditBrand";
 import EditWorkSpace from "./components/coworking-space/EditWorkSpace";
 import ImageUpload from "./ImageUpload";
-
+import Cookies from "js-cookie";
 function App() {
-  let { isLogin } = GpState();
-
-  localStorage.setItem("isLogin", isLogin);
+  const { isLogin } = GpState();
   return (
     <div style={{ overflowX: "hidden" }}>
       <div className="row admin_main">

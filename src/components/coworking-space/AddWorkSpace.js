@@ -11,7 +11,6 @@ import { useNavigate } from "react-router-dom";
 import { postConfig } from "../../services/Services";
 import Select from "react-dropdown-select";
 import BASE_URL from "../../apiConfig";
-
 import {
   getAmenities,
   getBrandsData,
@@ -20,8 +19,8 @@ import {
   getCountry,
   getMicrolocationByCity,
   getStateByCountry,
-  uploadFile,
 } from "./WorkSpaceService";
+import { uploadFile } from "../../services/Services";
 import { FaUpload } from "react-icons/fa";
 import {
   Table,

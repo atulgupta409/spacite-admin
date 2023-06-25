@@ -10,6 +10,7 @@ import Select from "react-dropdown-select";
 import ImageUpload from "../../ImageUpload";
 import { config, postConfig } from "../../services/Services";
 import BASE_URL from "../../apiConfig";
+import { uploadFile } from "../../services/Services";
 function Addbrand() {
   const toast = useToast();
   const [selectedOptions, setSelectedOptions] = useState([]);
@@ -36,6 +37,7 @@ function Addbrand() {
   const [loading, setLoading] = useState(false);
   const [cities, setCities] = useState([]);
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
+  const [isUploaded, setIsUploaded] = useState(false);
   const navigate = useNavigate();
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -142,35 +144,8 @@ function Addbrand() {
     setImages(allimages.concat(data));
   };
 
-  const uploadFile = (files) => {
-    const formData = new FormData();
-    setProgress(0);
-    files.forEach((file) => {
-      formData.append("files", file, file.name);
-    });
-    axios
-      .post("/upload-image", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-        onUploadProgress: (progressEvent) => {
-          setProgress(
-            parseInt(
-              Math.round((progressEvent.loaded * 100) / progressEvent.total)
-            )
-          );
-        },
-      })
-      .then((res) => {
-        previewFile(res.data);
-        // setTimeout(() => {
-        //   setProgress(0);
-        // }, 3000);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    console.log("sshiva");
+  const handleUploadFile = async (files) => {
+    await uploadFile(files, setProgress, setIsUploaded, previewFile);
   };
 
   const [indexed, setIndexed] = useState("noindex, nofollow");
@@ -212,7 +187,8 @@ function Addbrand() {
                   setImages={setImages}
                   progress={progress}
                   setProgress={setProgress}
-                  uploadFile={uploadFile}
+                  uploadFile={handleUploadFile}
+                  isUploaded={isUploaded}
                 />
               </div>
             </div>

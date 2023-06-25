@@ -1,12 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { FaUserCircle } from "react-icons/fa";
 import "./Mainpanelnav.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { GpState } from "../../context/context";
-
+import Cookies from "js-cookie";
 function Mainpanelnav() {
   const navigate = useNavigate();
-  let { isLogin } = GpState();
+  let { logout, userInfo } = GpState();
   let url = window.location.href;
   let splitUrl = url.split("/");
   let title = splitUrl[splitUrl.length - 1];
@@ -19,9 +19,8 @@ function Mainpanelnav() {
     title = title;
   }
   const logoutHandle = () => {
-    localStorage.removeItem("token");
-    isLogin = false;
-    navigate("/", { replace: true });
+    logout();
+    // navigate("/");
   };
 
   return (
@@ -41,9 +40,9 @@ function Mainpanelnav() {
           </button>
           <ul className="dropdown-menu p-0">
             <li>
-              <a className="dropdown-item" href="#" onClick={logoutHandle}>
+              <Link className="dropdown-item" to="/" onClick={logoutHandle}>
                 Logout
-              </a>
+              </Link>
             </li>
           </ul>
         </div>
