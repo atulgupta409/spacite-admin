@@ -16,6 +16,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import BASE_URL from "../../apiConfig";
+import { postConfig } from "../../services/Services";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -24,12 +25,14 @@ function Login() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const toast = useToast();
-  const { user } = GpState();
+  const { userInfo, login, token } = GpState();
 
   const handleClick = () => {
     setShow(!show);
   };
-  const submitHandle = async () => {
+
+  const submitHandle = async (e) => {
+    e.preventDefault();
     setLoading(true);
     if (!email || !password) {
       toast({
@@ -44,15 +47,10 @@ function Login() {
     }
 
     try {
-      const config = {
-        headers: {
-          "Content-type": "application/json",
-        },
-      };
       const { data } = await axios.post(
         `${BASE_URL}/api/user/login`,
         { email, password },
-        config
+        postConfig
       );
       toast({
         title: "Login Successful!",
@@ -61,14 +59,14 @@ function Login() {
         isClosable: true,
         position: "bottom",
       });
-      localStorage.setItem("userInfo", JSON.stringify(data));
-      localStorage.setItem("token", user.token);
+
+      login(data, data.token);
+      navigate("/coworking-space", { replace: true });
       setLoading(false);
-      navigate("/listing-space", { replace: true });
     } catch (error) {
       toast({
         title: "Error Occured!",
-        description: error.response.data.message,
+        description: error.toString(),
         status: "error",
         duration: 5000,
         isClosable: true,
@@ -77,6 +75,7 @@ function Login() {
       setLoading(false);
     }
   };
+
   return (
     <div>
       <div className="mainBox">

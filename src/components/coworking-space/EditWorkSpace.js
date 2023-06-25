@@ -21,7 +21,6 @@ import {
 } from "@chakra-ui/react";
 import Loader from "../loader/Loader";
 import {
-  uploadFile,
   getCityByState,
   getStateByCountry,
   getCountry,
@@ -30,6 +29,7 @@ import {
   getBrandsData,
   getCategory,
 } from "./WorkSpaceService";
+import { uploadFile } from "../../services/Services";
 import BASE_URL from "../../apiConfig";
 const initialValue = {
   name: "",

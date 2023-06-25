@@ -1,23 +1,32 @@
 import React, { useState, useEffect, useContext, createContext } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import Cookies from "js-cookie";
 const AppContext = createContext();
 
 const AppProvider = ({ children }) => {
   const [showModal, setShow] = useState(false);
-  const [user, setUser] = useState();
   const [country, setCountry] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [updateTable, setUpdateTable] = useState(false);
+  const [userInfo, setUserInfo] = useState(null);
+  const [token, setToken] = useState("");
   const navigate = useNavigate();
-  let isLogin = localStorage.getItem("token") ? true : false;
+  const login = (userData, authToken) => {
+    setUserInfo(userData);
+    setToken(authToken);
+    setIsLogin(true);
+    Cookies.set("token", authToken);
+    Cookies.set("userInfo", userData);
+  };
+  const [isLogin, setIsLogin] = useState(false);
   useEffect(() => {
-    const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-    setUser(userInfo);
-    if (!userInfo) {
-      navigate("/");
-    }
-  }, []);
+    setIsLogin(Cookies.get("token") ? true : false);
+  }, [isLogin]);
+  const logout = () => {
+    setUserInfo(null);
+    setToken(null);
+    Cookies.remove("userInfo");
+    Cookies.remove("token");
+    setIsLogin(false);
+  };
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -25,17 +34,17 @@ const AppProvider = ({ children }) => {
   return (
     <AppContext.Provider
       value={{
+        userInfo,
+        token,
+        login,
         handleClose,
         handleShow,
         showModal,
-        user,
-        setUser,
         isLogin,
+        setIsLogin,
+        logout,
         country,
         setCountry,
-
-        updateTable,
-        setUpdateTable,
       }}
     >
       {children}

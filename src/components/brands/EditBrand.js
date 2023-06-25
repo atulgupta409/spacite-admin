@@ -15,6 +15,7 @@ import Loader from "../loader/Loader";
 
 import Mainpanelnav from "../mainpanel-header/Mainpanelnav";
 import BASE_URL from "../../apiConfig";
+import { uploadFile } from "../../services/Services";
 
 const initialValue = {
   name: "",
@@ -63,6 +64,7 @@ const EditBrand = () => {
   const [allCity, setAllCity] = useState([]);
   const [progress, setProgress] = useState(0);
   const [images, setImages] = useState([]);
+  const [isUploaded, setIsUploaded] = useState(false);
   const toast = useToast();
   const navigate = useNavigate();
   const { id } = useParams();
@@ -187,31 +189,8 @@ const EditBrand = () => {
     setImages(allimages.concat(data));
   };
 
-  const uploadFile = (files) => {
-    const formData = new FormData();
-    setProgress(0);
-    files.forEach((file) => {
-      formData.append("files", file, file.name);
-    });
-    axios
-      .post("/upload-image", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-        onUploadProgress: (progressEvent) => {
-          setProgress(
-            parseInt(
-              Math.round((progressEvent.loaded * 100) / progressEvent.total)
-            )
-          );
-        },
-      })
-      .then((res) => {
-        previewFile(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  const handleUploadFile = async (files) => {
+    await uploadFile(files, setProgress, setIsUploaded, previewFile);
   };
   const [indexed, setIndexed] = useState("noindex, nofollow");
   const [isChecked, setIsChecked] = useState(false);
@@ -256,7 +235,8 @@ const EditBrand = () => {
                   setImages={setImages}
                   progress={progress}
                   setProgress={setProgress}
-                  uploadFile={uploadFile}
+                  uploadFile={handleUploadFile}
+                  isUploaded={isUploaded}
                 />
                 <img src={image} alt="image" />
               </div>

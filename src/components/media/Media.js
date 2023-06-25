@@ -30,13 +30,14 @@ import ImageUpload from "../../ImageUpload";
 import Delete from "../delete/Delete";
 import { config, postConfig } from "../../services/Services";
 import BASE_URL from "../../apiConfig";
+import { uploadFile } from "../../services/Services";
 
 function Media() {
   const [updateTable, setUpdateTable] = useState(false);
   const [selectItemNum, setSelectItemNum] = useState(10);
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState("");
-  // const [image, setImage] = useState(null);
+  const [isUploaded, setIsUploaded] = useState(false);
   const [progress, setProgress] = useState(0);
   const [images, setImages] = useState([]);
   const [imagedata, setImagedata] = useState([]);
@@ -58,34 +59,8 @@ function Media() {
     setImages(allimages.concat(data));
   };
 
-  const uploadFile = (files) => {
-    const formData = new FormData();
-    setProgress(0);
-    files.forEach((file) => {
-      formData.append("files", file, file.name);
-    });
-    axios
-      .post("/upload-image", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-        onUploadProgress: (progressEvent) => {
-          setProgress(
-            parseInt(
-              Math.round((progressEvent.loaded * 100) / progressEvent.total)
-            )
-          );
-        },
-      })
-      .then((res) => {
-        previewFile(res.data);
-        // setTimeout(() => {
-        //   setProgress(0);
-        // }, 3000);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  const handleUploadFile = async (files) => {
+    await uploadFile(files, setProgress, setIsUploaded, previewFile);
   };
 
   const handleSaveImage = async () => {
@@ -206,7 +181,7 @@ function Media() {
     setProgress(0);
     onClose();
   };
-
+  console.log(images);
   return (
     <>
       <div className="mx-5 mt-3">
@@ -238,7 +213,8 @@ function Media() {
                   setImages={setImages}
                   progress={progress}
                   setProgress={setProgress}
-                  uploadFile={uploadFile}
+                  uploadFile={handleUploadFile}
+                  isUploaded={isUploaded}
                 />
               </ModalBody>
               <ModalFooter>

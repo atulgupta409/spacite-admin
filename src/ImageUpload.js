@@ -34,27 +34,6 @@ const ImageUpload = ({
     setFileName(fileNames);
   };
 
-  useEffect(() => {
-    const drop_region_container = document.getElementById(
-      "drop-region-container"
-    );
-    const input = document.getElementById("file-input");
-    ["dragenter", "dragover"].forEach((eventName) => {
-      drop_region_container.addEventListener(eventName, () => {
-        drop_region_container.classList.add("highlight");
-      });
-    });
-    ["dragleave", "drop"].forEach((eventName) => {
-      drop_region_container.addEventListener(eventName, () => {
-        drop_region_container.classList.remove("highlight");
-      });
-    });
-
-    // click to upload
-    drop_region_container.addEventListener("click", () => {
-      input.click();
-    });
-  }, []);
   return (
     <div className="App">
       <div className="container">
@@ -69,27 +48,14 @@ const ImageUpload = ({
               className="d-flex align-items-flex-end"
               style={{ height: "25px" }}
             >
-              <label
-                htmlFor="file-upload"
-                className="file-upload-label d-inline-block p-0"
-              >
-                <FaUpload
-                  style={{
-                    color: "red",
-                    width: "22px",
-                    height: "22px",
-                    display: "inline-block",
-                  }}
+              <label className="file">
+                <input
+                  type="file"
+                  id="file-input"
+                  aria-label="File browser example"
+                  onChange={handleInputByClick}
                 />
-                Upload Image
               </label>
-              <input
-                id="file-input"
-                type="file"
-                style={{ display: "none" }}
-                multiple
-                onChange={handleInputByClick}
-              />
             </div>
           </div>
         </div>

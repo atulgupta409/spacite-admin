@@ -27,6 +27,7 @@ import axios from "axios";
 import { GpState } from "../../context/context";
 import Delete from "../delete/Delete";
 import BASE_URL from "../../apiConfig";
+import { config, postConfig } from "../../services/Services";
 function ResPropertyType() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [name, setName] = useState("");
@@ -39,18 +40,12 @@ function ResPropertyType() {
 
   const handleSavePropertyTypes = async () => {
     try {
-      const config = {
-        headers: {
-          "Content-type": "application/json",
-          Authorization: `Bearer ${user.token}`,
-        },
-      };
       const { data } = await axios.post(
         `${BASE_URL}/api/propertyType/propertyTypes`,
         {
           name: name,
         },
-        config
+        postConfig
       );
       setName("");
       setUpdateTable((prev) => !prev);
@@ -77,11 +72,7 @@ function ResPropertyType() {
   const getPropertyTypes = async () => {
     try {
       setLoading(true);
-      const config = {
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
-      };
+
       const { data } = await axios.get(
         `${BASE_URL}/api/propertyType/propertyTypes`,
         config
