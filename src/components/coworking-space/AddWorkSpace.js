@@ -156,26 +156,26 @@ function AddWorkSpace() {
     setPlans((prevRows) => prevRows.filter((row) => row.id !== id));
   };
 
-  useEffect(() => {
-    defautcreateContacts();
-  }, [coSpace]);
+  // useEffect(() => {
+  //   defautcreateContacts();
+  // }, [coSpace]);
 
-  const defautcreateContacts = () => {
-    const defaultRowCount = 1;
-    const newRows = [];
-    for (let i = 0; i < defaultRowCount; i++) {
-      const newRow = {
-        id: i + 1,
-        user: "",
-        email: "",
-        phone: "",
-        designation: "",
-      };
-      newRows.push(newRow);
-    }
+  // const defautcreateContacts = () => {
+  //   const defaultRowCount = 1;
+  //   const newRows = [];
+  //   for (let i = 0; i < defaultRowCount; i++) {
+  //     const newRow = {
+  //       id: i + 1,
+  //       user: "",
+  //       email: "",
+  //       phone: "",
+  //       designation: "",
+  //     };
+  //     newRows.push(newRow);
+  //   }
 
-    setContacts(newRows);
-  };
+  //   setContacts(newRows);
+  // };
   const createContact = () => {
     const newRow = {
       id: contacts.length + 1,

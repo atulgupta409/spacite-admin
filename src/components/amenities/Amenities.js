@@ -26,7 +26,7 @@ import {
 import axios from "axios";
 import { GpState } from "../../context/context";
 import Delete from "../delete/Delete";
-import { config, postConfig } from "../../services/Services";
+import { postConfig } from "../../services/Services";
 import { GrFormPrevious, GrFormNext } from "react-icons/gr";
 import { BiSkipNext, BiSkipPrevious } from "react-icons/bi";
 import BASE_URL from "../../apiConfig";
@@ -40,7 +40,7 @@ function Amenities() {
   const [searchedAmenities, setSearchedAmenities] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [showAll, setShowAll] = useState(true);
-  const { user } = GpState();
+  const { user, token } = GpState();
   const toast = useToast();
 
   const handleSaveAmenities = async () => {
@@ -78,6 +78,11 @@ function Amenities() {
 
   const getAmenities = async () => {
     try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
       setLoading(true);
       const { data } = await axios.get(
         `${BASE_URL}/api/amenity/amenities`,
@@ -91,6 +96,11 @@ function Amenities() {
   };
   const handleDeleteAmenities = async (id) => {
     try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
       const { data } = await axios.delete(
         `${BASE_URL}/api/amenity/delete/${id}`,
         config
