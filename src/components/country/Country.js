@@ -129,7 +129,7 @@ function Country() {
   const handleDeleteCountry = async (id) => {
     try {
       const { data } = await axios.delete(
-        `/api/allCountry/delete/${id}`,
+        `${BASE_URL}/api/allCountry/delete/${id}`,
         config
       );
       setUpdateTable((prev) => !prev);

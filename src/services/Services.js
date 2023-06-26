@@ -1,6 +1,7 @@
 import Cookies from "js-cookie";
 import BASE_URL from "../apiConfig";
 import axios from "axios";
+
 export const config = {
   headers: {
     Authorization: `Bearer ${Cookies.get("token")}`,

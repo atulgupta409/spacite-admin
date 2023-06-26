@@ -8,13 +8,13 @@ const AppProvider = ({ children }) => {
   const [country, setCountry] = useState([]);
   const [userInfo, setUserInfo] = useState(null);
   const [token, setToken] = useState("");
-  const navigate = useNavigate();
+
   const login = (userData, authToken) => {
+    Cookies.set("token", authToken);
+    Cookies.set("userInfo", userData);
     setUserInfo(userData);
     setToken(authToken);
     setIsLogin(true);
-    Cookies.set("token", authToken);
-    Cookies.set("userInfo", userData);
   };
   const [isLogin, setIsLogin] = useState(false);
   useEffect(() => {
@@ -30,7 +30,6 @@ const AppProvider = ({ children }) => {
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-
   return (
     <AppContext.Provider
       value={{
