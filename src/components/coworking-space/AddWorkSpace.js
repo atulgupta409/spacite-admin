@@ -414,15 +414,16 @@ function AddWorkSpace() {
     }
   };
   const checkedAmenityIds = [
-    "648ffb532f245fbe8d718391",
-    "648ffb6a2f245fbe8d718396",
-    "648ffb7b2f245fbe8d71839b",
-    "648ffb8b2f245fbe8d7183a0",
-    "648ffbaa2f245fbe8d7183a5",
-    "648ffbbf2f245fbe8d7183aa",
-    "648ffbd32f245fbe8d7183af",
-    "648ffbed2f245fbe8d7183b4",
-    "648ffc5c2f245fbe8d7183b9",
+    "649ac39ceab467c22dbe8ced",
+    "649ac3bfeab467c22dbe8cf1",
+    "649ac3ceeab467c22dbe8cf5",
+    "649ac3e0eab467c22dbe8cf9",
+    "649ac3f3eab467c22dbe8cfd",
+    "649ac403eab467c22dbe8d01",
+    "649ac415eab467c22dbe8d05",
+    "649ac425eab467c22dbe8d09",
+    "649ac434eab467c22dbe8d0d",
+    "649ac449eab467c22dbe8d11",
   ];
   useEffect(() => {
     setCheckedAmenities(checkedAmenityIds);
