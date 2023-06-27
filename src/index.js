@@ -6,6 +6,17 @@ import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
 import { ChakraProvider } from "@chakra-ui/react";
 import AppProvider from "./context/context";
+import axios from "axios";
+import Cookies from "js-cookie";
+
+axios.interceptors.request.use((request) => {
+  request.headers.Authorization = `Bearer ${Cookies.get("token")}`;
+  return request;
+});
+axios.interceptors.response.use((response) => {
+  response.headers.Authorization = `Bearer ${Cookies.get("token")}`;
+  return response;
+});
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

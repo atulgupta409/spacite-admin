@@ -4,13 +4,14 @@ import { EditorState, convertToRaw } from "draft-js";
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { useToast } from "@chakra-ui/react";
+import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Select from "react-dropdown-select";
 import ImageUpload from "../../ImageUpload";
-import { config, postConfig } from "../../services/Services";
 import BASE_URL from "../../apiConfig";
 import { uploadFile } from "../../services/Services";
+
 function Addbrand() {
   const toast = useToast();
   const [selectedOptions, setSelectedOptions] = useState([]);
@@ -50,34 +51,30 @@ function Addbrand() {
   const handleSaveBrand = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await axios.post(
-        `${BASE_URL}/api/brand/brands`,
-        {
-          name: brand.name,
-          order: brand.order,
-          image: images[0],
-          seo: {
-            title: brand.title,
-            description: brand.descriptionSeo,
-            footer_title: brand.footerTitle,
-            footer_description: footer_descript_value,
-            robots: indexed,
-            index: isChecked,
-            keywords: brand.keywords,
-            url: brand.path,
-            twitter: {
-              title: brand.twitterTitle,
-              description: brand.twitterDescription,
-            },
-            open_graph: {
-              title: brand.graphTitle,
-              description: brand.graphDescription,
-            },
+      const { data } = await axios.post(`${BASE_URL}/api/brand/brands`, {
+        name: brand.name,
+        order: brand.order,
+        image: images[0],
+        seo: {
+          title: brand.title,
+          description: brand.descriptionSeo,
+          footer_title: brand.footerTitle,
+          footer_description: footer_descript_value,
+          robots: indexed,
+          index: isChecked,
+          keywords: brand.keywords,
+          url: brand.path,
+          twitter: {
+            title: brand.twitterTitle,
+            description: brand.twitterDescription,
           },
-          cities: selectedOptions,
+          open_graph: {
+            title: brand.graphTitle,
+            description: brand.graphDescription,
+          },
         },
-        postConfig
-      );
+        cities: selectedOptions,
+      });
       setBrand({
         name: "",
         order: "",
@@ -117,7 +114,7 @@ function Addbrand() {
   const getCity = async () => {
     try {
       setLoading(true);
-      const { data } = await axios.get(`${BASE_URL}/api/city/cities`, config);
+      const { data } = await axios.get(`${BASE_URL}/api/city/cities`);
       setLoading(false);
       setCities(data);
     } catch (error) {

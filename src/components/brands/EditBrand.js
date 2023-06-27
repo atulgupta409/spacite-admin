@@ -8,8 +8,6 @@ import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { EditorState, convertToRaw, ContentState } from "draft-js";
 import Select from "react-dropdown-select";
 import ImageUpload from "../../ImageUpload";
-import { config, postConfig } from "../../services/Services";
-
 import { getBrandsDataById, getCity } from "./BrandService";
 import Loader from "../loader/Loader";
 
@@ -68,6 +66,7 @@ const EditBrand = () => {
   const toast = useToast();
   const navigate = useNavigate();
   const { id } = useParams();
+
   const handleInputChange = (e) => {
     console.log(e.target.value);
     setBrands({ ...brands, [e.target.name]: e.target.value });
@@ -109,38 +108,34 @@ const EditBrand = () => {
   const handleEditBrands = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await axios.put(
-        `${BASE_URL}/api/brand/brands/${id}`,
-        {
-          name,
-          description,
-          order,
-          image: images[0],
-          seo: {
-            title: seo.title,
-            description: seo.description,
-            footer_title: seo.footer_title,
-            footer_description: footer_descrip,
-            robots: indexed,
-            index: isChecked,
-            keywords: seo.keywords,
-            url: seo.url,
-            twitter: {
-              title: seo.twitter.title,
-              description: seo.twitter.description,
-            },
-            open_graph: {
-              title: seo.open_graph.title,
-              description: seo.open_graph.description,
-            },
+      const { data } = await axios.put(`${BASE_URL}/api/brand/brands/${id}`, {
+        name,
+        description,
+        order,
+        image: images[0],
+        seo: {
+          title: seo.title,
+          description: seo.description,
+          footer_title: seo.footer_title,
+          footer_description: footer_descrip,
+          robots: indexed,
+          index: isChecked,
+          keywords: seo.keywords,
+          url: seo.url,
+          twitter: {
+            title: seo.twitter.title,
+            description: seo.twitter.description,
           },
-          cities: selectedOptions,
-          type,
-          slug,
-          should_show_on_home,
+          open_graph: {
+            title: seo.open_graph.title,
+            description: seo.open_graph.description,
+          },
         },
-        postConfig
-      );
+        cities: selectedOptions,
+        type,
+        slug,
+        should_show_on_home,
+      });
       setBrands(data);
       setUpdateTable((prev) => !prev);
       navigate("/brands");

@@ -9,7 +9,6 @@ import { EditorState, convertToRaw, ContentState } from "draft-js";
 import { IoIosAddCircle } from "react-icons/io";
 import Mainpanelnav from "../mainpanel-header/Mainpanelnav";
 import { AiFillDelete } from "react-icons/ai";
-import { postConfig, config } from "../../services/Services";
 import {
   Table,
   Thead,
@@ -319,8 +318,7 @@ const EditWorkSpace = () => {
           contact_details: allContact,
           brand,
           slug,
-        },
-        postConfig
+        }
       );
       setWorkSpaces(data);
       setUpdateTable((prev) => !prev);
@@ -353,8 +351,7 @@ const EditWorkSpace = () => {
     try {
       setLoading(true);
       const { data } = await axios.get(
-        `${BASE_URL}/api/workSpace/workSpaces/${id}`,
-        config
+        `${BASE_URL}/api/workSpace/workSpaces/${id}`
       );
 
       setWorkSpaces(data);

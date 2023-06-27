@@ -28,8 +28,9 @@ import {
 import axios from "axios";
 import { GpState } from "../../context/context";
 import Delete from "../delete/Delete";
-import { postConfig, config } from "../../services/Services";
 import BASE_URL from "../../apiConfig";
+import Cookies from "js-cookie";
+
 function State() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [loading, setLoading] = useState(false);
@@ -44,6 +45,19 @@ function State() {
   const { country, setCountry } = GpState();
 
   const [selectItemNum, setSelectItemNum] = useState(10);
+  const config = {
+    headers: {
+      Authorization: `Bearer ${Cookies.get("token")}`,
+    },
+  };
+
+  const postConfig = {
+    headers: {
+      "Content-type": "application/json",
+
+      Authorization: `Bearer ${Cookies.get("token")}`,
+    },
+  };
   const itemsPerPageHandler = (e) => {
     setSelectItemNum(e.target.value);
   };

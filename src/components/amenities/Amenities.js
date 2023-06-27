@@ -26,7 +26,6 @@ import {
 import axios from "axios";
 import { GpState } from "../../context/context";
 import Delete from "../delete/Delete";
-import { postConfig } from "../../services/Services";
 import { GrFormPrevious, GrFormNext } from "react-icons/gr";
 import { BiSkipNext, BiSkipPrevious } from "react-icons/bi";
 import BASE_URL from "../../apiConfig";
@@ -45,14 +44,10 @@ function Amenities() {
 
   const handleSaveAmenities = async () => {
     try {
-      const { data } = await axios.post(
-        `${BASE_URL}/api/amenity/amenities`,
-        {
-          name: name,
-          icon: icon,
-        },
-        postConfig
-      );
+      const { data } = await axios.post(`${BASE_URL}/api/amenity/amenities`, {
+        name: name,
+        icon: icon,
+      });
       setName("");
       setIcon("");
       setUpdateTable((prev) => !prev);
@@ -78,16 +73,8 @@ function Amenities() {
 
   const getAmenities = async () => {
     try {
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
       setLoading(true);
-      const { data } = await axios.get(
-        `${BASE_URL}/api/amenity/amenities`,
-        config
-      );
+      const { data } = await axios.get(`${BASE_URL}/api/amenity/amenities`);
       setLoading(false);
       setAmenities(data);
     } catch (error) {
@@ -96,14 +83,8 @@ function Amenities() {
   };
   const handleDeleteAmenities = async (id) => {
     try {
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
       const { data } = await axios.delete(
-        `${BASE_URL}/api/amenity/delete/${id}`,
-        config
+        `${BASE_URL}/api/amenity/delete/${id}`
       );
       setUpdateTable((prev) => !prev);
       toast({

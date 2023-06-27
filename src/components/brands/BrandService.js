@@ -1,5 +1,5 @@
 import axios from "axios";
-import { config } from "../../services/Services";
+
 import BASE_URL from "../../apiConfig";
 
 export const getBrandsDataById = async (
@@ -11,10 +11,7 @@ export const getBrandsDataById = async (
 ) => {
   try {
     setLoading(true);
-    const { data } = await axios.get(
-      `${BASE_URL}/api/brand/brands/${id}`,
-      config
-    );
+    const { data } = await axios.get(`${BASE_URL}/api/brand/brands/${id}`);
     setIsChecked(data.seo.index);
     setIndexed(data.seo.robots);
     setLoading(false);
@@ -26,7 +23,7 @@ export const getBrandsDataById = async (
 
 export const getCity = async (setAllCity) => {
   try {
-    const { data } = await axios.get(`${BASE_URL}/api/city/cities`, config);
+    const { data } = await axios.get(`${BASE_URL}/api/city/cities`);
     setAllCity(data);
   } catch (error) {
     console.log(error);

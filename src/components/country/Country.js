@@ -30,10 +30,9 @@ import "./Country.css";
 import EditCountry from "./EditCountry";
 import { GrFormPrevious, GrFormNext } from "react-icons/gr";
 import { BiSkipNext, BiSkipPrevious } from "react-icons/bi";
-import { config, postConfig } from "../../services/Services";
 import BASE_URL from "../../apiConfig";
 function Country() {
-  const { country, setCountry, user } = GpState();
+  const { country, setCountry } = GpState();
   const [countryfield, setCountryfield] = useState({
     name: "",
     description: "",
@@ -75,16 +74,12 @@ function Country() {
     }
 
     try {
-      const { data } = await axios.post(
-        `${BASE_URL}/api/allCountry/country`,
-        {
-          name: countryfield.name,
-          description: countryfield.description,
-          dial_code: countryfield.dialCode,
-          iso_code: countryfield.isoCode,
-        },
-        postConfig
-      );
+      const { data } = await axios.post(`${BASE_URL}/api/allCountry/country`, {
+        name: countryfield.name,
+        description: countryfield.description,
+        dial_code: countryfield.dialCode,
+        iso_code: countryfield.isoCode,
+      });
       setCountryfield({
         name: "",
         description: "",
@@ -115,10 +110,7 @@ function Country() {
   const getCountry = async () => {
     try {
       setLoading(true);
-      const { data } = await axios.get(
-        `${BASE_URL}/api/allCountry/countries`,
-        config
-      );
+      const { data } = await axios.get(`${BASE_URL}/api/allCountry/countries`);
       setLoading(false);
       setCountry(data.country);
     } catch (error) {
@@ -129,8 +121,7 @@ function Country() {
   const handleDeleteCountry = async (id) => {
     try {
       const { data } = await axios.delete(
-        `${BASE_URL}/api/allCountry/delete/${id}`,
-        config
+        `${BASE_URL}/api/allCountry/delete/${id}`
       );
       setUpdateTable((prev) => !prev);
       toast({

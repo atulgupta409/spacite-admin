@@ -15,8 +15,8 @@ import {
   InputRightElement,
   VStack,
 } from "@chakra-ui/react";
+import Cookies from "js-cookie";
 import BASE_URL from "../../apiConfig";
-import { postConfig } from "../../services/Services";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -31,6 +31,13 @@ function Login() {
     setShow(!show);
   };
 
+  const postConfig = {
+    headers: {
+      "Content-type": "application/json",
+
+      Authorization: `Bearer ${Cookies.get("token")}`,
+    },
+  };
   const submitHandle = async (e) => {
     e.preventDefault();
     setLoading(true);

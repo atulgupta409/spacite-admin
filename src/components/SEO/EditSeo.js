@@ -7,11 +7,10 @@ import { Editor } from "react-draft-wysiwyg";
 import Mainpanelnav from "../mainpanel-header/Mainpanelnav";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { EditorState, convertToRaw, ContentState } from "draft-js";
-import { config, postConfig } from "../../services/Services";
 import Loader from "../loader/Loader";
 import { getSeoDataById } from "./SeoService";
 import BASE_URL from "../../apiConfig";
-
+import Cookies from "js-cookie";
 const initialValue = {
   page_title: "",
   title: "",
@@ -48,6 +47,13 @@ const EditSeo = () => {
   const toast = useToast();
   const navigate = useNavigate();
   const { id } = useParams();
+  const postConfig = {
+    headers: {
+      "Content-type": "application/json",
+
+      Authorization: `Bearer ${Cookies.get("token")}`,
+    },
+  };
   const handleInputChange = (e) => {
     setSeos({ ...seos, [e.target.name]: e.target.value });
   };

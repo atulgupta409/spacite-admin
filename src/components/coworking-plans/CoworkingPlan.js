@@ -24,10 +24,8 @@ import {
   Spinner,
 } from "@chakra-ui/react";
 import axios from "axios";
-import { GpState } from "../../context/context";
 import Delete from "../delete/Delete";
 import BASE_URL from "../../apiConfig";
-import { config, postConfig } from "../../services/Services";
 function ResPropertyType() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [name, setName] = useState("");
@@ -35,7 +33,6 @@ function ResPropertyType() {
   const [loading, setLoading] = useState(false);
 
   const [propertyTypes, setPropertyTypes] = useState([]);
-  const { user } = GpState();
   const toast = useToast();
 
   const handleSavePropertyTypes = async () => {
@@ -44,8 +41,7 @@ function ResPropertyType() {
         `${BASE_URL}/api/propertyType/propertyTypes`,
         {
           name: name,
-        },
-        postConfig
+        }
       );
       setName("");
       setUpdateTable((prev) => !prev);
@@ -74,8 +70,7 @@ function ResPropertyType() {
       setLoading(true);
 
       const { data } = await axios.get(
-        `${BASE_URL}/api/propertyType/propertyTypes`,
-        config
+        `${BASE_URL}/api/propertyType/propertyTypes`
       );
       setLoading(false);
       setPropertyTypes(data);
@@ -85,14 +80,8 @@ function ResPropertyType() {
   };
   const handleDeletePropertyTypes = async (id) => {
     try {
-      const config = {
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
-      };
       const { data } = await axios.delete(
-        `${BASE_URL}/api/propertyType/delete/${id}`,
-        config
+        `${BASE_URL}/api/propertyType/delete/${id}`
       );
       setUpdateTable((prev) => !prev);
       toast({
