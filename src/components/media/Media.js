@@ -52,19 +52,7 @@ function Media() {
   const nPage = Math.ceil(imagedata?.length / recordsPerPage);
 
   const toast = useToast();
-  // const config = {
-  //   headers: {
-  //     Authorization: `Bearer ${Cookies.get("token")}`,
-  //   },
-  // };
 
-  const postConfig = {
-    headers: {
-      "Content-type": "application/json",
-
-      Authorization: `Bearer ${Cookies.get("token")}`,
-    },
-  };
   const { isOpen, onOpen, onClose } = useDisclosure();
   const previewFile = (data) => {
     const allimages = images;
@@ -93,8 +81,7 @@ function Media() {
         {
           name: images[0],
           real_name: name,
-        },
-        postConfig
+        }
       );
       setName("");
       setImages([]);
@@ -187,7 +174,7 @@ function Media() {
     setProgress(0);
     onClose();
   };
-  console.log(images);
+
   return (
     <>
       <div className="mx-5 mt-3">

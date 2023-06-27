@@ -14,18 +14,13 @@ const AppProvider = ({ children }) => {
     Cookies.set("userInfo", userData);
     setUserInfo(userData);
     setToken(authToken);
-    setIsLogin(true);
   };
-  const [isLogin, setIsLogin] = useState(false);
-  useEffect(() => {
-    setIsLogin(Cookies.get("token") ? true : false);
-  }, [isLogin]);
+  let isLogin = !!Cookies.get("token");
   const logout = () => {
     setUserInfo(null);
     setToken(null);
     Cookies.remove("userInfo");
     Cookies.remove("token");
-    setIsLogin(false);
   };
 
   const handleClose = () => setShow(false);
@@ -40,7 +35,6 @@ const AppProvider = ({ children }) => {
         handleShow,
         showModal,
         isLogin,
-        setIsLogin,
         logout,
         country,
         setCountry,
