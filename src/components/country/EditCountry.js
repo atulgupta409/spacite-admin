@@ -14,9 +14,7 @@ import {
 import axios from "axios";
 import { GpState } from "../../context/context";
 import { AiFillEdit } from "react-icons/ai";
-import { postConfig } from "../../services/Services";
 import BASE_URL from "../../apiConfig";
-
 const EditCountry = ({ countries, setUpdateTable }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [name, setName] = useState(countries.name);
@@ -35,8 +33,7 @@ const EditCountry = ({ countries, setUpdateTable }) => {
           countryId: countryId,
           name: name,
           dial_code: dialCode,
-        },
-        postConfig
+        }
       );
       setCountry(data.country);
       setUpdateTable((prev) => !prev);

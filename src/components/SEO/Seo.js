@@ -17,12 +17,11 @@ import {
 import axios from "axios";
 import Delete from "../delete/Delete";
 import { AiFillEdit } from "react-icons/ai";
-import { config } from "../../services/Services";
 import { getSeoData } from "./SeoService";
 import { GrFormPrevious, GrFormNext } from "react-icons/gr";
 import { BiSkipNext, BiSkipPrevious } from "react-icons/bi";
 import BASE_URL from "../../apiConfig";
-
+import Cookies from "js-cookie";
 function Seo() {
   const [loading, setLoading] = useState(false);
   const [seos, setSeos] = useState([]);
@@ -31,7 +30,11 @@ function Seo() {
   const [searchTerm, setSearchTerm] = useState("");
   const [showAll, setShowAll] = useState(true);
   const toast = useToast();
-
+  const config = {
+    headers: {
+      Authorization: `Bearer ${Cookies.get("token")}`,
+    },
+  };
   const handleFetchSeo = async () => {
     await getSeoData(setLoading, setSeos);
   };

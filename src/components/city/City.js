@@ -28,8 +28,8 @@ import {
 import axios from "axios";
 import { GpState } from "../../context/context";
 import Delete from "../delete/Delete";
-import { config, postConfig } from "../../services/Services";
 import BASE_URL from "../../apiConfig";
+import Cookies from "js-cookie";
 
 function City() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -48,6 +48,7 @@ function City() {
   const { country, setCountry } = GpState();
 
   const [selectItemNum, setSelectItemNum] = useState(10);
+
   const itemsPerPageHandler = (e) => {
     setSelectItemNum(e.target.value);
   };
@@ -69,16 +70,12 @@ function City() {
 
   const handleSaveCity = async () => {
     try {
-      const { data } = await axios.post(
-        `${BASE_URL}/api/city/cities`,
-        {
-          name: cityfield.name,
-          description: cityfield.description,
-          country: countryId,
-          state: stateId,
-        },
-        postConfig
-      );
+      const { data } = await axios.post(`${BASE_URL}/api/city/cities`, {
+        name: cityfield.name,
+        description: cityfield.description,
+        country: countryId,
+        state: stateId,
+      });
       setCityfield({
         name: "",
         description: "",
@@ -108,7 +105,7 @@ function City() {
   const getCity = async () => {
     try {
       setLoading(true);
-      const { data } = await axios.get(`${BASE_URL}/api/city/cities`, config);
+      const { data } = await axios.get(`${BASE_URL}/api/city/cities`);
       setLoading(false);
       setCities(data);
     } catch (error) {
@@ -120,11 +117,9 @@ function City() {
       setLoading(true);
 
       await axios
-        .post(
-          `${BASE_URL}/api/state/statesbycountry`,
-          { country_id: countryId },
-          postConfig
-        )
+        .post(`${BASE_URL}/api/state/statesbycountry`, {
+          country_id: countryId,
+        })
         .then((result) => {
           console.log(result.data);
           setStates(result.data);
@@ -139,10 +134,7 @@ function City() {
     try {
       setLoading(true);
 
-      const { data } = await axios.get(
-        `${BASE_URL}/api/allCountry/countries`,
-        config
-      );
+      const { data } = await axios.get(`${BASE_URL}/api/allCountry/countries`);
       setLoading(false);
       setCountry(data.country);
     } catch (error) {
@@ -151,10 +143,7 @@ function City() {
   };
   const handleDeleteCity = async (id) => {
     try {
-      const { data } = await axios.delete(
-        `${BASE_URL}/api/city/delete/${id}`,
-        config
-      );
+      const { data } = await axios.delete(`${BASE_URL}/api/city/delete/${id}`);
       setUpdateTable((prev) => !prev);
       toast({
         title: "Deleted Successfully!",

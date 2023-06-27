@@ -8,8 +8,6 @@ import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { EditorState, convertToRaw } from "draft-js";
 import Mainpanelnav from "../mainpanel-header/Mainpanelnav";
 import { useNavigate } from "react-router-dom";
-import { postConfig } from "../../services/Services";
-import Select from "react-dropdown-select";
 import BASE_URL from "../../apiConfig";
 import {
   getAmenities,
@@ -32,7 +30,7 @@ import {
   TableContainer,
   Spinner,
 } from "@chakra-ui/react";
-
+import Cookies from "js-cookie";
 function AddWorkSpace() {
   const [plans, setPlans] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -127,7 +125,7 @@ function AddWorkSpace() {
 
   const defautcreatePlans = () => {
     const defaultRowCount = 4;
-    const time = ["Month", "Month", "Month", "Year"];
+    const time = ["Year", "Month", "Month", "Month"];
     const newRows = [];
     for (let i = 0; i < defaultRowCount; i++) {
       const newRow = {
@@ -141,6 +139,7 @@ function AddWorkSpace() {
 
     setPlans(newRows);
   };
+
   const createPlans = () => {
     const newRow = {
       id: plans.length + 1,
@@ -367,8 +366,7 @@ function AddWorkSpace() {
           // status,
           brand: brandId,
           slug: coSpace.slug,
-        },
-        postConfig
+        }
       );
       setCoSpace({
         brand: "",

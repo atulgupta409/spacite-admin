@@ -21,7 +21,6 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import Delete from "../delete/Delete";
 import { AiFillEdit } from "react-icons/ai";
-import { config } from "../../services/Services";
 import { getWorkSpaceData } from "./WorkSpaceService";
 import Desable from "../delete/Desable";
 import Approve from "../delete/Approve";
@@ -38,6 +37,7 @@ function CoworkingSpace() {
   const [searchOption, setSearchOption] = useState("");
 
   const toast = useToast();
+
   const handleFetchWorkSpace = async () => {
     await getWorkSpaceData(setLoading, setWorkSpaces);
   };
@@ -93,8 +93,7 @@ function CoworkingSpace() {
   const handleDeleteWorkSpaces = async (id) => {
     try {
       const { data } = await axios.delete(
-        `${BASE_URL}/api/workSpace/delete/${id}`,
-        config
+        `${BASE_URL}/api/workSpace/delete/${id}`
       );
       setUpdateTable((prev) => !prev);
       toast({

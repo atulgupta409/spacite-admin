@@ -28,10 +28,9 @@ import {
 } from "@chakra-ui/react";
 import ImageUpload from "../../ImageUpload";
 import Delete from "../delete/Delete";
-import { config, postConfig } from "../../services/Services";
 import BASE_URL from "../../apiConfig";
 import { uploadFile } from "../../services/Services";
-
+import Cookies from "js-cookie";
 function Media() {
   const [updateTable, setUpdateTable] = useState(false);
   const [selectItemNum, setSelectItemNum] = useState(10);
@@ -53,6 +52,19 @@ function Media() {
   const nPage = Math.ceil(imagedata?.length / recordsPerPage);
 
   const toast = useToast();
+  // const config = {
+  //   headers: {
+  //     Authorization: `Bearer ${Cookies.get("token")}`,
+  //   },
+  // };
+
+  const postConfig = {
+    headers: {
+      "Content-type": "application/json",
+
+      Authorization: `Bearer ${Cookies.get("token")}`,
+    },
+  };
   const { isOpen, onOpen, onClose } = useDisclosure();
   const previewFile = (data) => {
     const allimages = images;
@@ -111,10 +123,7 @@ function Media() {
   const getImages = async () => {
     try {
       setLoading(true);
-      const { data } = await axios.get(
-        `${BASE_URL}/api/image/getimages`,
-        config
-      );
+      const { data } = await axios.get(`${BASE_URL}/api/image/getimages`);
       setLoading(false);
       setImagedata(data);
     } catch (error) {
@@ -124,10 +133,7 @@ function Media() {
 
   const deleteImages = async (id) => {
     try {
-      const { data } = await axios.delete(
-        `${BASE_URL}/api/image/delete/${id}`,
-        config
-      );
+      const { data } = await axios.delete(`${BASE_URL}/api/image/delete/${id}`);
       setUpdateTable((prev) => !prev);
       toast({
         title: "Deleted Successfully!",

@@ -6,9 +6,8 @@ import { EditorState, convertToRaw } from "draft-js";
 import axios from "axios";
 import { useDisclosure, Spinner, useToast } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
-import { postConfig } from "../../services/Services";
 import BASE_URL from "../../apiConfig";
-
+import Cookies from "js-cookie";
 function AddSeoForm() {
   const toast = useToast();
 
@@ -30,7 +29,13 @@ function AddSeoForm() {
   });
   const [updateTable, setUpdateTable] = useState(false);
   const navigate = useNavigate();
+  const postConfig = {
+    headers: {
+      "Content-type": "application/json",
 
+      Authorization: `Bearer ${Cookies.get("token")}`,
+    },
+  };
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setSeo({

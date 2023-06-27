@@ -28,9 +28,8 @@ import {
 import axios from "axios";
 import { GpState } from "../../context/context";
 import Delete from "../delete/Delete";
-import { config, postConfig } from "../../services/Services";
 import BASE_URL from "../../apiConfig";
-
+import Cookies from "js-cookie";
 function City() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [loading, setLoading] = useState(false);
@@ -62,6 +61,19 @@ function City() {
   const nPage = Math.ceil(microlocations?.length / recordsPerPage);
 
   const toast = useToast();
+  const config = {
+    headers: {
+      Authorization: `Bearer ${Cookies.get("token")}`,
+    },
+  };
+
+  const postConfig = {
+    headers: {
+      "Content-type": "application/json",
+
+      Authorization: `Bearer ${Cookies.get("token")}`,
+    },
+  };
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setMicrolocationfield({
