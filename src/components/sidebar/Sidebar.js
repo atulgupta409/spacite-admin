@@ -14,6 +14,63 @@ import { IoLocationOutline } from "react-icons/io5";
 import { HiOutlineCash } from "react-icons/hi";
 
 function Sidebar() {
+  const sidebar = [
+    {
+      link: "/coworking-space",
+      title: "Coworking Space",
+      icon: "HiOutlineBuildingOffice",
+    },
+    {
+      link: "/coworking-plan",
+      title: "Coworking Plan",
+      icon: "HiOutlineBuildingOffice",
+    },
+    {
+      link: "/media",
+      title: "Media",
+      icon: "MdOutlinePermMedia",
+    },
+    {
+      link: "/country",
+      title: "Country",
+      icon: "IoEarthOutline",
+    },
+    {
+      link: "/state",
+      title: "State",
+      icon: "BiMapPin",
+    },
+    {
+      link: "/city",
+      title: "City",
+      icon: "GiModernCity",
+    },
+    {
+      link: "/microlocation",
+      title: "Microlocation",
+      icon: "IoLocationOutline",
+    },
+    {
+      link: "/amenities",
+      title: "Amenities",
+      icon: "HiOutlineCash",
+    },
+    {
+      link: "/seo",
+      title: "SEO",
+      icon: "MdOutlineRealEstateAgent",
+    },
+    {
+      link: "/brands",
+      title: "Brand",
+      icon: "MdOutlineRealEstateAgent",
+    },
+    {
+      link: "/clients",
+      title: "Our Client",
+      icon: "MdOutlineRealEstateAgent",
+    },
+  ];
   return (
     <div className="sidebar">
       <div className="sidenav">
@@ -27,12 +84,6 @@ function Sidebar() {
         </div>
         <div className="nav-menu-wrapper">
           <ul className="nav">
-            {/* <li className="nav-item">
-              <NavLink to="/listing-space">
-                <HiOutlineBuildingOffice2 className="icon" />
-                Listing Space
-              </NavLink>
-            </li> */}
             <li className="nav-item">
               <NavLink to="/coworking-space">
                 <HiOutlineBuildingOffice className="icon" />
