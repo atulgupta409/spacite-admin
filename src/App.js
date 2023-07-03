@@ -22,7 +22,7 @@ import Addbrand from "./components/brands/Addbrand";
 import EditBrand from "./components/brands/EditBrand";
 import EditWorkSpace from "./components/coworking-space/EditWorkSpace";
 import ImageUpload from "./ImageUpload";
-import Cookies from "js-cookie";
+import OurClient from "./components/ourClients/OurClient";
 function App() {
   const { isLogin } = GpState();
   return (
@@ -111,6 +111,10 @@ function App() {
               <Route
                 path="/image"
                 element={isLogin ? <ImageUpload /> : <Navigate to="/" />}
+              />
+              <Route
+                path="/clients"
+                element={isLogin ? <OurClient /> : <Navigate to="/" />}
               />
             </Routes>
           </div>

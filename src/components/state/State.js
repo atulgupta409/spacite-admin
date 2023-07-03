@@ -29,8 +29,9 @@ import axios from "axios";
 import { GpState } from "../../context/context";
 import Delete from "../delete/Delete";
 import BASE_URL from "../../apiConfig";
-import Cookies from "js-cookie";
-
+import { getCountry } from "../coworking-space/WorkSpaceService";
+import { deleteStates, getState } from "./stateService";
+import Select from "react-select";
 function State() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [loading, setLoading] = useState(false);
@@ -41,23 +42,11 @@ function State() {
     country: "",
     description: "",
   });
-  const [countryId, setCountryId] = useState(null);
+
   const { country, setCountry } = GpState();
 
   const [selectItemNum, setSelectItemNum] = useState(10);
-  const config = {
-    headers: {
-      Authorization: `Bearer ${Cookies.get("token")}`,
-    },
-  };
 
-  const postConfig = {
-    headers: {
-      "Content-type": "application/json",
-
-      Authorization: `Bearer ${Cookies.get("token")}`,
-    },
-  };
   const itemsPerPageHandler = (e) => {
     setSelectItemNum(e.target.value);
   };
@@ -79,15 +68,11 @@ function State() {
 
   const handleSaveStates = async () => {
     try {
-      const { data } = await axios.post(
-        `${BASE_URL}/api/state/states`,
-        {
-          name: statefield.name,
-          description: statefield.description,
-          country: countryId,
-        },
-        postConfig
-      );
+      const { data } = await axios.post(`${BASE_URL}/api/state/states`, {
+        name: statefield.name,
+        description: statefield.description,
+        country: selectedCountry.value,
+      });
       setStatefield({
         name: "",
         description: "",
@@ -113,71 +98,19 @@ function State() {
       });
     }
   };
-
-  const getState = async () => {
-    try {
-      setLoading(true);
-      const { data } = await axios.get(`${BASE_URL}/api/state/states`, config);
-      setLoading(false);
-      setStates(data);
-    } catch (error) {
-      console.log(error);
-    }
+  const handleFetchCountry = async () => {
+    await getCountry(setCountry);
   };
-  const getCountry = async () => {
-    try {
-      setLoading(true);
-      const { data } = await axios.get(
-        `${BASE_URL}/api/allCountry/countries`,
-        config
-      );
-      setLoading(false);
-      setCountry(data.country);
-    } catch (error) {
-      console.log(error);
-    }
+  const handleFetchStates = async () => {
+    await getState(setStates, setLoading);
   };
   const handleDeleteStates = async (id) => {
-    try {
-      const { data } = await axios.delete(
-        `${BASE_URL}/api/state/delete/${id}`,
-        config
-      );
-      setUpdateTable((prev) => !prev);
-      toast({
-        title: "Deleted Successfully!",
-        status: "success",
-        duration: 5000,
-        isClosable: true,
-        position: "bottom",
-      });
-    } catch (error) {
-      toast({
-        title: "Error Occured!",
-        description: error.response.data.message,
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-        position: "bottom-left",
-      });
-    }
+    await deleteStates(id, setUpdateTable, toast);
   };
   useEffect(() => {
-    getState();
-    getCountry();
+    handleFetchStates();
+    handleFetchCountry();
   }, [updateTable]);
-
-  const onChangeHandler = (e) => {
-    const index = e.target.selectedIndex;
-    const el = e.target.childNodes[index];
-    const option = el.getAttribute("id");
-    const { name, value } = e.target;
-    setStatefield({
-      ...statefield,
-      [name]: value,
-    });
-    setCountryId(option);
-  };
 
   if (firstIndex > 0) {
     var prePage = () => {
@@ -203,6 +136,22 @@ function State() {
     setCurPage(nPage);
   };
 
+  const [selectedCountry, setSelectedCountry] = useState(null);
+
+  const onChangeOptionHandler = (selectedOption, dropdownIdentifier) => {
+    switch (dropdownIdentifier) {
+      case "country":
+        setSelectedCountry(selectedOption);
+        break;
+      default:
+        break;
+    }
+  };
+  const countryOptions = country?.map((item) => ({
+    value: item._id,
+    label: item.name,
+  }));
+
   return (
     <>
       <div className="mx-5 mt-3">
@@ -220,26 +169,21 @@ function State() {
               <ModalHeader>Add New State</ModalHeader>
               <ModalCloseButton />
               <ModalBody>
-                <div className="d-flex justify-content-between">
-                  <div className="select-box">
-                    <select
-                      name="country"
-                      value={statefield.country}
-                      onChange={onChangeHandler}
-                    >
-                      <option>Select Country</option>
-                      {country?.map((countryElem) => (
-                        <option
-                          id={countryElem._id}
-                          key={countryElem._id}
-                          value={countryElem.name}
-                        >
-                          {countryElem.name}
-                        </option>
-                      ))}
-                    </select>
+                <div className="row">
+                  <div className="col-md-6">
+                    <Select
+                      placeholder="Country*"
+                      value={selectedCountry}
+                      options={countryOptions}
+                      onChange={(selectedOption) =>
+                        onChangeOptionHandler(selectedOption, "country")
+                      }
+                      isSearchable
+                      required
+                    />{" "}
                   </div>
                 </div>
+
                 <input
                   name="name"
                   value={statefield.name}

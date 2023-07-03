@@ -1,7 +1,3 @@
-/* .table_heading_row,
-.table_data_row {
-  display: flex;
-} */
 .table_heading_row th,
 .table_data_row td {
   overflow: hidden;

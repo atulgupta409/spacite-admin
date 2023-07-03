@@ -159,6 +159,10 @@ const EditBrand = () => {
       id
     );
   };
+  useEffect(() => {
+    const selectCities = cities.map((city) => city._id);
+    setSelectedOptions(selectCities);
+  }, [cities]);
   const handleFetchCity = async () => {
     await getCity(setAllCity);
   };
@@ -198,7 +202,6 @@ const EditBrand = () => {
   if (loading) {
     return <Loader />;
   }
-  console.log(indexed, isChecked);
   return (
     <div className="mx-5 mt-3">
       <Mainpanelnav />
@@ -233,7 +236,7 @@ const EditBrand = () => {
                   uploadFile={handleUploadFile}
                   isUploaded={isUploaded}
                 />
-                <img src={image} alt="image" />
+                <img src={image} width="25%" alt="image" />
               </div>
             </div>
             <div className="row pt-4">

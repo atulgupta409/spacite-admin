@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Mainpanelnav from "../mainpanel-header/Mainpanelnav";
+import { GpState } from "../../context/context";
+import { useToast } from "@chakra-ui/react";
 import { BsBookmarkPlus } from "react-icons/bs";
-import { GrFormPrevious, GrFormNext } from "react-icons/gr";
-import { BiSkipNext, BiSkipPrevious } from "react-icons/bi";
+import axios from "axios";
 import {
   Table,
   Thead,
@@ -11,7 +12,6 @@ import {
   Th,
   Td,
   TableContainer,
-  useToast,
 } from "@chakra-ui/react";
 import {
   Modal,
@@ -25,33 +25,22 @@ import {
   useDisclosure,
   Spinner,
 } from "@chakra-ui/react";
-import axios from "axios";
-import { GpState } from "../../context/context";
 import Delete from "../delete/Delete";
+import "./OurClient.css";
+import { GrFormPrevious, GrFormNext } from "react-icons/gr";
+import { BiSkipNext, BiSkipPrevious } from "react-icons/bi";
 import BASE_URL from "../../apiConfig";
-import Select from "react-select";
-import { deleteCity, getCity } from "./CityService";
-import {
-  getStateByCountry,
-  getCountry,
-} from "../coworking-space/WorkSpaceService";
-
-function City() {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const [loading, setLoading] = useState(false);
-  const [cities, setCities] = useState([]);
-  const [updateTable, setUpdateTable] = useState(false);
-  const [cityfield, setCityfield] = useState({
+function OurClient() {
+  const [ourClient, setOurClient] = useState([]);
+  const [ourClientField, setOurClientField] = useState({
     name: "",
-    country: "",
-    state: "",
-    description: "",
+    logo_url: "",
   });
-  const [states, setStates] = useState([]);
-  const { country, setCountry } = GpState();
-
+  const [updateTable, setUpdateTable] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const toast = useToast();
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const [selectItemNum, setSelectItemNum] = useState(10);
-
   const itemsPerPageHandler = (e) => {
     setSelectItemNum(e.target.value);
   };
@@ -59,31 +48,36 @@ function City() {
   const recordsPerPage = selectItemNum;
   const lastIndex = curPage * recordsPerPage;
   const firstIndex = lastIndex - recordsPerPage;
-  const records = cities?.slice(firstIndex, lastIndex);
-  const nPage = Math.ceil(cities?.length / recordsPerPage);
+  const records = ourClient?.slice(firstIndex, lastIndex);
+  const nPage = Math.ceil(ourClient?.length / recordsPerPage);
 
-  const toast = useToast();
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setCityfield({
-      ...cityfield,
+    setOurClientField({
+      ...ourClientField,
       [name]: value,
     });
   };
-
-  const handleSaveCity = async () => {
-    try {
-      const { data } = await axios.post(`${BASE_URL}/api/city/cities`, {
-        name: cityfield.name,
-        description: cityfield.description,
-        country: selectedCountry.value,
-        state: selectedState.value,
+  const handleSaveOurClient = async () => {
+    if ((!ourClientField.name, !ourClientField.logo_url)) {
+      toast({
+        title: "Please Fill all The Fields!",
+        status: "warning",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
       });
-      setCityfield({
+      return;
+    }
+
+    try {
+      const { data } = await axios.post(`${BASE_URL}/api/ourClient/client`, {
+        name: ourClientField.name,
+        logo_url: ourClientField.logo_url,
+      });
+      setOurClientField({
         name: "",
-        description: "",
-        country: "",
-        state: "",
+        logo_url: "",
       });
       setUpdateTable((prev) => !prev);
       onClose();
@@ -97,7 +91,7 @@ function City() {
     } catch (error) {
       toast({
         title: "Error Occured!",
-        description: "Failed to Load the Search Results",
+        description: "Failed to Save Results",
         status: "error",
         duration: 5000,
         isClosable: true,
@@ -105,22 +99,45 @@ function City() {
       });
     }
   };
-  const handleFetchStates = async (countryId) => {
-    await getStateByCountry(countryId, setStates);
-  };
-  const handleFetchCountry = async () => {
-    await getCountry(setCountry);
-  };
-  const handleFetchCity = async () => {
-    await getCity(setCities, setLoading);
+
+  const getOurClients = async () => {
+    try {
+      setLoading(true);
+      const { data } = await axios.get(`${BASE_URL}/api/ourClient/clients`);
+      setOurClient(data);
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-  const handleDeleteCity = async (id) => {
-    await deleteCity(id, setUpdateTable, toast);
+  const handleDeleteClient = async (id) => {
+    try {
+      const { data } = await axios.delete(
+        `${BASE_URL}/api/ourClient/delete/${id}`
+      );
+      setUpdateTable((prev) => !prev);
+      toast({
+        title: "Deleted Successfully!",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom",
+      });
+    } catch (error) {
+      toast({
+        title: "Error Occured!",
+        description: error.response.data.message,
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom-left",
+      });
+    }
   };
+
   useEffect(() => {
-    handleFetchCountry();
-    handleFetchCity();
+    getOurClients();
   }, [updateTable]);
 
   if (firstIndex > 0) {
@@ -146,32 +163,6 @@ function City() {
   const getLastPage = () => {
     setCurPage(nPage);
   };
-  const [selectedState, setSelectedState] = useState(null);
-  const [selectedCountry, setSelectedCountry] = useState(null);
-
-  const onChangeOptionHandler = (selectedOption, dropdownIdentifier) => {
-    switch (dropdownIdentifier) {
-      case "country":
-        setSelectedCountry(selectedOption);
-
-        handleFetchStates(selectedOption ? selectedOption.value : null);
-        break;
-      case "state":
-        setSelectedState(selectedOption);
-        break;
-
-      default:
-        break;
-    }
-  };
-  const stateOptions = states?.map((state) => ({
-    value: state._id,
-    label: state.name,
-  }));
-  const countryOptions = country?.map((item) => ({
-    value: item._id,
-    label: item.name,
-  }));
 
   return (
     <>
@@ -187,50 +178,23 @@ function City() {
           <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
             <ModalContent>
-              <ModalHeader>Add New City</ModalHeader>
+              <ModalHeader>Add New Client</ModalHeader>
               <ModalCloseButton />
               <ModalBody>
-                <div className="row">
-                  <div className="col-md-6">
-                    <Select
-                      placeholder="Country*"
-                      value={selectedCountry}
-                      options={countryOptions}
-                      onChange={(selectedOption) =>
-                        onChangeOptionHandler(selectedOption, "country")
-                      }
-                      isSearchable
-                      required
-                    />{" "}
-                  </div>
-                  <div className="col-md-6">
-                    <Select
-                      placeholder="State*"
-                      value={selectedState}
-                      options={stateOptions}
-                      onChange={(selectedOption) =>
-                        onChangeOptionHandler(selectedOption, "state")
-                      }
-                      onMenuOpen={handleFetchCity}
-                      isSearchable
-                      required
-                    />
-                  </div>
-                </div>
                 <input
-                  name="name"
-                  value={cityfield.name}
-                  onChange={handleInputChange}
                   type="text"
-                  placeholder="Name"
+                  value={ourClientField.name}
+                  onChange={handleInputChange}
+                  placeholder="Name*"
+                  name="name"
                   className="property-input"
                 />
                 <input
-                  name="description"
-                  value={cityfield.description}
-                  onChange={handleInputChange}
                   type="text"
-                  placeholder="Description"
+                  value={ourClientField.logo_url}
+                  onChange={handleInputChange}
+                  placeholder="Logo Url"
+                  name="logo_url"
                   className="property-input"
                 />
               </ModalBody>
@@ -238,7 +202,7 @@ function City() {
                 <Button colorScheme="blue" mr={3} onClick={onClose}>
                   Cancel
                 </Button>
-                <Button variant="ghost" onClick={handleSaveCity}>
+                <Button variant="ghost" onClick={handleSaveOurClient}>
                   Save
                 </Button>
               </ModalFooter>
@@ -246,21 +210,20 @@ function City() {
           </Modal>
         </div>
         <div className="table-box">
-          <div className="table-top-box">City Table</div>
+          <div className="table-top-box">Client Table</div>
           <TableContainer marginTop="60px" variant="striped" color="teal">
             <Table variant="simple">
               <Thead>
                 <Tr>
                   <Th>Name</Th>
-                  <Th>Country</Th>
-                  <Th>State</Th>
+                  <Th>Logo Url</Th>
                   <Th>Delete</Th>
                 </Tr>
               </Thead>
               <Tbody>
                 {loading ? (
                   <Tr>
-                    <Td>
+                    <Td align="center" style={{ width: "50px" }}>
                       <Spinner
                         size="xl"
                         w={20}
@@ -271,14 +234,14 @@ function City() {
                     </Td>
                   </Tr>
                 ) : (
-                  records?.map((city) => (
-                    <Tr key={city._id} id={city._id}>
-                      <Td>{city.name}</Td>
-                      <Td>{city.country?.name}</Td>
-                      <Td>{city.state?.name}</Td>
+                  records?.map((client) => (
+                    <Tr key={client._id} id={client._id}>
+                      <Td>{client.name}</Td>
+                      <Td>{client.logo_url}</Td>
+
                       <Td>
                         <Delete
-                          handleFunction={() => handleDeleteCity(city._id)}
+                          handleFunction={() => handleDeleteClient(client._id)}
                         />
                       </Td>
                     </Tr>
@@ -310,7 +273,7 @@ function City() {
               </div>
               <div style={{ width: "110px" }}>
                 {firstIndex + 1} - {records?.length + firstIndex} of{" "}
-                {cities?.length}
+                {ourClient?.length}
               </div>
 
               <div className="page-item">
@@ -333,4 +296,4 @@ function City() {
   );
 }
 
-export default City;
+export default OurClient;

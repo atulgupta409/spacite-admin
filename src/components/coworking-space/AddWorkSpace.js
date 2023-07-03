@@ -30,10 +30,9 @@ import {
   TableContainer,
   Spinner,
 } from "@chakra-ui/react";
-import Cookies from "js-cookie";
+import Select from "react-select";
 function AddWorkSpace() {
   const [plans, setPlans] = useState([]);
-  const [loading, setLoading] = useState(false);
   const [editorState, setEditorState] = useState(() =>
     EditorState.createEmpty()
   );
@@ -46,9 +45,6 @@ function AddWorkSpace() {
   const [categories, setCategories] = useState([]);
   const [microlocations, setMicrolocations] = useState([]);
   const [amenities, setAmenities] = useState([]);
-  const [countryId, setCountryId] = useState(null);
-  const [stateId, setStateId] = useState(null);
-  const [cityId, setCityId] = useState(null);
   const [brandId, setBrandId] = useState(null);
   const [isUploaded, setIsUploaded] = useState(false);
   const [formData, setFormData] = useState({
@@ -63,8 +59,6 @@ function AddWorkSpace() {
   const navigate = useNavigate();
 
   const [checkedAmenities, setCheckedAmenities] = useState([]);
-
-  const [microlocationId, setMicrolocationId] = useState(null);
   const [fileName, setFileName] = useState([]);
   const [progress, setProgress] = useState(0);
   const [images, setImages] = useState([]);
@@ -155,26 +149,6 @@ function AddWorkSpace() {
     setPlans((prevRows) => prevRows.filter((row) => row.id !== id));
   };
 
-  // useEffect(() => {
-  //   defautcreateContacts();
-  // }, [coSpace]);
-
-  // const defautcreateContacts = () => {
-  //   const defaultRowCount = 1;
-  //   const newRows = [];
-  //   for (let i = 0; i < defaultRowCount; i++) {
-  //     const newRow = {
-  //       id: i + 1,
-  //       user: "",
-  //       email: "",
-  //       phone: "",
-  //       designation: "",
-  //     };
-  //     newRows.push(newRow);
-  //   }
-
-  //   setContacts(newRows);
-  // };
   const createContact = () => {
     const newRow = {
       id: contacts.length + 1,
@@ -240,13 +214,13 @@ function AddWorkSpace() {
       [name]: value,
     });
   };
-  const handleFetchCity = async () => {
+  const handleFetchCity = async (stateId) => {
     await getCityByState(stateId, setCities);
   };
-  const handleFetchStates = async () => {
+  const handleFetchStates = async (countryId) => {
     await getStateByCountry(countryId, setStates);
   };
-  const handleFetchMicrolocation = async () => {
+  const handleFetchMicrolocation = async (cityId) => {
     await getMicrolocationByCity(cityId, setMicrolocations);
   };
 
@@ -274,24 +248,7 @@ function AddWorkSpace() {
       [name]: value,
     };
 
-    if (name === "country") {
-      setCountryId(option);
-    } else if (name === "state") {
-      setStateId(option);
-      setCoSpace({
-        ...updatedCoSpace,
-      });
-    } else if (name === "city") {
-      setCityId(option);
-      setCoSpace({
-        ...updatedCoSpace,
-      });
-    } else if (name === "microLocation") {
-      setMicrolocationId(option);
-      setCoSpace({
-        ...updatedCoSpace,
-      });
-    } else if (name === "brand") {
+    if (name === "brand") {
       setBrandId(option);
       setCoSpace({
         ...updatedCoSpace,
@@ -336,10 +293,10 @@ function AddWorkSpace() {
           },
           location: {
             address: coSpace.address,
-            country: countryId,
-            state: stateId,
-            city: cityId,
-            micro_location: microlocationId,
+            country: selectedCountry.value,
+            state: selectedState.value,
+            city: selectedCity.value,
+            micro_location: selectedMicroLocation.value,
             latitude: coSpace.lattitude,
             longitude: coSpace.longitude,
           },
@@ -414,16 +371,16 @@ function AddWorkSpace() {
     }
   };
   const checkedAmenityIds = [
-    "649ac39ceab467c22dbe8ced",
-    "649ac3bfeab467c22dbe8cf1",
-    "649ac3ceeab467c22dbe8cf5",
-    "649ac3e0eab467c22dbe8cf9",
-    "649ac3f3eab467c22dbe8cfd",
-    "649ac403eab467c22dbe8d01",
-    "649ac415eab467c22dbe8d05",
-    "649ac425eab467c22dbe8d09",
-    "649ac434eab467c22dbe8d0d",
-    "649ac449eab467c22dbe8d11",
+    "649ea04d58693a1c3a52f7b4",
+    "649ea05d58693a1c3a52f7b8",
+    "649ea06f58693a1c3a52f7bc",
+    "649ea08158693a1c3a52f7c0",
+    "649ea09658693a1c3a52f7c4",
+    "649ea0ad58693a1c3a52f7c8",
+    "649ea0d858693a1c3a52f7cc",
+    "649ea13558693a1c3a52f7d0",
+    "649ea18658693a1c3a52f7d4",
+    "649ea1a458693a1c3a52f7d8",
   ];
   useEffect(() => {
     setCheckedAmenities(checkedAmenityIds);
@@ -495,7 +452,52 @@ function AddWorkSpace() {
     setIsChecked(checked);
     setIndexed(checked ? "index, follow" : "noindex, nofollow");
   };
+  const [selectedMicroLocation, setSelectedMicroLocation] = useState(null);
+  const [selectedState, setSelectedState] = useState(null);
+  const [selectedCountry, setSelectedCountry] = useState(null);
+  const [selectedCity, setSelectedCity] = useState(null);
+  const onChangeOptionHandler = (selectedOption, dropdownIdentifier) => {
+    switch (dropdownIdentifier) {
+      case "country":
+        setSelectedCountry(selectedOption);
 
+        handleFetchStates(selectedOption ? selectedOption.value : null);
+        break;
+      case "city":
+        setSelectedCity(selectedOption);
+
+        handleFetchMicrolocation(selectedOption ? selectedOption.value : null);
+        break;
+
+      case "state":
+        setSelectedState(selectedOption);
+
+        handleFetchCity(selectedOption ? selectedOption.value : null);
+        break;
+      case "microLocation":
+        setSelectedMicroLocation(selectedOption);
+
+        break;
+      default:
+        break;
+    }
+  };
+  const microLocationOptions = microlocations?.map((microLocation) => ({
+    value: microLocation._id,
+    label: microLocation.name,
+  }));
+  const stateOptions = states?.map((state) => ({
+    value: state._id,
+    label: state.name,
+  }));
+  const countryOptions = country?.map((item) => ({
+    value: item._id,
+    label: item.name,
+  }));
+  const cityOptions = cities?.map((city) => ({
+    value: city._id,
+    label: city.name,
+  }));
   return (
     <div className="mx-5 mt-3">
       <Mainpanelnav />
@@ -680,120 +682,62 @@ function AddWorkSpace() {
                 </div>
               </div>
             </div>
-            <div className="row">
+            <div className="row mt-4">
               <div className="col-md-3">
-                <div
-                  style={{
-                    borderBottom: "1px solid #cccccc",
-                    margin: "20px 0",
-                  }}
-                >
-                  <select
-                    className="form-select"
-                    aria-label="Default select example"
-                    value={coSpace.country}
-                    onChange={onChangeHandler}
-                    name="country"
-                    onClick={handleFetchStates}
+                <div>
+                  <Select
+                    placeholder="Country*"
+                    value={selectedCountry}
+                    options={countryOptions}
+                    onChange={(selectedOption) =>
+                      onChangeOptionHandler(selectedOption, "country")
+                    }
+                    isSearchable
                     required
-                  >
-                    <option>Select a country*</option>
-                    {country?.map((countryElem) => (
-                      <option
-                        id={countryElem._id}
-                        key={countryElem._id}
-                        value={countryElem.name}
-                      >
-                        {countryElem.name}
-                      </option>
-                    ))}
-                  </select>
+                  />
                 </div>
               </div>
               <div className="col-md-3">
-                <div
-                  style={{
-                    borderBottom: "1px solid #cccccc",
-                    margin: "20px 0",
-                  }}
-                >
-                  <select
-                    className="form-select"
-                    aria-label="Default select example"
-                    value={coSpace.state}
-                    name="state"
-                    onChange={onChangeHandler}
-                    onClick={handleFetchCity}
+                <div>
+                  <Select
+                    placeholder="State*"
+                    value={selectedState}
+                    options={stateOptions}
+                    onChange={(selectedOption) =>
+                      onChangeOptionHandler(selectedOption, "state")
+                    }
+                    onMenuOpen={handleFetchCity}
+                    isSearchable
                     required
-                  >
-                    <option>Select a state*</option>
-                    {states?.map((stateElem) => (
-                      <option
-                        id={stateElem._id}
-                        key={stateElem._id}
-                        value={stateElem.name}
-                      >
-                        {stateElem.name}
-                      </option>
-                    ))}
-                  </select>
+                  />
                 </div>
               </div>
               <div className="col-md-3">
-                <div
-                  style={{
-                    borderBottom: "1px solid #cccccc",
-                    margin: "20px 0",
-                  }}
-                >
-                  <select
-                    className="form-select"
-                    aria-label="Default select example"
-                    value={coSpace.city}
-                    onChange={onChangeHandler}
-                    onClick={handleFetchMicrolocation}
-                    name="city"
+                <div>
+                  <Select
+                    placeholder="City*"
+                    value={selectedCity}
+                    options={cityOptions}
+                    onChange={(selectedOption) =>
+                      onChangeOptionHandler(selectedOption, "city")
+                    }
+                    isSearchable
                     required
-                  >
-                    <option>Select a city*</option>
-                    {cities?.map((cityElem) => (
-                      <option
-                        id={cityElem._id}
-                        key={cityElem._id}
-                        value={cityElem.name}
-                      >
-                        {cityElem.name}
-                      </option>
-                    ))}
-                  </select>
+                  />
                 </div>
               </div>
               <div className="col-md-3">
-                <div
-                  style={{
-                    borderBottom: "1px solid #cccccc",
-                    margin: "20px 0",
-                  }}
-                >
-                  <select
-                    className="form-select"
-                    aria-label="Default select example"
-                    name="microLocation"
-                    value={coSpace.microLocation}
-                    onChange={onChangeHandler}
+                <div>
+                  <Select
+                    placeholder="Microlocation*"
+                    value={selectedMicroLocation}
+                    options={microLocationOptions}
+                    onChange={(selectedOption) =>
+                      onChangeOptionHandler(selectedOption, "microLocation")
+                    }
+                    isSearchable
                     required
-                  >
-                    <option>Select a microlocation*</option>
-                    {microlocations?.map((microLocation) => (
-                      <option
-                        id={microLocation._id}
-                        key={microLocation._id}
-                        value={microLocation.name}
-                      >
-                        {microLocation.name}
-                      </option>
-                    ))}
-                  </select>
+                  />
                 </div>
               </div>
             </div>
