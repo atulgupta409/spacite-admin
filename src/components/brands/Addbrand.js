@@ -4,7 +4,6 @@ import { EditorState, convertToRaw } from "draft-js";
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { useToast } from "@chakra-ui/react";
-import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Select from "react-dropdown-select";

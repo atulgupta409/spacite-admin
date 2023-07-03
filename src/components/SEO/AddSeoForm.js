@@ -29,13 +29,7 @@ function AddSeoForm() {
   });
   const [updateTable, setUpdateTable] = useState(false);
   const navigate = useNavigate();
-  const postConfig = {
-    headers: {
-      "Content-type": "application/json",
 
-      Authorization: `Bearer ${Cookies.get("token")}`,
-    },
-  };
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setSeo({
@@ -47,30 +41,26 @@ function AddSeoForm() {
   const handleSaveSeo = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await axios.post(
-        `${BASE_URL}/api/seo/seos`,
-        {
-          title: seo.heading,
-          page_title: seo.title,
-          script: seo.script,
-          description: seo.description,
-          robots: indexed,
-          index: isChecked,
-          keywords: seo.keywords,
-          path: seo.path,
-          footer_title: seo.footerTitle,
-          footer_description: footer_descript_value,
-          twitter: {
-            title: seo.twitterTitle,
-            description: seo.twitterDescription,
-          },
-          open_graph: {
-            title: seo.graphTitle,
-            description: seo.graphDescription,
-          },
+      const { data } = await axios.post(`${BASE_URL}/api/seo/seos`, {
+        title: seo.heading,
+        page_title: seo.title,
+        script: seo.script,
+        description: seo.description,
+        robots: indexed,
+        index: isChecked,
+        keywords: seo.keywords,
+        path: seo.path,
+        footer_title: seo.footerTitle,
+        footer_description: footer_descript_value,
+        twitter: {
+          title: seo.twitterTitle,
+          description: seo.twitterDescription,
         },
-        postConfig
-      );
+        open_graph: {
+          title: seo.graphTitle,
+          description: seo.graphDescription,
+        },
+      });
       setSeo({
         heading: "",
         title: "",
@@ -119,7 +109,8 @@ function AddSeoForm() {
     setIsChecked(checked);
     setIndexed(checked ? "index, follow" : "noindex, nofollow");
   };
-  console.log(indexed, isChecked);
+  console.log("Shivam");
+
   return (
     <div className="mx-5 mt-3">
       <Mainpanelnav />

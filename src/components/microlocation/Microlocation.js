@@ -29,7 +29,14 @@ import axios from "axios";
 import { GpState } from "../../context/context";
 import Delete from "../delete/Delete";
 import BASE_URL from "../../apiConfig";
-import Cookies from "js-cookie";
+import {
+  getCountry,
+  getCityByState,
+  getStateByCountry,
+  getMicroLocation,
+  deleteMicrolocations,
+} from "./MicrolocationService";
+import Select from "react-select";
 function City() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [loading, setLoading] = useState(false);
@@ -61,19 +68,6 @@ function City() {
   const nPage = Math.ceil(microlocations?.length / recordsPerPage);
 
   const toast = useToast();
-  const config = {
-    headers: {
-      Authorization: `Bearer ${Cookies.get("token")}`,
-    },
-  };
-
-  const postConfig = {
-    headers: {
-      "Content-type": "application/json",
-
-      Authorization: `Bearer ${Cookies.get("token")}`,
-    },
-  };
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setMicrolocationfield({
@@ -89,11 +83,10 @@ function City() {
         {
           name: microlocationfield.name,
           description: microlocationfield.description,
-          country: countryId,
-          state: stateId,
-          city: cityId,
-        },
-        postConfig
+          country: selectedCountry.value,
+          state: selectedState.value,
+          city: selectedCity.value,
+        }
       );
       setMicrolocationfield({
         name: "",
@@ -122,130 +115,25 @@ function City() {
       });
     }
   };
-  const getCityByState = async () => {
-    try {
-      setLoading(true);
-      await axios
-        .post(
-          `${BASE_URL}/api/city/citybystate`,
-          { state_id: stateId },
-          postConfig
-        )
-        .then((result) => {
-          console.log(result.data);
-          setCities(result.data);
-        });
-      setLoading(false);
-    } catch (error) {
-      console.log(error);
-    }
+  const handleFetchCity = async (stateId) => {
+    await getCityByState(stateId, setCities);
   };
-  const getStateByCountry = async () => {
-    try {
-      setLoading(true);
-      await axios
-        .post(
-          `${BASE_URL}/api/state/statesbycountry`,
-          { country_id: countryId },
-          postConfig
-        )
-        .then((result) => {
-          console.log(result.data);
-          setStates(result.data);
-        });
-      setLoading(false);
-    } catch (error) {
-      console.log(error);
-    }
+  const handleFetchStates = async (countryId) => {
+    await getStateByCountry(countryId, setStates);
   };
-  const getCountry = async () => {
-    try {
-      setLoading(true);
-      const { data } = await axios.get(
-        `${BASE_URL}/api/allCountry/countries`,
-        config
-      );
-      setLoading(false);
-      setCountry(data.country);
-    } catch (error) {
-      console.log(error);
-    }
+  const handleFetchCountry = async () => {
+    await getCountry(setCountry);
   };
-  const getMicroLocation = async () => {
-    try {
-      setLoading(true);
-      const { data } = await axios.get(
-        `${BASE_URL}/api/microlocation/microlocations`,
-        config
-      );
-      setLoading(false);
-      setMicrolocations(data);
-    } catch (error) {
-      console.log(error);
-    }
+  const handleFetchMicrolocation = async () => {
+    await getMicroLocation(setMicrolocations, setLoading);
   };
   const handleDeleteMicrolocations = async (id) => {
-    try {
-      const { data } = await axios.delete(
-        `${BASE_URL}/api/microlocation/delete/${id}`,
-        config
-      );
-      setUpdateTable((prev) => !prev);
-      toast({
-        title: "Deleted Successfully!",
-        status: "success",
-        duration: 5000,
-        isClosable: true,
-        position: "bottom",
-      });
-    } catch (error) {
-      toast({
-        title: "Error Occured!",
-        description: error.response.data.message,
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-        position: "bottom-left",
-      });
-    }
+    await deleteMicrolocations(id, setUpdateTable, toast);
   };
   useEffect(() => {
-    getCountry();
-    getMicroLocation();
+    handleFetchCountry();
+    handleFetchMicrolocation();
   }, [updateTable]);
-  const onChangeHandler = (e) => {
-    const index = e.target.selectedIndex;
-    const el = e.target.childNodes[index];
-    const option = el.getAttribute("id");
-    const { name, value } = e.target;
-    setMicrolocationfield({
-      ...microlocationfield,
-      [name]: value,
-    });
-    setCountryId(option);
-  };
-  const onChangeHandlerState = (e) => {
-    const index = e.target.selectedIndex;
-    const el = e.target.childNodes[index];
-    const option = el.getAttribute("id");
-    const { name, value } = e.target;
-    setMicrolocationfield({
-      ...microlocationfield,
-      [name]: value,
-    });
-    setStateId(option);
-  };
-  const onChangeHandlerCity = (e) => {
-    const index = e.target.selectedIndex;
-    const el = e.target.childNodes[index];
-    const option = el.getAttribute("id");
-    const { name, value } = e.target;
-    setMicrolocationfield({
-      ...microlocationfield,
-      [name]: value,
-    });
-    setCityId(option);
-  };
 
   if (firstIndex > 0) {
     var prePage = () => {
@@ -270,7 +158,40 @@ function City() {
   const getLastPage = () => {
     setCurPage(nPage);
   };
+  const [selectedState, setSelectedState] = useState(null);
+  const [selectedCountry, setSelectedCountry] = useState(null);
+  const [selectedCity, setSelectedCity] = useState(null);
+  const onChangeOptionHandler = (selectedOption, dropdownIdentifier) => {
+    switch (dropdownIdentifier) {
+      case "country":
+        setSelectedCountry(selectedOption);
 
+        handleFetchStates(selectedOption ? selectedOption.value : null);
+        break;
+      case "state":
+        setSelectedState(selectedOption);
+        handleFetchCity(selectedOption ? selectedOption.value : null);
+        break;
+      case "city":
+        setSelectedCity(selectedOption);
+        break;
+
+      default:
+        break;
+    }
+  };
+  const stateOptions = states?.map((state) => ({
+    value: state._id,
+    label: state.name,
+  }));
+  const countryOptions = country?.map((item) => ({
+    value: item._id,
+    label: item.name,
+  }));
+  const cityOptions = cities?.map((city) => ({
+    value: city._id,
+    label: city.name,
+  }));
   return (
     <>
       <div className="mx-5 mt-3">
@@ -288,80 +209,70 @@ function City() {
               <ModalHeader>Add New Microlocation</ModalHeader>
               <ModalCloseButton />
               <ModalBody>
-                <div className="d-flex justify-content-between">
-                  <div className="select-box">
-                    <select
-                      name="country"
-                      value={microlocationfield.country}
-                      onChange={onChangeHandler}
-                      onClick={getStateByCountry}
-                    >
-                      <option>Select Country</option>
-                      {country?.map((countryElem) => (
-                        <option
-                          id={countryElem._id}
-                          key={countryElem._id}
-                          value={countryElem.name}
-                        >
-                          {countryElem.name}
-                        </option>
-                      ))}
-                    </select>
+                <div className="row">
+                  <div className="col-md-6">
+                    <Select
+                      placeholder="Country*"
+                      value={selectedCountry}
+                      options={countryOptions}
+                      onChange={(selectedOption) =>
+                        onChangeOptionHandler(selectedOption, "country")
+                      }
+                      isSearchable
+                      required
+                    />{" "}
                   </div>
-                  <div className="select-box">
-                    <select
-                      name="state"
-                      value={microlocationfield.state}
-                      onChange={onChangeHandlerState}
-                      onClick={getCityByState}
-                    >
-                      <option>Select State</option>
-                      {states?.map((stateElem) => (
-                        <option
-                          id={stateElem._id}
-                          key={stateElem._id}
-                          value={stateElem.name}
-                        >
-                          {stateElem.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="select-box">
-                    <select
-                      name="city"
-                      value={microlocationfield.city}
-                      onChange={onChangeHandlerCity}
-                    >
-                      <option>Select City</option>
-                      {cities?.map((cityElem) => (
-                        <option
-                          id={cityElem._id}
-                          key={cityElem._id}
-                          value={cityElem.name}
-                        >
-                          {cityElem.name}
-                        </option>
-                      ))}
-                    </select>
+                  <div className="col-md-6">
+                    <Select
+                      placeholder="State*"
+                      value={selectedState}
+                      options={stateOptions}
+                      onChange={(selectedOption) =>
+                        onChangeOptionHandler(selectedOption, "state")
+                      }
+                      onMenuOpen={handleFetchCity}
+                      isSearchable
+                      required
+                    />
                   </div>
                 </div>
-                <input
-                  name="name"
-                  value={microlocationfield.name}
-                  onChange={handleInputChange}
-                  type="text"
-                  placeholder="Name"
-                  className="property-input"
-                />
-                <input
-                  name="description"
-                  value={microlocationfield.description}
-                  onChange={handleInputChange}
-                  type="text"
-                  placeholder="Description"
-                  className="property-input"
-                />
+
+                <div className="row mt-2">
+                  <div className="col-md-6">
+                    <Select
+                      placeholder="City*"
+                      value={selectedCity}
+                      options={cityOptions}
+                      onChange={(selectedOption) =>
+                        onChangeOptionHandler(selectedOption, "city")
+                      }
+                      isSearchable
+                      required
+                    />
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col-md-6">
+                    <input
+                      name="name"
+                      value={microlocationfield.name}
+                      onChange={handleInputChange}
+                      type="text"
+                      placeholder="Name"
+                      className="property-input"
+                    />
+                  </div>
+                  <div className="col-md-6">
+                    <input
+                      name="description"
+                      value={microlocationfield.description}
+                      onChange={handleInputChange}
+                      type="text"
+                      placeholder="Description"
+                      className="property-input"
+                    />
+                  </div>
+                </div>
               </ModalBody>
               <ModalFooter>
                 <Button colorScheme="blue" mr={3} onClick={onClose}>

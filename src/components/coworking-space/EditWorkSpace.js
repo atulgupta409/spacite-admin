@@ -30,6 +30,7 @@ import {
 } from "./WorkSpaceService";
 import { uploadFile } from "../../services/Services";
 import BASE_URL from "../../apiConfig";
+import Select from "react-select";
 const initialValue = {
   name: "",
   description: "",
@@ -112,7 +113,6 @@ const EditWorkSpace = () => {
   const [microlocations, setMicrolocations] = useState([]);
   const [allAmenities, setAllAmenities] = useState([]);
   const [workSpaces, setWorkSpaces] = useState(initialValue);
-  const [selectedOptions, setSelectedOptions] = useState([]);
   const [fileName, setFileName] = useState([]);
   const [allContact, setAllContact] = useState([]);
   const {
@@ -151,7 +151,104 @@ const EditWorkSpace = () => {
     isOpenSat: false,
     isOpenSun: false,
   });
+  const [mergedArray, setMergedArray] = useState([]);
+  const [selectedMicroLocation, setSelectedMicroLocation] = useState(null);
+  const [selectedCity, setSelectedCity] = useState(null);
+  const [selectedState, setSelectedState] = useState(null);
+  const [selectedCountry, setSelectedCountry] = useState(null);
+  const getWorkSpacesDataById = async () => {
+    try {
+      setLoading(true);
+      const { data } = await axios.get(
+        `${BASE_URL}/api/workSpace/workSpaces/${id}`
+      );
 
+      setWorkSpaces(data);
+      setApiValues({
+        isOpen: data.hours_of_operation.monday_friday.is_open_24,
+        isOpenSat: data.hours_of_operation.saturday.is_open_24,
+        isOpenSun: data.hours_of_operation.sunday.is_open_24,
+      });
+      setIsChecked(data.seo.index);
+      setIndexed(data.seo.robots);
+      handleFetchStates(data.location.country);
+      handleFetchCity(data.location.state);
+      handleFetchMicrolocation(data.location.city);
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const onChangeOptionHandler = (selectedOption, dropdownIdentifier) => {
+    switch (dropdownIdentifier) {
+      case "country":
+        setSelectedCountry(selectedOption);
+        handleFetchStates(selectedOption ? selectedOption.value : null);
+        break;
+      case "city":
+        setSelectedCity(selectedOption);
+        handleFetchMicrolocation(selectedOption ? selectedOption.value : null);
+        break;
+      case "microLocation":
+        setSelectedMicroLocation(selectedOption);
+        break;
+      case "state":
+        setSelectedState(selectedOption);
+        handleFetchCity(selectedOption ? selectedOption.value : null);
+        break;
+
+      default:
+        break;
+    }
+  };
+  const microLocationOptions = microlocations?.map((microLocation) => ({
+    value: microLocation._id,
+    label: microLocation.name,
+  }));
+  const stateOptions = states?.map((state) => ({
+    value: state._id,
+    label: state.name,
+  }));
+  const countryOptions = country?.map((item) => ({
+    value: item._id,
+    label: item.name,
+  }));
+  const cityOptions = cities?.map((city) => ({
+    value: city._id,
+    label: city.name,
+  }));
+  useEffect(() => {
+    const initialCountry = countryOptions.find(
+      (option) => option.value === location.country
+    );
+    if (initialCountry) {
+      setSelectedCountry(initialCountry);
+    }
+  }, [states]);
+  useEffect(() => {
+    const initialState = stateOptions.find(
+      (option) => option.value === location.state
+    );
+    if (initialState) {
+      setSelectedState(initialState);
+    }
+  }, [states]);
+  useEffect(() => {
+    const initialCity = cityOptions.find(
+      (option) => option.value === location.city
+    );
+    if (initialCity) {
+      setSelectedCity(initialCity);
+    }
+  }, [cities]);
+  useEffect(() => {
+    const initialMicroLocation = microLocationOptions.find(
+      (option) => option.value === location.micro_location
+    );
+    if (initialMicroLocation) {
+      setSelectedMicroLocation(initialMicroLocation);
+    }
+  }, [microlocations]);
   const toggleHoursHandler = (event, day, allday) => {
     const isChecked = event.target.checked;
     setApiValues((prevState) => ({
@@ -289,10 +386,10 @@ const EditWorkSpace = () => {
           },
           location: {
             address: location.address,
-            country: location.country,
-            state: location.state,
-            city: location.city,
-            micro_location: location.micro_location,
+            country: selectedCountry.value,
+            state: selectedState.value,
+            city: selectedCity.value,
+            micro_location: selectedMicroLocation.value,
             latitude: location.latitude,
             longitude: location.longitude,
           },
@@ -347,41 +444,14 @@ const EditWorkSpace = () => {
     setEditorState(initialEditorState);
   }, [workSpaces]);
 
-  const getWorkSpacesDataById = async () => {
-    try {
-      setLoading(true);
-      const { data } = await axios.get(
-        `${BASE_URL}/api/workSpace/workSpaces/${id}`
-      );
-
-      setWorkSpaces(data);
-      setApiValues({
-        isOpen: data.hours_of_operation.monday_friday.is_open_24,
-        isOpenSat: data.hours_of_operation.saturday.is_open_24,
-        isOpenSun: data.hours_of_operation.sunday.is_open_24,
-      });
-      setIsChecked(data.seo.index);
-      setIndexed(data.seo.robots);
-      handleFetchStates(data.location.country);
-      handleFetchCity(data.location.state);
-      handleFetchMicrolocation(data.location.city);
-      setLoading(false);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   const handleFetchCity = async (id) => {
-    location.state = id;
-    await getCityByState(location.state, setCities);
+    await getCityByState(id, setCities);
   };
   const handleFetchStates = async (id) => {
-    location.country = id;
-    await getStateByCountry(location.country, setStates);
+    await getStateByCountry(id, setStates);
   };
   const handleFetchMicrolocation = async (id) => {
-    location.city = id;
-    await getMicrolocationByCity(location.city, setMicrolocations);
+    await getMicrolocationByCity(id, setMicrolocations);
   };
   const handleFetchCountry = async () => {
     await getCountry(setCountry);
@@ -433,7 +503,7 @@ const EditWorkSpace = () => {
   const handleUploadFile = async (files) => {
     await uploadFile(files, setProgress, setIsUploaded, previewFile);
   };
-  const [mergedArray, setMergedArray] = useState([]);
+
   const handleInputByClick = (e) => {
     const files = Array.from(e.target.files);
     handleUploadFile(files);
@@ -472,7 +542,6 @@ const EditWorkSpace = () => {
   if (loading) {
     return <Loader />;
   }
-
   return (
     <div className="mx-5 mt-3">
       <Mainpanelnav />
@@ -489,7 +558,7 @@ const EditWorkSpace = () => {
                 />
               </div>
             </div>
-            {allContact?.map((row, id) => (
+            {allContact?.map((row) => (
               <div className="row pt-3" key={row.id}>
                 <div className="col-md-3">
                   <div
@@ -632,137 +701,64 @@ const EditWorkSpace = () => {
             </div>
             <div className="row">
               <h4 className="propert_form_h4">Location</h4>
-              <div className="col-md-4">
-                <div
-                  style={{
-                    borderBottom: "1px solid #cccccc",
-                    margin: "20px 0",
-                  }}
-                >
-                  <select
-                    className="form-select"
-                    aria-label="Default select example"
-                    value={location.country}
-                    onChange={(event) =>
-                      handleInputChangeObject(event, "location", "country")
+              <div className="col-md-3">
+                <div>
+                  <Select
+                    placeholder="Country*"
+                    value={selectedCountry}
+                    options={countryOptions}
+                    onChange={(selectedOption) =>
+                      onChangeOptionHandler(selectedOption, "country")
                     }
-                    onClick={(event) => handleFetchStates(event.target.value)}
-                    name="location"
+                    isSearchable
                     required
-                  >
-                    <option>Select a country*</option>
-                    {country?.map((countryElem) => (
-                      <option
-                        id={countryElem._id}
-                        key={countryElem._id}
-                        value={countryElem._id}
-                      >
-                        {countryElem.name}
-                      </option>
-                    ))}
-                  </select>
+                  />
                 </div>
               </div>
-              <div className="col-md-4">
-                <div
-                  style={{
-                    borderBottom: "1px solid #cccccc",
-                    margin: "20px 0",
-                  }}
-                >
-                  <select
-                    className="form-select"
-                    aria-label="Default select example"
-                    value={location.state}
-                    name="location"
-                    onChange={(event) =>
-                      handleInputChangeObject(event, "location", "state")
+              <div className="col-md-3">
+                <div>
+                  <Select
+                    placeholder="State*"
+                    value={selectedState}
+                    options={stateOptions}
+                    onChange={(selectedOption) =>
+                      onChangeOptionHandler(selectedOption, "state")
                     }
-                    onClick={(event) => handleFetchCity(event.target.value)}
+                    isSearchable
                     required
-                  >
-                    <option>Select a state*</option>
-                    {states?.map((stateElem) => (
-                      <option
-                        id={stateElem._id}
-                        key={stateElem._id}
-                        value={stateElem._id}
-                      >
-                        {stateElem.name}
-                      </option>
-                    ))}
-                  </select>
+                  />
                 </div>
               </div>
-              <div className="col-md-4">
-                <div
-                  style={{
-                    borderBottom: "1px solid #cccccc",
-                    margin: "20px 0",
-                  }}
-                >
-                  <select
-                    className="form-select"
-                    aria-label="Default select example"
-                    value={location.city}
-                    name="location"
-                    onChange={(event) =>
-                      handleInputChangeObject(event, "location", "city")
+              <div className="col-md-3">
+                <div>
+                  <Select
+                    placeholder="City*"
+                    value={selectedCity}
+                    options={cityOptions}
+                    onChange={(selectedOption) =>
+                      onChangeOptionHandler(selectedOption, "city")
                     }
-                    onClick={(event) =>
-                      handleFetchMicrolocation(event.target.value)
-                    }
+                    isSearchable
                     required
-                  >
-                    <option>Select a city*</option>
-                    {cities?.map((cityElem) => (
-                      <option
-                        id={cityElem._id}
-                        key={cityElem._id}
-                        value={cityElem._id}
-                      >
-                        {cityElem.name}
-                      </option>
-                    ))}
-                  </select>
+                  />
+                </div>
+              </div>
+              <div className="col-md-3">
+                <div>
+                  <Select
+                    placeholder="Microlocation*"
+                    value={selectedMicroLocation}
+                    options={microLocationOptions}
+                    onChange={(selectedOption) =>
+                      onChangeOptionHandler(selectedOption, "microLocation")
+                    }
+                    isSearchable
+                    required
+                  />
                 </div>
               </div>
             </div>
             <div className="row">
-              <div className="col-md-4">
-                <div
-                  style={{
-                    borderBottom: "1px solid #cccccc",
-                    margin: "20px 0",
-                  }}
-                >
-                  <select
-                    className="form-select"
-                    aria-label="Default select example"
-                    name="location"
-                    value={location.micro_location}
-                    onChange={(event) =>
-                      handleInputChangeObject(
-                        event,
-                        "location",
-                        "micro_location"
-                      )
-                    }
-                    required
-                  >
-                    <option>Select a microlocation*</option>
-                    {microlocations?.map((microLocation) => (
-                      <option
-                        id={microLocation._id}
-                        key={microLocation._id}
-                        value={microLocation._id}
-                      >
-                        {microLocation.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
               <div className="col-md-4">
                 <div
                   className="form-floating border_field"
@@ -1157,7 +1153,7 @@ const EditWorkSpace = () => {
                 style={{ cursor: "pointer" }}
               />
             </div>
-            {allplans.map((row, id) => (
+            {allplans.map((row) => (
               <div className="row" key={row.id}>
                 <div className="col-md-3">
                   <div

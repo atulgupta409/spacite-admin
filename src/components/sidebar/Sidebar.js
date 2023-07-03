@@ -93,6 +93,12 @@ function Sidebar() {
                 Brand
               </NavLink>
             </li>
+            <li className="nav-item">
+              <NavLink to="/clients">
+                <MdOutlineRealEstateAgent className="icon" />
+                Our Clients
+              </NavLink>
+            </li>
           </ul>
         </div>
       </div>

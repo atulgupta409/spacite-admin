@@ -111,8 +111,10 @@ function Country() {
     try {
       setLoading(true);
       const { data } = await axios.get(`${BASE_URL}/api/allCountry/countries`);
-      setLoading(false);
+
       setCountry(data.country);
+      console.log(data.country);
+      setLoading(false);
     } catch (error) {
       console.log(error);
     }
