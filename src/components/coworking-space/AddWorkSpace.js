@@ -39,7 +39,6 @@ function AddWorkSpace() {
   );
   const toast = useToast();
   const { userInfo } = GpState();
-
   const [updateTable, setUpdateTable] = useState(false);
   const [country, setCountry] = useState([]);
   const [states, setStates] = useState([]);
@@ -276,7 +275,6 @@ function AddWorkSpace() {
           name: coSpace.name,
           description: footer_descript_value,
           images: imageData,
-          added_by: userInfo.email,
           amenties: checkedAmenities,
           seo: {
             title: coSpace.title,
