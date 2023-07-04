@@ -11,6 +11,7 @@ import Loader from "../loader/Loader";
 import { getSeoDataById } from "./SeoService";
 import BASE_URL from "../../apiConfig";
 import Cookies from "js-cookie";
+import draftToHtml from "draftjs-to-html";
 const initialValue = {
   page_title: "",
   title: "",
@@ -73,8 +74,9 @@ const EditSeo = () => {
     setEditorState(editorState);
   };
 
-  const footer_descrip = convertToRaw(editorState.getCurrentContent()).blocks[0]
-    .text;
+  const footer_descrip = draftToHtml(
+    convertToRaw(editorState.getCurrentContent())
+  );
 
   const handleEditSeo = async (e) => {
     e.preventDefault();

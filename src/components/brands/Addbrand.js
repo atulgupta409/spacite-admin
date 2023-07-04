@@ -10,7 +10,7 @@ import Select from "react-dropdown-select";
 import ImageUpload from "../../ImageUpload";
 import BASE_URL from "../../apiConfig";
 import { uploadFile } from "../../services/Services";
-
+import draftToHtml from "draftjs-to-html";
 function Addbrand() {
   const toast = useToast();
   const [selectedOptions, setSelectedOptions] = useState([]);
@@ -127,8 +127,9 @@ function Addbrand() {
     setEditorState(editorState);
   };
 
-  let footer_descript_value = convertToRaw(editorState.getCurrentContent())
-    .blocks[0].text;
+  let footer_descript_value = draftToHtml(
+    convertToRaw(editorState.getCurrentContent())
+  );
 
   const handleDropdownChange = (selectedValues) => {
     const ids = selectedValues.map((option) => option._id);

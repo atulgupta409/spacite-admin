@@ -1,0 +1,12 @@
+.table_container {
+  display: flex;
+  width: 100%;
+}
+
+.top_table_box1 {
+  width: 60%;
+}
+.top_table_box2 {
+  width: 40%;
+  margin-left: 30px;
+}

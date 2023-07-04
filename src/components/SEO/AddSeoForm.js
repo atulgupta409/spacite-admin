@@ -8,6 +8,7 @@ import { useDisclosure, Spinner, useToast } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import BASE_URL from "../../apiConfig";
 import Cookies from "js-cookie";
+import draftToHtml from "draftjs-to-html";
 function AddSeoForm() {
   const toast = useToast();
 
@@ -99,8 +100,9 @@ function AddSeoForm() {
     setEditorState(editorState);
   };
 
-  let footer_descript_value = convertToRaw(editorState.getCurrentContent())
-    .blocks[0].text;
+  let footer_descript_value = draftToHtml(
+    convertToRaw(editorState.getCurrentContent())
+  );
   const [indexed, setIndexed] = useState("noindex, nofollow");
   const [isChecked, setIsChecked] = useState(false);
 

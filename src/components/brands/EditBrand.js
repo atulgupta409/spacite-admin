@@ -10,7 +10,7 @@ import Select from "react-dropdown-select";
 import ImageUpload from "../../ImageUpload";
 import { getBrandsDataById, getCity } from "./BrandService";
 import Loader from "../loader/Loader";
-
+import draftToHtml from "draftjs-to-html";
 import Mainpanelnav from "../mainpanel-header/Mainpanelnav";
 import BASE_URL from "../../apiConfig";
 import { uploadFile } from "../../services/Services";
@@ -102,8 +102,9 @@ const EditBrand = () => {
     setEditorState(editorState);
   };
 
-  const footer_descrip = convertToRaw(editorState.getCurrentContent()).blocks[0]
-    .text;
+  const footer_descrip = draftToHtml(
+    convertToRaw(editorState.getCurrentContent())
+  );
 
   const handleEditBrands = async (e) => {
     e.preventDefault();

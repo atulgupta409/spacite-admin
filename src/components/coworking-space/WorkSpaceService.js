@@ -78,8 +78,9 @@ export const getWorkSpaceData = async (setLoading, setWorkSpaces) => {
   try {
     setLoading(true);
     const { data } = await axios.get(`${BASE_URL}/api/workSpace/workSpaces`);
-    setLoading(false);
+
     setWorkSpaces(data);
+    setLoading(false);
   } catch (error) {
     console.log(error);
   }

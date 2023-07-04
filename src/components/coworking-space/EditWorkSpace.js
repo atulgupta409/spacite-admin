@@ -30,6 +30,7 @@ import {
 } from "./WorkSpaceService";
 import { uploadFile } from "../../services/Services";
 import BASE_URL from "../../apiConfig";
+import draftToHtml from "draftjs-to-html";
 import Select from "react-select";
 const initialValue = {
   name: "",
@@ -413,6 +414,11 @@ const EditWorkSpace = () => {
           },
           plans: allplans,
           contact_details: allContact,
+          priority: {
+            location: {
+              city: selectedCity.value,
+            },
+          },
           brand,
           slug,
         }
@@ -436,8 +442,9 @@ const EditWorkSpace = () => {
     setEditorState(editorState);
   };
 
-  const footer_descrip = convertToRaw(editorState.getCurrentContent()).blocks[0]
-    .text;
+  const footer_descrip = draftToHtml(
+    convertToRaw(editorState.getCurrentContent())
+  );
   useEffect(() => {
     const contentState = ContentState.createFromText(description || "empty");
     const initialEditorState = EditorState.createWithContent(contentState);

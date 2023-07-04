@@ -9,6 +9,7 @@ import { EditorState, convertToRaw } from "draft-js";
 import Mainpanelnav from "../mainpanel-header/Mainpanelnav";
 import { useNavigate } from "react-router-dom";
 import BASE_URL from "../../apiConfig";
+import draftToHtml from "draftjs-to-html";
 import {
   getAmenities,
   getBrandsData,
@@ -19,7 +20,6 @@ import {
   getStateByCountry,
 } from "./WorkSpaceService";
 import { uploadFile } from "../../services/Services";
-import { FaUpload } from "react-icons/fa";
 import {
   Table,
   Thead,
@@ -31,12 +31,15 @@ import {
   Spinner,
 } from "@chakra-ui/react";
 import Select from "react-select";
+import { GpState } from "../../context/context";
 function AddWorkSpace() {
   const [plans, setPlans] = useState([]);
   const [editorState, setEditorState] = useState(() =>
     EditorState.createEmpty()
   );
   const toast = useToast();
+  const { userInfo } = GpState();
+
   const [updateTable, setUpdateTable] = useState(false);
   const [country, setCountry] = useState([]);
   const [states, setStates] = useState([]);
@@ -112,7 +115,6 @@ function AddWorkSpace() {
 
     startTime.setMinutes(startTime.getMinutes() + 30);
   }
-
   useEffect(() => {
     defautcreatePlans();
   }, [categories]);
@@ -205,8 +207,9 @@ function AddWorkSpace() {
   const onEditorStateChange = (editorState) => {
     setEditorState(editorState);
   };
-  let footer_descript_value = convertToRaw(editorState.getCurrentContent())
-    .blocks[0].text;
+  let footer_descript_value = draftToHtml(
+    convertToRaw(editorState.getCurrentContent())
+  );
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setCoSpace({
@@ -273,6 +276,7 @@ function AddWorkSpace() {
           name: coSpace.name,
           description: footer_descript_value,
           images: imageData,
+          added_by: userInfo.email,
           amenties: checkedAmenities,
           seo: {
             title: coSpace.title,
@@ -320,7 +324,11 @@ function AddWorkSpace() {
           },
           plans,
           contact_details: contacts,
-          // status,
+          priority: {
+            location: {
+              city: selectedCity.value,
+            },
+          },
           brand: brandId,
           slug: coSpace.slug,
         }

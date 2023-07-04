@@ -91,6 +91,12 @@ function Sidebar() {
               </NavLink>
             </li>
             <li className="nav-item">
+              <NavLink to="/priority">
+                <HiOutlineBuildingOffice className="icon" />
+                Top Priority Space
+              </NavLink>
+            </li>
+            <li className="nav-item">
               <NavLink to="/coworking-plan">
                 <HiOutlineBuildingOffice className="icon" />
                 Coworking Plans
@@ -141,7 +147,7 @@ function Sidebar() {
             <li className="nav-item">
               <NavLink to="/brands">
                 <MdOutlineRealEstateAgent className="icon" />
-                Brand
+                Brands
               </NavLink>
             </li>
             <li className="nav-item">
