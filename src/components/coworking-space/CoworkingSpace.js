@@ -121,7 +121,7 @@ function CoworkingSpace() {
   const handleReject = (id) => {
     changeWorkSpaceStatus(id, "reject", setUpdateTable, toast);
   };
-  const [selectItemNum, setSelectItemNum] = useState(5);
+  const [selectItemNum, setSelectItemNum] = useState(10);
   const itemsPerPageHandler = (e) => {
     setSelectItemNum(e.target.value);
   };
@@ -419,10 +419,10 @@ function CoworkingSpace() {
                 value={selectItemNum}
                 onChange={itemsPerPageHandler}
               >
-                <option value="5">5</option>
                 <option value="10">10</option>
-                <option value="15">15</option>
-                <option value="20">20</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
               </select>
             </div>
             <div style={{ width: "110px" }}>

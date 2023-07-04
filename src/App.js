@@ -23,6 +23,7 @@ import EditBrand from "./components/brands/EditBrand";
 import EditWorkSpace from "./components/coworking-space/EditWorkSpace";
 import ImageUpload from "./ImageUpload";
 import OurClient from "./components/ourClients/OurClient";
+import TopPrioritySpace from "./components/prioritySpace/TopPrioritySpace";
 function App() {
   const { isLogin } = GpState();
   return (
@@ -115,6 +116,10 @@ function App() {
               <Route
                 path="/clients"
                 element={isLogin ? <OurClient /> : <Navigate to="/" />}
+              />
+              <Route
+                path="/priority"
+                element={isLogin ? <TopPrioritySpace /> : <Navigate to="/" />}
               />
             </Routes>
           </div>

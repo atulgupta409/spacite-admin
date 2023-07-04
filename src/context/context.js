@@ -11,7 +11,7 @@ const AppProvider = ({ children }) => {
 
   const login = (userData, authToken) => {
     Cookies.set("token", authToken);
-    Cookies.set("userInfo", userData);
+    Cookies.set("userInfo", JSON.stringify(userData));
     setUserInfo(userData);
     setToken(authToken);
   };
