@@ -132,20 +132,24 @@ const EditWorkSpace = () => {
     brand,
     is_popular,
   } = workSpaces;
-  const options = [
-    { id: 1, name: "09:00 AM" },
-    { id: 2, name: "01:15 AM" },
-    { id: 3, name: "01:30 AM" },
-    { id: 4, name: "01:45 AM" },
-    { id: 5, name: "02:00 AM" },
-    { id: 6, name: "02:15 AM" },
-    { id: 7, name: "02:30 AM" },
-    { id: 8, name: "02:45 AM" },
-    { id: 9, name: "03:00 AM" },
-    { id: 10, name: "03:15 AM" },
-    { id: 11, name: "03:30 AM" },
-    { id: 11, name: "07:00 PM" },
-  ];
+  const options = [];
+
+  const startTime = new Date();
+  startTime.setHours(9, 0, 0);
+
+  const endTime = new Date();
+  endTime.setHours(24, 0, 0);
+
+  while (startTime < endTime) {
+    const timeString = startTime.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+    const option = { id: options.length + 1, name: timeString };
+    options.push(option);
+
+    startTime.setMinutes(startTime.getMinutes() + 30);
+  }
   const [checkedAmenities, setCheckedAmenities] = useState([]);
   const [apiValues, setApiValues] = useState({
     isOpen: true,
@@ -284,7 +288,6 @@ const EditWorkSpace = () => {
     };
     setAllPlans((prevRows) => [...prevRows, newRow]);
   };
-
   const removePlan = (id) => {
     setAllPlans((prevRows) => prevRows.filter((row) => row.id !== id));
   };
@@ -549,6 +552,7 @@ const EditWorkSpace = () => {
   if (loading) {
     return <Loader />;
   }
+
   return (
     <div className="mx-5 mt-3">
       <Mainpanelnav />
@@ -1204,9 +1208,9 @@ const EditWorkSpace = () => {
                       value={row.duration}
                     >
                       <option>Duration</option>
-                      <option value="Month">Month</option>
-                      <option value="Day">Day</option>
-                      <option value="Year">Year</option>
+                      <option value="month">month</option>
+                      <option value="day">day</option>
+                      <option value="year">year</option>
                     </select>
                   </div>
                 </div>
@@ -1250,7 +1254,7 @@ const EditWorkSpace = () => {
                     id="floatingInput"
                     placeholder="Title"
                     name="seo"
-                    value={seo.title}
+                    value={seo?.title}
                     onChange={(event) =>
                       handleInputChangeObject(event, "seo", "title")
                     }
@@ -1270,7 +1274,7 @@ const EditWorkSpace = () => {
                       id="floatingInput"
                       placeholder="Keywords"
                       name="seo"
-                      value={seo.keywords}
+                      value={seo?.keywords}
                       onChange={(event) =>
                         handleInputChangeObject(event, "seo", "keywords")
                       }
@@ -1291,7 +1295,7 @@ const EditWorkSpace = () => {
                       id="floatingInput"
                       placeholder="Description"
                       name="seo"
-                      value={seo.description}
+                      value={seo?.description}
                       onChange={(event) =>
                         handleInputChangeObject(event, "seo", "description")
                       }
@@ -1312,7 +1316,7 @@ const EditWorkSpace = () => {
                       id="floatingInput"
                       placeholder="Twitter Title"
                       name="seo.twitter.title"
-                      value={seo.twitter.title}
+                      value={seo?.twitter?.title}
                       onChange={handleInputChange2}
                     />
                     <label htmlFor="floatingInput">Twitter Title</label>
@@ -1331,7 +1335,7 @@ const EditWorkSpace = () => {
                       id="floatingInput"
                       placeholder="Twitter Description"
                       name="seo.twitter.description"
-                      value={seo.twitter.description}
+                      value={seo?.twitter?.description}
                       onChange={handleInputChange2}
                     />
                     <label htmlFor="floatingInput">Twitter Description</label>
@@ -1351,7 +1355,7 @@ const EditWorkSpace = () => {
                     id="floatingInput"
                     placeholder="Open Graph Title"
                     name="seo.open_graph.title"
-                    value={seo.open_graph.title}
+                    value={seo?.open_graph?.title}
                     onChange={handleInputChange2}
                   />
                   <label htmlFor="floatingInput">Open Garph Title</label>
@@ -1370,7 +1374,7 @@ const EditWorkSpace = () => {
                     id="floatingInput"
                     placeholder="Open Graph Description"
                     name="seo.open_graph.description"
-                    value={seo.open_graph.description}
+                    value={seo?.open_graph?.description}
                     onChange={handleInputChange2}
                   />
                   <label htmlFor="floatingInput">Open Graph Description</label>
