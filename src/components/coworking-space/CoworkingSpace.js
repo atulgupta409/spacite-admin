@@ -249,6 +249,7 @@ function CoworkingSpace() {
                           (curPage - 1) * selectItemNum,
                           curPage * selectItemNum
                         )
+
                         .map((workSpace) => (
                           <Tr className="table_data_row" key={workSpace._id}>
                             <Td className="name_heading">{workSpace.name}</Td>
@@ -286,13 +287,18 @@ function CoworkingSpace() {
                               </Link>
                             </Td>
                             <Td className="preview_heading">
-                              <AiOutlineEye
-                                style={{
-                                  margin: "auto",
-                                  fontSize: "20px",
-                                  cursor: "pointer",
-                                }}
-                              />
+                              <Link
+                                to={`http://localhost:3001/coworking/${workSpace.slug}`}
+                                target="_blank"
+                              >
+                                <AiOutlineEye
+                                  style={{
+                                    margin: "auto",
+                                    fontSize: "20px",
+                                    cursor: "pointer",
+                                  }}
+                                />
+                              </Link>
                             </Td>
                             <Td className="action_heading">
                               <div
@@ -325,6 +331,7 @@ function CoworkingSpace() {
                           (curPage - 1) * selectItemNum,
                           curPage * selectItemNum
                         )
+
                         .map((workSpace, index) => (
                           <Tr className="table_data_row" key={workSpace._id}>
                             <Td className="name_heading">{workSpace.name}</Td>
@@ -362,13 +369,18 @@ function CoworkingSpace() {
                               </Link>
                             </Td>
                             <Td className="preview_heading">
-                              <AiOutlineEye
-                                style={{
-                                  margin: "auto",
-                                  fontSize: "20px",
-                                  cursor: "pointer",
-                                }}
-                              />
+                              <Link
+                                to={`http://localhost:3001/coworking/${workSpace.slug}`}
+                                target="_blank"
+                              >
+                                <AiOutlineEye
+                                  style={{
+                                    margin: "auto",
+                                    fontSize: "20px",
+                                    cursor: "pointer",
+                                  }}
+                                />
+                              </Link>
                             </Td>
                             <Td className="action_heading">
                               <div
