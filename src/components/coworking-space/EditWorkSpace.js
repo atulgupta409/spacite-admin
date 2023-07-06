@@ -373,19 +373,19 @@ const EditWorkSpace = () => {
           images: mergedArray,
           amenties: checkedAmenities,
           seo: {
-            title: seo.title,
-            description: seo.description,
+            title: seo?.title,
+            description: seo?.description,
             robots: indexed,
             index: isChecked,
-            keywords: seo.keywords,
-            url: seo.url,
+            keywords: seo?.keywords,
+            url: seo?.url,
             twitter: {
-              title: seo.twitter.title,
-              description: seo.twitter.description,
+              title: seo?.twitter?.title,
+              description: seo?.twitter?.description,
             },
             open_graph: {
-              title: seo.open_graph.title,
-              description: seo.open_graph.description,
+              title: seo?.open_graph?.title,
+              description: seo?.open_graph?.description,
             },
           },
           location: {
