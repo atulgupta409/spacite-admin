@@ -209,6 +209,7 @@ function AddWorkSpace() {
   let footer_descript_value = draftToHtml(
     convertToRaw(editorState.getCurrentContent())
   );
+  console.log(footer_descript_value);
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setCoSpace({

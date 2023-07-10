@@ -9,6 +9,7 @@ import { EditorState, convertToRaw, ContentState } from "draft-js";
 import { IoIosAddCircle } from "react-icons/io";
 import Mainpanelnav from "../mainpanel-header/Mainpanelnav";
 import { AiFillDelete } from "react-icons/ai";
+import htmlToDraft from "html-to-draftjs";
 import {
   Table,
   Thead,
@@ -449,7 +450,12 @@ const EditWorkSpace = () => {
     convertToRaw(editorState.getCurrentContent())
   );
   useEffect(() => {
-    const contentState = ContentState.createFromText(description || "empty");
+    const blocksFromHtml = htmlToDraft(description);
+    const { contentBlocks, entityMap } = blocksFromHtml;
+    const contentState = ContentState.createFromBlockArray(
+      contentBlocks,
+      entityMap
+    );
     const initialEditorState = EditorState.createWithContent(contentState);
     setEditorState(initialEditorState);
   }, [workSpaces]);
