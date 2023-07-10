@@ -14,8 +14,7 @@ import draftToHtml from "draftjs-to-html";
 import Mainpanelnav from "../mainpanel-header/Mainpanelnav";
 import BASE_URL from "../../apiConfig";
 import { uploadFile } from "../../services/Services";
-import { htmlToText } from "html-to-text";
-
+import htmlToDraft from "html-to-draftjs";
 const initialValue = {
   name: "",
   description: "",
@@ -175,8 +174,11 @@ const EditBrand = () => {
   };
 
   useEffect(() => {
-    const contentState = ContentState.createFromText(
-      htmlToText(seo?.footer_description) || "empty"
+    const blocksFromHtml = htmlToDraft(seo?.footer_description || "empty");
+    const { contentBlocks, entityMap } = blocksFromHtml;
+    const contentState = ContentState.createFromBlockArray(
+      contentBlocks,
+      entityMap
     );
     const initialEditorState = EditorState.createWithContent(contentState);
     setEditorState(initialEditorState);

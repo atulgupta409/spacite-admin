@@ -12,6 +12,7 @@ import { getSeoDataById } from "./SeoService";
 import BASE_URL from "../../apiConfig";
 import Cookies from "js-cookie";
 import draftToHtml from "draftjs-to-html";
+import htmlToDraft from "html-to-draftjs";
 const initialValue = {
   page_title: "",
   title: "",
@@ -115,8 +116,11 @@ const EditSeo = () => {
     }
   };
   useEffect(() => {
-    const contentState = ContentState.createFromText(
-      footer_description || "Empty"
+    const blocksFromHtml = htmlToDraft(footer_description || "empty");
+    const { contentBlocks, entityMap } = blocksFromHtml;
+    const contentState = ContentState.createFromBlockArray(
+      contentBlocks,
+      entityMap
     );
     const initialEditorState = EditorState.createWithContent(contentState);
     setEditorState(initialEditorState);
@@ -138,7 +142,7 @@ const EditSeo = () => {
   if (loading) {
     return <Loader />;
   }
-  console.log(indexed, isChecked);
+
   return (
     <div className="mx-5 mt-3">
       <Mainpanelnav />
@@ -160,7 +164,7 @@ const EditSeo = () => {
                     onChange={(e) => handleInputChange(e)}
                     value={page_title}
                   />
-                  <label htmlFor="floatingInput">Main Heading*</label>
+                  <label htmlFor="floatingInput">Heading*</label>
                 </div>
               </div>
               <div className="col-md-6">
@@ -172,13 +176,13 @@ const EditSeo = () => {
                     className="form-control"
                     id="floatingInput"
                     type="text"
-                    placeholder="Title*"
+                    placeholder="Meta Title*"
                     name="title"
                     required
                     onChange={(e) => handleInputChange(e)}
                     value={title}
                   />
-                  <label htmlFor="floatingInput">Title*</label>
+                  <label htmlFor="floatingInput">Meta Title*</label>
                 </div>
               </div>
             </div>

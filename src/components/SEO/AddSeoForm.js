@@ -111,7 +111,6 @@ function AddSeoForm() {
     setIsChecked(checked);
     setIndexed(checked ? "index, follow" : "noindex, nofollow");
   };
-  console.log("Shivam");
 
   return (
     <div className="mx-5 mt-3">
@@ -141,13 +140,13 @@ function AddSeoForm() {
                     type="text"
                     className="form-control"
                     id="floatingInput"
-                    placeholder="Title*"
+                    placeholder="Meta Title*"
                     required
                     name="title"
                     onChange={handleInputChange}
                     value={seo.title}
                   />
-                  <label htmlFor="floatingInput">Title*</label>
+                  <label htmlFor="floatingInput">Meta Title*</label>
                 </div>
               </div>
             </div>
