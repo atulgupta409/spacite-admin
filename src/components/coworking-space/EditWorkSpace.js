@@ -450,7 +450,7 @@ const EditWorkSpace = () => {
     convertToRaw(editorState.getCurrentContent())
   );
   useEffect(() => {
-    const blocksFromHtml = htmlToDraft(description);
+    const blocksFromHtml = htmlToDraft(description || "empty");
     const { contentBlocks, entityMap } = blocksFromHtml;
     const contentState = ContentState.createFromBlockArray(
       contentBlocks,
