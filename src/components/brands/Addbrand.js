@@ -15,7 +15,9 @@ function Addbrand() {
   const toast = useToast();
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [progress, setProgress] = useState(0);
+  const [progressFeature, setProgressFeature] = useState(0);
   const [images, setImages] = useState([]);
+  const [featureImage, setFeatureImage] = useState([]);
   const [brand, setBrand] = useState({
     name: "",
     order: "",
@@ -38,6 +40,7 @@ function Addbrand() {
   const [cities, setCities] = useState([]);
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
   const [isUploaded, setIsUploaded] = useState(false);
+  const [isUploadedFeature, setIsUploadedFeature] = useState(false);
   const navigate = useNavigate();
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -54,6 +57,7 @@ function Addbrand() {
         name: brand.name,
         order: brand.order,
         image: images[0],
+        featureImage: featureImage[0],
         seo: {
           title: brand.title,
           description: brand.descriptionSeo,
@@ -140,7 +144,18 @@ function Addbrand() {
     const allimages = images;
     setImages(allimages.concat(data));
   };
-
+  const previewFeatureImage = (data) => {
+    const allimages = featureImage;
+    setFeatureImage(allimages.concat(data));
+  };
+  const handleUploadFeatureImage = async (files) => {
+    await uploadFile(
+      files,
+      setProgressFeature,
+      setIsUploadedFeature,
+      previewFeatureImage
+    );
+  };
   const handleUploadFile = async (files) => {
     await uploadFile(files, setProgress, setIsUploaded, previewFile);
   };
@@ -208,7 +223,18 @@ function Addbrand() {
                 </div>
               </div>
             </div>
-            <div className="row my-2">
+            <div className="row mt-3">
+              <h4 className="property_form_h4">Upload Feature Image</h4>
+              <ImageUpload
+                images={featureImage}
+                setImages={setFeatureImage}
+                progress={progressFeature}
+                setProgress={setProgressFeature}
+                uploadFile={handleUploadFeatureImage}
+                isUploaded={isUploadedFeature}
+              />
+            </div>
+            <div className="row mt-5">
               <h4 className="property_form_h4">SEO Details</h4>
               <div className="col-md-6">
                 <div className="form-floating border_field">

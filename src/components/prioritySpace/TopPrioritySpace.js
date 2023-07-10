@@ -151,51 +151,150 @@ function TopPrioritySpace() {
     setCurPage(nPage);
   };
   const [selectedWorkspaces, setSelectedWorkspaces] = useState([]);
-  const handleCheckboxChange = (workspace) => {
-    if (selectedWorkspaces.some((item) => item._id === workspace._id)) {
-      // Uncheck the checkbox and remove the workspace from the selected list
-      setSelectedWorkspaces(
-        selectedWorkspaces.filter((item) => item._id !== workspace._id)
-      );
-      handleSavePriority(workspace, 1000); // Set default priority of 1000
-    } else {
-      // Check the checkbox and add the workspace to the selected list with updated priority
-      const updatedWorkspaces = [
-        ...selectedWorkspaces,
-        { ...workspace, priority: selectedWorkspaces.length + 1 },
-      ];
-      updatedWorkspaces.forEach((item, index) => {
-        item.priority = index + 1;
-        handleSavePriority(item, item.priority);
-      });
-      setSelectedWorkspaces(updatedWorkspaces);
-    }
-  };
+  const [isChecked, setIsChecked] = useState(false);
+  // const handleCheckboxChange = (workspace) => {
+  //   if (selectedWorkspaces.some((item) => item._id === workspace._id)) {
+  //     // Uncheck the checkbox and remove the workspace from the selected list
+  //     setSelectedWorkspaces(
+  //       selectedWorkspaces.filter((item) => item._id !== workspace._id)
+  //     );
+  //     handleSavePriority(workspace, 1000); // Set default priority of 1000
+  //   } else {
+  //     // Check the checkbox and add the workspace to the selected list with updated priority
+  //     const updatedWorkspaces = [
+  //       ...selectedWorkspaces,
+  //       { ...workspace, priority: selectedWorkspaces.length + 1 },
+  //     ];
+  //     updatedWorkspaces.forEach((item, index) => {
+  //       item.priority = index + 1;
+  //       handleSavePriority(item, item.priority);
+  //     });
+  //     setSelectedWorkspaces(updatedWorkspaces);
+  //   }
+  // };
+  // const handleCheckboxChange = (workspace) => {
+  //   const isChecked = selectedWorkspaces.some(
+  //     (item) => item._id === workspace._id
+  //   );
+  //   console.log();
+  //   if (isChecked) {
+  //     // Uncheck the checkbox and remove the workspace from the selected list
+  //     setSelectedWorkspaces(
+  //       selectedWorkspaces.filter((item) => item._id !== workspace._id)
+  //     );
+  //     handleSavePriority(workspace, 1000); // Set default priority of 1000
+  //   } else {
+  //     // Check the checkbox and add the workspace to the selected list with updated priority
+  //     const updatedWorkspaces = [
+  //       ...selectedWorkspaces,
+  //       { ...workspace, priority: selectedWorkspaces.length + 1 },
+  //     ];
+  //     updatedWorkspaces.forEach((item, index) => {
+  //       item.priority = index + 1;
+  //       handleSavePriority(item, item.priority);
+  //     });
+  //     console.log(updatedWorkspaces);
+  //     setSelectedWorkspaces(updatedWorkspaces);
+  //   }
 
-  const handleSavePriority = (workspace, order) => {
-    axios
-      .put(
-        `${BASE_URL}/api/workSpace/workSpaces/changeOrder/${workspace._id}`,
+  //   setIsChecked(!isChecked);
+  // };
+  // const handleSavePriority = (workspace, order) => {
+  //   axios
+  //     .put(
+  //       `${BASE_URL}/api/workSpace/workSpaces/changeOrder/${workspace._id}`,
+  //       {
+  //         overall: {
+  //           order: order,
+  //           is_active: !isChecked,
+  //         },
+  //         location: 800,
+  //         micro_location: 900,
+  //       }
+  //     )
+  //     .then((response) => {
+  //       const updatedWorkspace = response.data;
+  //       setWorkSpaces(
+  //         workSpaces.map((item) =>
+  //           item._id === updatedWorkspace._id ? updatedWorkspace : item
+  //         )
+  //       );
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error updating workspace priority:", error);
+  //     });
+  // };
+  async function updatePriority(id, data) {
+    try {
+      const response = await fetch(
+        `${BASE_URL}/api/workSpace/workSpaces/changeOrder/${id}`,
         {
-          overall: {
-            order: order,
-            is_active: true,
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
           },
-          location: 800,
-          micro_location: 900,
+          body: JSON.stringify(data),
         }
-      )
-      .then((response) => {
-        const updatedWorkspace = response.data;
-        setWorkSpaces(
-          workSpaces.map((item) =>
-            item._id === updatedWorkspace._id ? updatedWorkspace : item
-          )
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to update priority for coworking space");
+      }
+
+      const result = await response.json();
+      return result;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+  const handleCheckboxChange = async (id, checked) => {
+    try {
+      let data;
+      if (checked) {
+        // Checkbox is checked, assign ascending order
+        data = {
+          priority: {
+            overall: {
+              is_active: true,
+              order: 1, // Start with order 1
+            },
+          },
+        };
+        // Update the order for other active spaces
+        const activeSpaces = workSpaces.filter(
+          (space) => space.priority.overall.is_active
         );
-      })
-      .catch((error) => {
-        console.error("Error updating workspace priority:", error);
-      });
+        activeSpaces.forEach((space, index) => {
+          if (space._id === id) {
+            // Skip the current space
+            return;
+          }
+          const updatedOrder = index + 2; // Increment order for other active spaces
+          data.priority[space._id] = {
+            is_active: true,
+            order: updatedOrder,
+          };
+        });
+      } else {
+        // Checkbox is unchecked, set default order
+        data = {
+          priority: {
+            overall: {
+              is_active: true,
+              order: 1000, // Default order
+            },
+          },
+        };
+      }
+
+      const result = await updatePriority(id, data);
+      console.log("Priority updated successfully:", result);
+      // Handle the successful response here
+    } catch (error) {
+      console.error("Failed to update priority:", error);
+      // Handle the error here
+    }
   };
 
   return (
@@ -259,12 +358,29 @@ function TopPrioritySpace() {
                         workSpaces.map((space) => (
                           <Tr key={space._id}>
                             <Td>
-                              <input
+                              {/* <input
                                 type="checkbox"
                                 checked={selectedWorkspaces.some(
                                   (item) => item._id === space._id
                                 )}
                                 onChange={() => handleCheckboxChange(space)}
+                              /> */}
+                              {/* <input
+                                type="checkbox"
+                                checked={selectedWorkspaces.some(
+                                  (item) => item._id === space._id
+                                )}
+                                onChange={() => handleCheckboxChange(space)}
+                              /> */}
+                              <input
+                                type="checkbox"
+                                checked={space.priority.overall.is_active}
+                                onChange={(e) =>
+                                  handleCheckboxChange(
+                                    space._id,
+                                    e.target.checked
+                                  )
+                                }
                               />
                             </Td>
                             <Td>{space?.name}</Td>
@@ -346,6 +462,23 @@ function TopPrioritySpace() {
                         <Th>MicroLocation</Th>
                       </Tr>
                     </Thead>
+                    <Tbody>
+                      {selectedWorkspaces.map((space) => (
+                        <Tr key={space._id}>
+                          <Td>{space.name}</Td>
+                          <Td className="city_heading">
+                            {space.location.city
+                              ? space.location.city.name
+                              : ""}
+                          </Td>
+                          <Td>
+                            {space.location.micro_location
+                              ? space.location.micro_location.name
+                              : ""}
+                          </Td>
+                        </Tr>
+                      ))}
+                    </Tbody>
                   </Table>
                 </div>
               </div>
