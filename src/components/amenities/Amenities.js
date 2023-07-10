@@ -205,7 +205,12 @@ function Amenities() {
         </div>
         <div className="table-box">
           <div className="table-top-box">Amenities Table</div>
-          <TableContainer marginTop="60px" variant="striped" color="teal">
+          <TableContainer
+            marginTop="60px"
+            variant="striped"
+            color="teal"
+            overflowX="hidden"
+          >
             <div className="row">
               <div className="col-md-3">
                 <input

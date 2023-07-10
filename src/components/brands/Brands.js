@@ -33,8 +33,10 @@ const Brands = () => {
     try {
       setLoading(true);
       const { data } = await axios.get(`${BASE_URL}/api/brand/brands`);
+      const newData = data.reverse();
+
+      setBrands(newData);
       setLoading(false);
-      setBrands(data);
     } catch (error) {
       console.log(error);
     }
@@ -83,7 +85,7 @@ const Brands = () => {
     setShowAll(searchTerm === "");
   }, [updateTable, searchTerm]);
 
-  const [selectItemNum, setSelectItemNum] = useState(5);
+  const [selectItemNum, setSelectItemNum] = useState(10);
   const itemsPerPageHandler = (e) => {
     setSelectItemNum(e.target.value);
   };
@@ -124,7 +126,12 @@ const Brands = () => {
         </Link>
         <div className="table-box">
           <div className="table-top-box">Brands Table</div>
-          <TableContainer marginTop="60px" variant="striped" color="teal">
+          <TableContainer
+            marginTop="60px"
+            variant="striped"
+            color="teal"
+            overflowX="hidden"
+          >
             <div className="row">
               <div className="col-md-3">
                 <input
@@ -237,10 +244,10 @@ const Brands = () => {
                   value={selectItemNum}
                   onChange={itemsPerPageHandler}
                 >
-                  <option value="5">5</option>
                   <option value="10">10</option>
-                  <option value="15">15</option>
-                  <option value="20">20</option>
+                  <option value="25">25</option>
+                  <option value="50">50</option>
+                  <option value="100">100</option>
                 </select>
               </div>
               <div style={{ width: "110px" }}>

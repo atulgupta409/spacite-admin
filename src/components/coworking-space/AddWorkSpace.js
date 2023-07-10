@@ -908,7 +908,7 @@ function AddWorkSpace() {
                                   <input
                                     type="text"
                                     style={{ color: "#000" }}
-                                    value={img.alt}
+                                    value={img.alt.split(".")[0]}
                                     onChange={(event) =>
                                       handleAltChange(event, index)
                                     }

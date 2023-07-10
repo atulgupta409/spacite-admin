@@ -14,6 +14,7 @@ import draftToHtml from "draftjs-to-html";
 import Mainpanelnav from "../mainpanel-header/Mainpanelnav";
 import BASE_URL from "../../apiConfig";
 import { uploadFile } from "../../services/Services";
+import { htmlToText } from "html-to-text";
 
 const initialValue = {
   name: "",
@@ -51,6 +52,7 @@ const EditBrand = () => {
     description,
     order,
     image,
+    featureImage,
     seo,
     cities,
     type,
@@ -63,6 +65,9 @@ const EditBrand = () => {
   const [progress, setProgress] = useState(0);
   const [images, setImages] = useState([]);
   const [isUploaded, setIsUploaded] = useState(false);
+  const [isUploadedFeature, setIsUploadedFeature] = useState(false);
+  const [progressFeature, setProgressFeature] = useState(0);
+  const [featureImages, setfeatureImages] = useState([]);
   const toast = useToast();
   const navigate = useNavigate();
   const { id } = useParams();
@@ -114,22 +119,23 @@ const EditBrand = () => {
         description,
         order,
         image: images[0],
+        featureImage: featureImages[0],
         seo: {
-          title: seo.title,
-          description: seo.description,
-          footer_title: seo.footer_title,
+          title: seo?.title,
+          description: seo?.description,
+          footer_title: seo?.footer_title,
           footer_description: footer_descrip,
           robots: indexed,
           index: isChecked,
-          keywords: seo.keywords,
-          url: seo.url,
+          keywords: seo?.keywords,
+          url: seo?.url,
           twitter: {
-            title: seo.twitter.title,
-            description: seo.twitter.description,
+            title: seo?.twitter?.title,
+            description: seo?.twitter?.description,
           },
           open_graph: {
-            title: seo.open_graph.title,
-            description: seo.open_graph.description,
+            title: seo?.open_graph?.title,
+            description: seo?.open_graph?.description,
           },
         },
         cities: selectedOptions,
@@ -170,7 +176,7 @@ const EditBrand = () => {
 
   useEffect(() => {
     const contentState = ContentState.createFromText(
-      seo.footer_description || "empty"
+      htmlToText(seo?.footer_description) || "empty"
     );
     const initialEditorState = EditorState.createWithContent(contentState);
     setEditorState(initialEditorState);
@@ -191,6 +197,18 @@ const EditBrand = () => {
 
   const handleUploadFile = async (files) => {
     await uploadFile(files, setProgress, setIsUploaded, previewFile);
+  };
+  const previewfeatureImages = (data) => {
+    const allimages = featureImages;
+    setfeatureImages(allimages.concat(data));
+  };
+  const handleUploadfeatureImages = async (files) => {
+    await uploadFile(
+      files,
+      setProgressFeature,
+      setIsUploadedFeature,
+      previewfeatureImages
+    );
   };
   const [indexed, setIndexed] = useState("noindex, nofollow");
   const [isChecked, setIsChecked] = useState(false);
@@ -259,7 +277,23 @@ const EditBrand = () => {
                 </div>
               </div>
             </div>
-            <div className="row pt-4">
+            <div className="row mt-3">
+              <h4 className="property_form_h4">Upload Feature Image</h4>
+              <ImageUpload
+                images={featureImages}
+                setImages={setfeatureImages}
+                progress={progressFeature}
+                setProgress={setProgressFeature}
+                uploadFile={handleUploadfeatureImages}
+                isUploaded={isUploadedFeature}
+              />
+              <img
+                src={featureImage}
+                style={{ width: "25%", marginTop: "30px" }}
+                alt="image"
+              />
+            </div>
+            <div className="row mt-4">
               <div className="col-md-6">
                 <h4 className="property_form_h4">SEO Details</h4>
                 <div className="form-floating border_field">
@@ -269,7 +303,7 @@ const EditBrand = () => {
                     id="floatingInput"
                     placeholder="Title"
                     name="seo"
-                    value={seo.title}
+                    value={seo?.title}
                     onChange={(event) =>
                       handleInputChangeObject(event, "seo", "title")
                     }
@@ -287,7 +321,7 @@ const EditBrand = () => {
                     id="floatingInput"
                     placeholder="Keywords"
                     name="seo"
-                    value={seo.keywords}
+                    value={seo?.keywords}
                     onChange={(event) =>
                       handleInputChangeObject(event, "seo", "keywords")
                     }
@@ -305,7 +339,7 @@ const EditBrand = () => {
                     id="floatingInput"
                     placeholder="Description"
                     name="seo"
-                    value={seo.description}
+                    value={seo?.description}
                     onChange={(event) =>
                       handleInputChangeObject(event, "seo", "description")
                     }
@@ -324,7 +358,7 @@ const EditBrand = () => {
                     id="floatingInputTwitter"
                     placeholder="Twitter title"
                     name="seo.twitter.title"
-                    value={seo.twitter.title}
+                    value={seo?.twitter?.title}
                     onChange={handleInputChange2}
                   />
                   <label htmlFor="floatingInputTwitter">Twitter Title</label>
@@ -340,7 +374,7 @@ const EditBrand = () => {
                     id="floatingInputTwitDesc"
                     name="seo.twitter.description"
                     placeholder="Twitter Description"
-                    value={seo.twitter.description}
+                    value={seo?.twitter?.description}
                     onChange={handleInputChange2}
                   />
                   <label htmlFor="floatingInputTwitDesc">
@@ -358,7 +392,7 @@ const EditBrand = () => {
                     id="floatingInputOgTitle"
                     placeholder="Open graph title"
                     name="seo.open_graph.title"
-                    value={seo.open_graph.title}
+                    value={seo?.open_graph?.title}
                     onChange={handleInputChange2}
                   />
                   <label htmlFor="floatingInputOgTitle">Open Graph Title</label>
@@ -374,7 +408,7 @@ const EditBrand = () => {
                     id="floatingInputOgDesc"
                     placeholder="Open Graph Description"
                     name="seo.open_graph.description"
-                    value={seo.open_graph.description}
+                    value={seo?.open_graph?.description}
                     onChange={handleInputChange2}
                   />
                   <label htmlFor="floatingInputOgDesc">
@@ -411,7 +445,7 @@ const EditBrand = () => {
                     className="form-control"
                     id="floatingInputTwitter"
                     placeholder="Footer Title"
-                    value={seo.footer_title}
+                    value={seo?.footer_title}
                     name="seo"
                     onChange={(event) =>
                       handleInputChangeObject(event, "seo", "footer_title")
