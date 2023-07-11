@@ -217,3 +217,7 @@ input[type="file"]::file-selector-button:active {
 .main-div {
   margin: 10px; /* Adjust the margin value to set the desired gap */
 }
+.editorClassName {
+  resize: both;
+  overflow: auto;
+}
