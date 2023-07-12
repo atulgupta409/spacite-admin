@@ -40,7 +40,9 @@ function Media() {
   const [progress, setProgress] = useState(0);
   const [images, setImages] = useState([]);
   const [imagedata, setImagedata] = useState([]);
-
+  const [searchedMedia, setSearchedMedia] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [showAll, setShowAll] = useState(true);
   const itemsPerPageHandler = (e) => {
     setSelectItemNum(e.target.value);
   };
@@ -48,8 +50,9 @@ function Media() {
   const recordsPerPage = selectItemNum;
   const lastIndex = curPage * recordsPerPage;
   const firstIndex = lastIndex - recordsPerPage;
-  const records = imagedata?.slice(firstIndex, lastIndex);
-  const nPage = Math.ceil(imagedata?.length / recordsPerPage);
+  const nPage = Math.ceil(
+    (showAll ? imagedata?.length : searchedMedia?.length) / recordsPerPage
+  );
 
   const toast = useToast();
 
@@ -106,7 +109,23 @@ function Media() {
       });
     }
   };
+  const handleSearch = () => {
+    const filterMedia = imagedata.filter((image) => {
+      const matchName =
+        image.real_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        searchTerm.toLowerCase().includes(image.real_name.toLowerCase());
 
+      return matchName;
+    });
+
+    setSearchedMedia(filterMedia);
+    setCurPage(1);
+  };
+
+  useEffect(() => {
+    handleSearch();
+    setShowAll(searchTerm === "");
+  }, [updateTable, searchTerm]);
   const getImages = async () => {
     try {
       setLoading(true);
@@ -153,13 +172,14 @@ function Media() {
     };
   }
 
-  if (records?.length === selectItemNum) {
-    var nextPage = () => {
-      if (curPage !== lastIndex) {
-        setCurPage(curPage + 1);
-      }
-    };
-  }
+  var nextPage = () => {
+    const lastPage = Math.ceil(
+      (showAll ? imagedata.length : searchedMedia.length) / selectItemNum
+    );
+    if (curPage < lastPage) {
+      setCurPage((prev) => prev + 1);
+    }
+  };
 
   const getFirstPage = () => {
     setCurPage(1);
@@ -223,8 +243,28 @@ function Media() {
         </div>
         <div className="table-box">
           <div className="table-top-box">Media Table</div>
-          <TableContainer marginTop="60px" variant="striped" color="teal">
-            <Table variant="simple">
+          <TableContainer
+            marginTop="60px"
+            variant="striped"
+            color="teal"
+            overflowX="hidden"
+          >
+            <div className="row">
+              <div className="col-md-3">
+                <div className="form-floating border_field">
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="floatingInput"
+                    placeholder="Search by name"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                  <label htmlFor="floatingInput">Search by name</label>
+                </div>
+              </div>
+            </div>
+            <Table variant="simple" marginTop="20px">
               <Thead>
                 <Tr>
                   <Th>Name</Th>
@@ -232,7 +272,7 @@ function Media() {
                   <Th>Delete</Th>
                 </Tr>
               </Thead>
-              <Tbody>
+              {/* <Tbody>
                 {loading ? (
                   <Tr>
                     <Td align="center" style={{ width: "50px" }}>
@@ -262,6 +302,67 @@ function Media() {
                     </Tr>
                   ))
                 )}
+              </Tbody> */}
+              <Tbody>
+                {loading ? (
+                  <Tr>
+                    <Td>
+                      <Spinner
+                        size="xl"
+                        w={20}
+                        h={20}
+                        alignSelf="center"
+                        style={{ position: "absolute", left: "482px" }}
+                      />
+                    </Td>
+                  </Tr>
+                ) : showAll ? (
+                  imagedata
+                    .slice(
+                      (curPage - 1) * selectItemNum,
+                      curPage * selectItemNum
+                    )
+                    .map((image) => (
+                      <Tr key={image._id} id={image._id}>
+                        <Td>
+                          {image.real_name.length > 16
+                            ? image.real_name.substring(0, 16) + ".."
+                            : image.real_name}
+                        </Td>
+                        <Td>{image.name}</Td>
+                        <Td>
+                          <Delete
+                            handleFunction={() => deleteImages(image._id)}
+                          />
+                        </Td>
+                      </Tr>
+                    ))
+                ) : searchedMedia.length > 0 ? (
+                  searchedMedia
+                    .slice(
+                      (curPage - 1) * selectItemNum,
+                      curPage * selectItemNum
+                    )
+                    .map((image) => (
+                      <Tr key={image._id} id={image._id}>
+                        <Td>
+                          {image.real_name.length > 16
+                            ? image.real_name.substring(0, 16) + ".."
+                            : image.real_name}
+                        </Td>
+                        <Td>{image.name}</Td>
+                        <Td>
+                          <Delete
+                            handleFunction={() => deleteImages(image._id)}
+                          />
+                        </Td>
+                      </Tr>
+                    ))
+                ) : (
+                  <Tr>
+                    <Td colSpan={8}>No matching results found.</Td>
+                  </Tr>
+                )}
               </Tbody>
             </Table>
           </TableContainer>
@@ -287,8 +388,17 @@ function Media() {
                 </select>
               </div>
               <div style={{ width: "110px" }}>
-                {firstIndex + 1} - {records?.length + firstIndex} of{" "}
-                {imagedata?.length}
+                {firstIndex + 1} -{" "}
+                {showAll
+                  ? imagedata.slice(
+                      (curPage - 1) * selectItemNum,
+                      curPage * selectItemNum
+                    ).length + firstIndex
+                  : searchedMedia?.slice(
+                      (curPage - 1) * selectItemNum,
+                      curPage * selectItemNum
+                    ).length + firstIndex}{" "}
+                of {showAll ? imagedata?.length : searchedMedia.length}
               </div>
 
               <div className="page-item">

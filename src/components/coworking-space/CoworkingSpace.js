@@ -129,7 +129,9 @@ function CoworkingSpace() {
   const recordsPerPage = selectItemNum;
   const lastIndex = curPage * recordsPerPage;
   const firstIndex = lastIndex - recordsPerPage;
-  const nPage = Math.ceil(searchedWorkSpaces?.length / selectItemNum);
+  const nPage = Math.ceil(
+    (showAll ? workSpaces.length : searchedWorkSpaces?.length) / selectItemNum
+  );
   if (firstIndex > 0) {
     var prePage = () => {
       if (curPage !== firstIndex) {
@@ -139,7 +141,9 @@ function CoworkingSpace() {
   }
 
   var nextPage = () => {
-    const lastPage = Math.ceil(workSpaces.length / selectItemNum);
+    const lastPage = Math.ceil(
+      (showAll ? workSpaces.length : searchedWorkSpaces.length) / selectItemNum
+    );
     if (curPage < lastPage) {
       setCurPage((prev) => prev + 1);
     }
@@ -437,7 +441,7 @@ function CoworkingSpace() {
                 <option value="100">100</option>
               </select>
             </div>
-            <div style={{ width: "110px" }}>
+            {/* <div style={{ width: "110px" }}>
               {firstIndex + 1} -{" "}
               {showAll
                 ? workSpaces.slice(
@@ -446,6 +450,19 @@ function CoworkingSpace() {
                   ).length + firstIndex
                 : searchedWorkSpaces?.length}{" "}
               of {workSpaces?.length}
+            </div> */}
+            <div style={{ width: "110px" }}>
+              {firstIndex + 1} -{" "}
+              {showAll
+                ? workSpaces.slice(
+                    (curPage - 1) * selectItemNum,
+                    curPage * selectItemNum
+                  ).length + firstIndex
+                : searchedWorkSpaces?.slice(
+                    (curPage - 1) * selectItemNum,
+                    curPage * selectItemNum
+                  ).length + firstIndex}{" "}
+              of {showAll ? workSpaces?.length : searchedWorkSpaces.length}
             </div>
 
             <div className="page-item">

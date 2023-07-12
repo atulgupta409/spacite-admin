@@ -50,10 +50,10 @@ function City() {
     city: "",
   });
   const [states, setStates] = useState([]);
-  const [countryId, setCountryId] = useState(null);
-  const [stateId, setStateId] = useState(null);
-  const [cityId, setCityId] = useState(null);
   const [microlocations, setMicrolocations] = useState([]);
+  const [searchedMicrolocation, setSearchedMicrolocation] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [showAll, setShowAll] = useState(true);
   const { country, setCountry } = GpState();
 
   const [selectItemNum, setSelectItemNum] = useState(10);
@@ -64,8 +64,10 @@ function City() {
   const recordsPerPage = selectItemNum;
   const lastIndex = curPage * recordsPerPage;
   const firstIndex = lastIndex - recordsPerPage;
-  const records = microlocations?.slice(firstIndex, lastIndex);
-  const nPage = Math.ceil(microlocations?.length / recordsPerPage);
+  const nPage = Math.ceil(
+    (showAll ? microlocations.length : searchedMicrolocation?.length) /
+      recordsPerPage
+  );
 
   const toast = useToast();
   const handleInputChange = (e) => {
@@ -130,6 +132,23 @@ function City() {
   const handleDeleteMicrolocations = async (id) => {
     await deleteMicrolocations(id, setUpdateTable, toast);
   };
+  const handleSearch = () => {
+    const filteredMicrolocation = microlocations.filter((micro) => {
+      const matchName =
+        micro.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        searchTerm.toLowerCase().includes(micro.name.toLowerCase());
+
+      return matchName;
+    });
+
+    setSearchedMicrolocation(filteredMicrolocation);
+    setCurPage(1);
+  };
+
+  useEffect(() => {
+    handleSearch();
+    setShowAll(searchTerm === "");
+  }, [updateTable, searchTerm]);
   useEffect(() => {
     handleFetchCountry();
     handleFetchMicrolocation();
@@ -143,13 +162,15 @@ function City() {
     };
   }
 
-  if (records?.length === selectItemNum) {
-    var nextPage = () => {
-      if (curPage !== lastIndex) {
-        setCurPage(curPage + 1);
-      }
-    };
-  }
+  var nextPage = () => {
+    const lastPage = Math.ceil(
+      (showAll ? microlocations.length : searchedMicrolocation.length) /
+        selectItemNum
+    );
+    if (curPage < lastPage) {
+      setCurPage((prev) => prev + 1);
+    }
+  };
 
   const getFirstPage = () => {
     setCurPage(1);
@@ -287,8 +308,28 @@ function City() {
         </div>
         <div className="table-box">
           <div className="table-top-box">Microlocation Table</div>
-          <TableContainer marginTop="60px" variant="striped" color="teal">
-            <Table variant="simple">
+          <TableContainer
+            marginTop="60px"
+            variant="striped"
+            color="teal"
+            overflowX="hidden"
+          >
+            <div className="row">
+              <div className="col-md-3">
+                <div className="form-floating border_field">
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="floatingInput"
+                    placeholder="Search by name"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                  <label htmlFor="floatingInput">Search by name</label>
+                </div>
+              </div>
+            </div>
+            <Table variant="simple" marginTop="20px">
               <Thead>
                 <Tr>
                   <Th>Name</Th>
@@ -311,22 +352,52 @@ function City() {
                       />
                     </Td>
                   </Tr>
+                ) : showAll ? (
+                  microlocations
+                    .slice(
+                      (curPage - 1) * selectItemNum,
+                      curPage * selectItemNum
+                    )
+                    .map((micro) => (
+                      <Tr key={micro._id} id={micro._id}>
+                        <Td>{micro.name}</Td>
+                        <Td>{micro.country?.name}</Td>
+                        <Td>{micro.state?.name}</Td>
+                        <Td>{micro.city?.name}</Td>
+                        <Td>
+                          <Delete
+                            handleFunction={() =>
+                              handleDeleteMicrolocations(micro._id)
+                            }
+                          />
+                        </Td>
+                      </Tr>
+                    ))
+                ) : searchedMicrolocation.length > 0 ? (
+                  searchedMicrolocation
+                    .slice(
+                      (curPage - 1) * selectItemNum,
+                      curPage * selectItemNum
+                    )
+                    .map((micro) => (
+                      <Tr key={micro._id} id={micro._id}>
+                        <Td>{micro.name}</Td>
+                        <Td>{micro.country?.name}</Td>
+                        <Td>{micro.state?.name}</Td>
+                        <Td>{micro.city?.name}</Td>
+                        <Td>
+                          <Delete
+                            handleFunction={() =>
+                              handleDeleteMicrolocations(micro._id)
+                            }
+                          />
+                        </Td>
+                      </Tr>
+                    ))
                 ) : (
-                  records?.map((micro) => (
-                    <Tr key={micro._id} id={micro._id}>
-                      <Td>{micro.name}</Td>
-                      <Td>{micro.country?.name}</Td>
-                      <Td>{micro.state?.name}</Td>
-                      <Td>{micro.city?.name}</Td>
-                      <Td>
-                        <Delete
-                          handleFunction={() =>
-                            handleDeleteMicrolocations(micro._id)
-                          }
-                        />
-                      </Td>
-                    </Tr>
-                  ))
+                  <Tr>
+                    <Td colSpan={8}>No matching results found.</Td>
+                  </Tr>
                 )}
               </Tbody>
             </Table>
@@ -353,8 +424,20 @@ function City() {
                 </select>
               </div>
               <div style={{ width: "110px" }}>
-                {firstIndex + 1} - {records?.length + firstIndex} of{" "}
-                {microlocations?.length}
+                {firstIndex + 1} -{" "}
+                {showAll
+                  ? microlocations.slice(
+                      (curPage - 1) * selectItemNum,
+                      curPage * selectItemNum
+                    ).length + firstIndex
+                  : searchedMicrolocation?.slice(
+                      (curPage - 1) * selectItemNum,
+                      curPage * selectItemNum
+                    ).length + firstIndex}{" "}
+                of{" "}
+                {showAll
+                  ? microlocations?.length
+                  : searchedMicrolocation.length}
               </div>
 
               <div className="page-item">

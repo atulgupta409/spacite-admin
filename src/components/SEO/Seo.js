@@ -93,7 +93,9 @@ function Seo() {
   const recordsPerPage = selectItemNum;
   const lastIndex = curPage * recordsPerPage;
   const firstIndex = lastIndex - recordsPerPage;
-  const nPage = Math.ceil(searchedSeos?.length / selectItemNum);
+  const nPage = Math.ceil(
+    (showAll ? seos.length : searchedSeos.length) / selectItemNum
+  );
   if (firstIndex > 0) {
     var prePage = () => {
       if (curPage !== firstIndex) {
@@ -103,7 +105,9 @@ function Seo() {
   }
 
   var nextPage = () => {
-    const lastPage = Math.ceil(seos.length / selectItemNum);
+    const lastPage = Math.ceil(
+      (showAll ? seos.length : searchedSeos.length) / selectItemNum
+    );
     if (curPage < lastPage) {
       setCurPage((prev) => prev + 1);
     }
@@ -132,15 +136,20 @@ function Seo() {
         >
           <div className="row">
             <div className="col-md-3">
-              <input
-                type="text"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="Search by Path"
-              />
+              <div className="form-floating border_field">
+                <input
+                  type="text"
+                  className="form-control"
+                  id="floatingInput"
+                  placeholder="Search by Path"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+                <label htmlFor="floatingInput">Search by Path</label>
+              </div>
             </div>
           </div>
-          <Table variant="simple">
+          <Table variant="simple" marginTop="20px">
             <Thead>
               <Tr>
                 <Th>Path</Th>
@@ -168,11 +177,15 @@ function Seo() {
                   .slice((curPage - 1) * selectItemNum, curPage * selectItemNum)
                   .map((seo) => (
                     <Tr key={seo._id} id={seo._id}>
-                      <Td>{seo.path}</Td>
-                      <Td>{seo.title}</Td>
+                      <Td>{seo?.path}</Td>
+                      <Td>
+                        {seo?.title.length > 30
+                          ? seo?.title.substring(0, 30) + "..."
+                          : seo.title}
+                      </Td>
                       <Td className="tableDescription">
-                        {seo.description.length > 200
-                          ? seo.description.substring(0, 200) + "..."
+                        {seo.description.length > 100
+                          ? seo.description.substring(0, 100) + "..."
                           : seo.description}
                       </Td>
                       <Td>
@@ -195,10 +208,14 @@ function Seo() {
                   .map((seo) => (
                     <Tr key={seo._id} id={seo._id}>
                       <Td>{seo.path}</Td>
-                      <Td>{seo.title}</Td>
+                      <Td>
+                        {seo?.title.length > 30
+                          ? seo?.title.substring(0, 30) + "..."
+                          : seo.title}
+                      </Td>
                       <Td className="tableDescription">
-                        {seo.description.length > 200
-                          ? seo.description.substring(0, 200) + "..."
+                        {seo.description.length > 100
+                          ? seo.description.substring(0, 100) + "..."
                           : seo.description}
                       </Td>
                       <Td>
@@ -243,8 +260,17 @@ function Seo() {
               </select>
             </div>
             <div style={{ width: "110px" }}>
-              {firstIndex + 1} - {searchedSeos?.length + firstIndex} of{" "}
-              {seos?.length}
+              {firstIndex + 1} -{" "}
+              {showAll
+                ? seos.slice(
+                    (curPage - 1) * selectItemNum,
+                    curPage * selectItemNum
+                  ).length + firstIndex
+                : searchedSeos?.slice(
+                    (curPage - 1) * selectItemNum,
+                    curPage * selectItemNum
+                  ).length + firstIndex}{" "}
+              of {showAll ? seos?.length : searchedSeos.length}
             </div>
 
             <div className="page-item">

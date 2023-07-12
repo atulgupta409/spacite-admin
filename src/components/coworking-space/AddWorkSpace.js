@@ -99,7 +99,7 @@ function AddWorkSpace() {
   const options = [];
 
   const startTime = new Date();
-  startTime.setHours(9, 0, 0);
+  startTime.setHours(1, 0, 0);
 
   const endTime = new Date();
   endTime.setHours(24, 0, 0);
