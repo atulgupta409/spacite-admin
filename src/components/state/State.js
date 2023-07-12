@@ -42,7 +42,9 @@ function State() {
     country: "",
     description: "",
   });
-
+  const [searchedState, setSearchedState] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [showAll, setShowAll] = useState(true);
   const { country, setCountry } = GpState();
 
   const [selectItemNum, setSelectItemNum] = useState(10);
@@ -54,8 +56,9 @@ function State() {
   const recordsPerPage = selectItemNum;
   const lastIndex = curPage * recordsPerPage;
   const firstIndex = lastIndex - recordsPerPage;
-  const records = states?.slice(firstIndex, lastIndex);
-  const nPage = Math.ceil(states?.length / recordsPerPage);
+  const nPage = Math.ceil(
+    (showAll ? states.length : searchedState?.length) / recordsPerPage
+  );
   const toast = useToast();
 
   const handleInputChange = (e) => {
@@ -98,6 +101,23 @@ function State() {
       });
     }
   };
+  const handleSearch = () => {
+    const filteredState = states.filter((state) => {
+      const matchName =
+        state.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        searchTerm.toLowerCase().includes(state.name.toLowerCase());
+
+      return matchName;
+    });
+
+    setSearchedState(filteredState);
+    setCurPage(1);
+  };
+
+  useEffect(() => {
+    handleSearch();
+    setShowAll(searchTerm === "");
+  }, [updateTable, searchTerm]);
   const handleFetchCountry = async () => {
     await getCountry(setCountry);
   };
@@ -120,13 +140,14 @@ function State() {
     };
   }
 
-  if (records?.length === selectItemNum) {
-    var nextPage = () => {
-      if (curPage !== lastIndex) {
-        setCurPage(curPage + 1);
-      }
-    };
-  }
+  var nextPage = () => {
+    const lastPage = Math.ceil(
+      (showAll ? states.length : searchedState.length) / selectItemNum
+    );
+    if (curPage < lastPage) {
+      setCurPage((prev) => prev + 1);
+    }
+  };
 
   const getFirstPage = () => {
     setCurPage(1);
@@ -214,8 +235,28 @@ function State() {
         </div>
         <div className="table-box">
           <div className="table-top-box">State Table</div>
-          <TableContainer marginTop="60px" variant="striped" color="teal">
-            <Table variant="simple">
+          <TableContainer
+            marginTop="60px"
+            variant="striped"
+            color="teal"
+            overflowX="hidden"
+          >
+            <div className="row">
+              <div className="col-md-3">
+                <div className="form-floating border_field">
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="floatingInput"
+                    placeholder="Search by name"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                  <label htmlFor="floatingInput">Search by name</label>
+                </div>
+              </div>
+            </div>
+            <Table variant="simple" marginTop="20px">
               <Thead>
                 <Tr>
                   <Th>Name</Th>
@@ -223,6 +264,7 @@ function State() {
                   <Th>Delete</Th>
                 </Tr>
               </Thead>
+
               <Tbody>
                 {loading ? (
                   <Tr>
@@ -236,18 +278,46 @@ function State() {
                       />
                     </Td>
                   </Tr>
+                ) : showAll ? (
+                  states
+                    .slice(
+                      (curPage - 1) * selectItemNum,
+                      curPage * selectItemNum
+                    )
+                    .map((state) => (
+                      <Tr key={state._id} id={state._id}>
+                        <Td>{state?.name}</Td>
+                        <Td>{state?.country?.name}</Td>
+
+                        <Td>
+                          <Delete
+                            handleFunction={() => handleDeleteStates(state._id)}
+                          />
+                        </Td>
+                      </Tr>
+                    ))
+                ) : searchedState.length > 0 ? (
+                  searchedState
+                    .slice(
+                      (curPage - 1) * selectItemNum,
+                      curPage * selectItemNum
+                    )
+                    .map((state) => (
+                      <Tr key={state._id} id={state._id}>
+                        <Td>{state?.name}</Td>
+                        <Td>{state?.country?.name}</Td>
+
+                        <Td>
+                          <Delete
+                            handleFunction={() => handleDeleteStates(state._id)}
+                          />
+                        </Td>
+                      </Tr>
+                    ))
                 ) : (
-                  records?.map((state) => (
-                    <Tr key={state._id} id={state._id}>
-                      <Td>{state.name}</Td>
-                      <Td>{state.country?.name}</Td>
-                      <Td>
-                        <Delete
-                          handleFunction={() => handleDeleteStates(state._id)}
-                        />
-                      </Td>
-                    </Tr>
-                  ))
+                  <Tr>
+                    <Td colSpan={8}>No matching results found.</Td>
+                  </Tr>
                 )}
               </Tbody>
             </Table>
@@ -274,10 +344,18 @@ function State() {
                 </select>
               </div>
               <div style={{ width: "110px" }}>
-                {firstIndex + 1} - {records?.length + firstIndex} of{" "}
-                {states?.length}
+                {firstIndex + 1} -{" "}
+                {showAll
+                  ? states.slice(
+                      (curPage - 1) * selectItemNum,
+                      curPage * selectItemNum
+                    ).length + firstIndex
+                  : searchedState?.slice(
+                      (curPage - 1) * selectItemNum,
+                      curPage * selectItemNum
+                    ).length + firstIndex}{" "}
+                of {showAll ? states?.length : searchedState.length}
               </div>
-
               <div className="page-item">
                 <BiSkipPrevious onClick={getFirstPage} />
               </div>

@@ -39,8 +39,10 @@ export const getMicroLocation = async (setMicrolocations, setLoading) => {
     const { data } = await axios.get(
       `${BASE_URL}/api/microlocation/microlocations`
     );
+    const newData = data.reverse();
+
+    setMicrolocations(newData);
     setLoading(false);
-    setMicrolocations(data);
   } catch (error) {
     console.log(error);
   }

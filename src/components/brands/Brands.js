@@ -93,7 +93,9 @@ const Brands = () => {
   const recordsPerPage = selectItemNum;
   const lastIndex = curPage * recordsPerPage;
   const firstIndex = lastIndex - recordsPerPage;
-  const nPage = Math.ceil(searchedBrands?.length / selectItemNum);
+  const nPage = Math.ceil(
+    (showAll ? brands.length : searchedBrands.length) / selectItemNum
+  );
   if (firstIndex > 0) {
     var prePage = () => {
       if (curPage !== firstIndex) {
@@ -103,7 +105,9 @@ const Brands = () => {
   }
 
   var nextPage = () => {
-    const lastPage = Math.ceil(brands.length / selectItemNum);
+    const lastPage = Math.ceil(
+      (showAll ? brands.length : searchedBrands.length) / selectItemNum
+    );
     if (curPage < lastPage) {
       setCurPage((prev) => prev + 1);
     }
@@ -134,20 +138,25 @@ const Brands = () => {
           >
             <div className="row">
               <div className="col-md-3">
-                <input
-                  type="text"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  placeholder="Search by name"
-                />
+                <div className="form-floating border_field">
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="floatingInput"
+                    placeholder="Search by name"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                  <label htmlFor="floatingInput">Search by name</label>
+                </div>
               </div>
             </div>
-            <Table variant="simple">
+            <Table variant="simple" marginTop="20px">
               <Thead>
                 <Tr>
                   <Th>Name</Th>
                   <Th>Description</Th>
-                  {/* <Th>Order</Th> */}
+
                   <Th>Edit</Th>
                   <Th>Delete</Th>
                 </Tr>
@@ -175,11 +184,11 @@ const Brands = () => {
                       <Tr key={brand._id} id={brand._id}>
                         <Td>{brand.name}</Td>
                         <Td className="tableDescription">
-                          {brand.description?.length > 200
-                            ? brand.description.substring(0, 200) + "..."
-                            : brand.description}
+                          {(brand.description?.length > 50
+                            ? brand.description.substring(0, 50) + "..."
+                            : brand.description) || "Empty"}
                         </Td>
-                        {/* <Td>{brand.order}</Td> */}
+
                         <Td>
                           <Link to={`/brands/edit-brand/${brand._id}`}>
                             <AiFillEdit
@@ -204,11 +213,11 @@ const Brands = () => {
                       <Tr key={brand._id} id={brand._id}>
                         <Td>{brand.name}</Td>
                         <Td className="tableDescription">
-                          {brand.description.length > 200
-                            ? brand.description.substring(0, 200) + "..."
-                            : brand.description}
+                          {(brand?.description?.length > 50
+                            ? brand?.description.substring(0, 50) + "..."
+                            : brand?.description) || "Empty"}
                         </Td>
-                        {/* <Td>{brand.order}</Td> */}
+
                         <Td>
                           <Link to={`/brands/edit-brand/${brand._id}`}>
                             <AiFillEdit
@@ -257,8 +266,11 @@ const Brands = () => {
                       (curPage - 1) * selectItemNum,
                       curPage * selectItemNum
                     ).length + firstIndex
-                  : searchedBrands?.length}{" "}
-                of {brands?.length}
+                  : searchedBrands?.slice(
+                      (curPage - 1) * selectItemNum,
+                      curPage * selectItemNum
+                    ).length + firstIndex}{" "}
+                of {showAll ? brands?.length : searchedBrands.length}
               </div>
 
               <div className="page-item">

@@ -47,6 +47,9 @@ function City() {
     state: "",
     description: "",
   });
+  const [searchedCity, setSearchedCity] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [showAll, setShowAll] = useState(true);
   const [states, setStates] = useState([]);
   const { country, setCountry } = GpState();
 
@@ -59,8 +62,9 @@ function City() {
   const recordsPerPage = selectItemNum;
   const lastIndex = curPage * recordsPerPage;
   const firstIndex = lastIndex - recordsPerPage;
-  const records = cities?.slice(firstIndex, lastIndex);
-  const nPage = Math.ceil(cities?.length / recordsPerPage);
+  const nPage = Math.ceil(
+    (showAll ? cities.length : searchedCity?.length) / recordsPerPage
+  );
 
   const toast = useToast();
   const handleInputChange = (e) => {
@@ -105,6 +109,23 @@ function City() {
       });
     }
   };
+  const handleSearch = () => {
+    const filteredCity = cities.filter((city) => {
+      const matchName =
+        city.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        searchTerm.toLowerCase().includes(city.name.toLowerCase());
+
+      return matchName;
+    });
+
+    setSearchedCity(filteredCity);
+    setCurPage(1);
+  };
+
+  useEffect(() => {
+    handleSearch();
+    setShowAll(searchTerm === "");
+  }, [updateTable, searchTerm]);
   const handleFetchStates = async (countryId) => {
     await getStateByCountry(countryId, setStates);
   };
@@ -130,14 +151,14 @@ function City() {
       }
     };
   }
-
-  if (records?.length === selectItemNum) {
-    var nextPage = () => {
-      if (curPage !== lastIndex) {
-        setCurPage(curPage + 1);
-      }
-    };
-  }
+  var nextPage = () => {
+    const lastPage = Math.ceil(
+      (showAll ? cities.length : searchedCity.length) / selectItemNum
+    );
+    if (curPage < lastPage) {
+      setCurPage((prev) => prev + 1);
+    }
+  };
 
   const getFirstPage = () => {
     setCurPage(1);
@@ -247,8 +268,28 @@ function City() {
         </div>
         <div className="table-box">
           <div className="table-top-box">City Table</div>
-          <TableContainer marginTop="60px" variant="striped" color="teal">
-            <Table variant="simple">
+          <TableContainer
+            marginTop="60px"
+            variant="striped"
+            color="teal"
+            overflowX="hidden"
+          >
+            <div className="row">
+              <div className="col-md-3">
+                <div className="form-floating border_field">
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="floatingInput"
+                    placeholder="Search by name"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                  <label htmlFor="floatingInput">Search by name</label>
+                </div>
+              </div>
+            </div>
+            <Table variant="simple" marginTop="20px">
               <Thead>
                 <Tr>
                   <Th>Name</Th>
@@ -270,19 +311,48 @@ function City() {
                       />
                     </Td>
                   </Tr>
+                ) : showAll ? (
+                  cities
+                    .slice(
+                      (curPage - 1) * selectItemNum,
+                      curPage * selectItemNum
+                    )
+                    .map((city) => (
+                      <Tr key={city._id} id={city._id}>
+                        <Td>{city.name}</Td>
+                        <Td>{city.country?.name}</Td>
+                        <Td>{city.state?.name}</Td>
+
+                        <Td>
+                          <Delete
+                            handleFunction={() => handleDeleteCity(city._id)}
+                          />
+                        </Td>
+                      </Tr>
+                    ))
+                ) : searchedCity.length > 0 ? (
+                  searchedCity
+                    .slice(
+                      (curPage - 1) * selectItemNum,
+                      curPage * selectItemNum
+                    )
+                    .map((city) => (
+                      <Tr key={city._id} id={city._id}>
+                        <Td>{city.name}</Td>
+                        <Td>{city.country?.name}</Td>
+                        <Td>{city.state?.name}</Td>
+
+                        <Td>
+                          <Delete
+                            handleFunction={() => handleDeleteCity(city._id)}
+                          />
+                        </Td>
+                      </Tr>
+                    ))
                 ) : (
-                  records?.map((city) => (
-                    <Tr key={city._id} id={city._id}>
-                      <Td>{city.name}</Td>
-                      <Td>{city.country?.name}</Td>
-                      <Td>{city.state?.name}</Td>
-                      <Td>
-                        <Delete
-                          handleFunction={() => handleDeleteCity(city._id)}
-                        />
-                      </Td>
-                    </Tr>
-                  ))
+                  <Tr>
+                    <Td colSpan={8}>No matching results found.</Td>
+                  </Tr>
                 )}
               </Tbody>
             </Table>
@@ -309,8 +379,17 @@ function City() {
                 </select>
               </div>
               <div style={{ width: "110px" }}>
-                {firstIndex + 1} - {records?.length + firstIndex} of{" "}
-                {cities?.length}
+                {firstIndex + 1} -{" "}
+                {showAll
+                  ? cities.slice(
+                      (curPage - 1) * selectItemNum,
+                      curPage * selectItemNum
+                    ).length + firstIndex
+                  : searchedCity?.slice(
+                      (curPage - 1) * selectItemNum,
+                      curPage * selectItemNum
+                    ).length + firstIndex}{" "}
+                of {showAll ? cities?.length : searchedCity.length}
               </div>
 
               <div className="page-item">

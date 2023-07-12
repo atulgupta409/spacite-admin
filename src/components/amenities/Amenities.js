@@ -39,7 +39,6 @@ function Amenities() {
   const [searchedAmenities, setSearchedAmenities] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [showAll, setShowAll] = useState(true);
-  const { user, token } = GpState();
   const toast = useToast();
 
   const handleSaveAmenities = async () => {
@@ -134,7 +133,9 @@ function Amenities() {
   const recordsPerPage = selectItemNum;
   const lastIndex = curPage * recordsPerPage;
   const firstIndex = lastIndex - recordsPerPage;
-  const nPage = Math.ceil(searchedAmenities?.length / selectItemNum);
+  const nPage = Math.ceil(
+    (showAll ? amenities.length : searchedAmenities.length) / selectItemNum
+  );
   if (firstIndex > 0) {
     var prePage = () => {
       if (curPage !== firstIndex) {
@@ -144,7 +145,9 @@ function Amenities() {
   }
 
   var nextPage = () => {
-    const lastPage = Math.ceil(amenities.length / selectItemNum);
+    const lastPage = Math.ceil(
+      (showAll ? amenities.length : searchedAmenities.length) / selectItemNum
+    );
     if (curPage < lastPage) {
       setCurPage((prev) => prev + 1);
     }
@@ -213,15 +216,20 @@ function Amenities() {
           >
             <div className="row">
               <div className="col-md-3">
-                <input
-                  type="text"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  placeholder="Search by Name"
-                />
+                <div className="form-floating border_field">
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="floatingInput"
+                    placeholder="Search by name"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                  <label htmlFor="floatingInput">Search by name</label>
+                </div>
               </div>
             </div>
-            <Table variant="simple">
+            <Table variant="simple" marginTop="20px">
               <Thead>
                 <Tr>
                   <Th>Name</Th>
@@ -314,8 +322,11 @@ function Amenities() {
                       (curPage - 1) * selectItemNum,
                       curPage * selectItemNum
                     ).length + firstIndex
-                  : searchedAmenities?.length}{" "}
-                of {amenities?.length}
+                  : searchedAmenities?.slice(
+                      (curPage - 1) * selectItemNum,
+                      curPage * selectItemNum
+                    ).length + firstIndex}{" "}
+                of {showAll ? amenities?.length : searchedAmenities.length}
               </div>
 
               <div className="page-item">
