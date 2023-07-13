@@ -152,15 +152,17 @@ function TopPrioritySpace() {
   };
   const [selectedWorkspaces, setSelectedWorkspaces] = useState([]);
   const [isChecked, setIsChecked] = useState(false);
+
   // const handleCheckboxChange = (workspace) => {
-  //   if (selectedWorkspaces.some((item) => item._id === workspace._id)) {
-  //     // Uncheck the checkbox and remove the workspace from the selected list
+  //   const isChecked = selectedWorkspaces.some(
+  //     (item) => item._id === workspace._id
+  //   );
+  //   if (isChecked) {
   //     setSelectedWorkspaces(
   //       selectedWorkspaces.filter((item) => item._id !== workspace._id)
   //     );
-  //     handleSavePriority(workspace, 1000); // Set default priority of 1000
+  //     handleSavePriority(workspace, 1000);
   //   } else {
-  //     // Check the checkbox and add the workspace to the selected list with updated priority
   //     const updatedWorkspaces = [
   //       ...selectedWorkspaces,
   //       { ...workspace, priority: selectedWorkspaces.length + 1 },
@@ -169,58 +171,53 @@ function TopPrioritySpace() {
   //       item.priority = index + 1;
   //       handleSavePriority(item, item.priority);
   //     });
+  //     console.log(updatedWorkspaces);
   //     setSelectedWorkspaces(updatedWorkspaces);
   //   }
+
+  //   setIsChecked(!isChecked);
   // };
-  const handleCheckboxChange = (workspace) => {
-    const isChecked = selectedWorkspaces.some(
-      (item) => item._id === workspace._id
-    );
-    if (isChecked) {
-      setSelectedWorkspaces(
-        selectedWorkspaces.filter((item) => item._id !== workspace._id)
+  // const handleSavePriority = (workspace, order) => {
+  //   axios
+  //     .put(`${BASE_URL}/api/workSpace/workSpaces/change-order/priority`, {
+  //       data: {
+  //         is_active: true,
+  //         order: 24,
+  //         city: "5e3e77de936bc06de1f9a5e2",
+  //         name: "",
+  //       },
+  //       id: "641172a36700335e98ca0f9b",
+  //       type: "location",
+  //     })
+  //     .then((response) => {
+  //       const updatedWorkspace = response.data;
+  //       setWorkSpaces(
+  //         workSpaces.map((item) =>
+  //           item._id === updatedWorkspace._id ? updatedWorkspace : item
+  //         )
+  //       );
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error updating workspace priority:", error);
+  //     });
+  // };
+  const handleCheckboxChange = async (event, coworkingSpace) => {
+    const { checked } = event.target;
+
+    try {
+      const updatedSpace = {
+        order: checked ? workSpaces.length + 1 : 1000,
+        is_active: checked,
+      };
+
+      await axios.put(
+        `${BASE_URL}/api/coworkingspaces/${coworkingSpace._id}`,
+        updatedSpace
       );
-      handleSavePriority(workspace, 1000);
-    } else {
-      const updatedWorkspaces = [
-        ...selectedWorkspaces,
-        { ...workspace, priority: selectedWorkspaces.length + 1 },
-      ];
-      updatedWorkspaces.forEach((item, index) => {
-        item.priority = index + 1;
-        handleSavePriority(item, item.priority);
-      });
-      console.log(updatedWorkspaces);
-      setSelectedWorkspaces(updatedWorkspaces);
+    } catch (error) {
+      console.error("An error occurred:", error);
     }
-
-    setIsChecked(!isChecked);
   };
-  const handleSavePriority = (workspace, order) => {
-    axios
-      .put(`${BASE_URL}/api/workSpace/workSpaces/change-order/priority`, {
-        data: {
-          is_active: true,
-          order: 24,
-          city: "5e3e77de936bc06de1f9a5e2",
-          name: "",
-        },
-        id: "641172a36700335e98ca0f9b",
-        type: "location",
-      })
-      .then((response) => {
-        const updatedWorkspace = response.data;
-        setWorkSpaces(
-          workSpaces.map((item) =>
-            item._id === updatedWorkspace._id ? updatedWorkspace : item
-          )
-        );
-      })
-      .catch((error) => {
-        console.error("Error updating workspace priority:", error);
-      });
-  };
-
   return (
     <div className="mx-5 mt-3">
       <Mainpanelnav />
@@ -282,13 +279,6 @@ function TopPrioritySpace() {
                         workSpaces.map((space) => (
                           <Tr key={space._id}>
                             <Td>
-                              <input
-                                type="checkbox"
-                                checked={selectedWorkspaces.some(
-                                  (item) => item._id === space._id
-                                )}
-                                onChange={() => handleCheckboxChange(space)}
-                              />
                               {/* <input
                                 type="checkbox"
                                 checked={selectedWorkspaces.some(
@@ -296,6 +286,13 @@ function TopPrioritySpace() {
                                 )}
                                 onChange={() => handleCheckboxChange(space)}
                               /> */}
+                              <input
+                                type="checkbox"
+                                checked={space.priority.is_active}
+                                onChange={(event) =>
+                                  handleCheckboxChange(event, space)
+                                }
+                              />
                             </Td>
                             <Td>{space?.name}</Td>
                             <Td className="city_heading">

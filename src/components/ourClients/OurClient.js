@@ -30,6 +30,8 @@ import "./OurClient.css";
 import { GrFormPrevious, GrFormNext } from "react-icons/gr";
 import { BiSkipNext, BiSkipPrevious } from "react-icons/bi";
 import BASE_URL from "../../apiConfig";
+import ImageUpload from "../../ImageUpload";
+import { uploadFile } from "../../services/Services";
 function OurClient() {
   const [ourClient, setOurClient] = useState([]);
   const [ourClientField, setOurClientField] = useState({
@@ -41,6 +43,9 @@ function OurClient() {
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [selectItemNum, setSelectItemNum] = useState(10);
+  const [isUploaded, setIsUploaded] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [images, setImages] = useState([]);
   const itemsPerPageHandler = (e) => {
     setSelectItemNum(e.target.value);
   };
@@ -58,8 +63,16 @@ function OurClient() {
       [name]: value,
     });
   };
+  const previewFile = (data) => {
+    const allimages = images;
+    setImages(allimages.concat(data));
+  };
+
+  const handleUploadFile = async (files) => {
+    await uploadFile(files, setProgress, setIsUploaded, previewFile);
+  };
   const handleSaveOurClient = async () => {
-    if ((!ourClientField.name, !ourClientField.logo_url)) {
+    if (!ourClientField.name) {
       toast({
         title: "Please Fill all The Fields!",
         status: "warning",
@@ -73,7 +86,7 @@ function OurClient() {
     try {
       const { data } = await axios.post(`${BASE_URL}/api/ourClient/client`, {
         name: ourClientField.name,
-        logo_url: ourClientField.logo_url,
+        logo_url: images[0],
       });
       setOurClientField({
         name: "",
@@ -164,6 +177,7 @@ function OurClient() {
     setCurPage(nPage);
   };
 
+  console.log(images);
   return (
     <>
       <div className="mx-5 mt-3">
@@ -189,13 +203,13 @@ function OurClient() {
                   name="name"
                   className="property-input"
                 />
-                <input
-                  type="text"
-                  value={ourClientField.logo_url}
-                  onChange={handleInputChange}
-                  placeholder="Logo Url"
-                  name="logo_url"
-                  className="property-input"
+                <ImageUpload
+                  images={images}
+                  setImages={setImages}
+                  progress={progress}
+                  setProgress={setProgress}
+                  uploadFile={handleUploadFile}
+                  isUploaded={isUploaded}
                 />
               </ModalBody>
               <ModalFooter>
