@@ -177,7 +177,6 @@ function OurClient() {
     setCurPage(nPage);
   };
 
-  console.log(images);
   return (
     <>
       <div className="mx-5 mt-3">

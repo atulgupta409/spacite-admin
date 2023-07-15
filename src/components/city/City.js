@@ -35,6 +35,7 @@ import {
   getStateByCountry,
   getCountry,
 } from "../coworking-space/WorkSpaceService";
+import EditCity from "./EditCity";
 
 function City() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -295,6 +296,8 @@ function City() {
                   <Th>Name</Th>
                   <Th>Country</Th>
                   <Th>State</Th>
+                  <Th>Status</Th>
+                  <Th>Edit</Th>
                   <Th>Delete</Th>
                 </Tr>
               </Thead>
@@ -322,7 +325,14 @@ function City() {
                         <Td>{city.name}</Td>
                         <Td>{city.country?.name}</Td>
                         <Td>{city.state?.name}</Td>
-
+                        <Td>{city.active === true ? "Active" : "Inactive"}</Td>
+                        <Td>
+                          <EditCity
+                            id={city._id}
+                            cities={city}
+                            setUpdateTable={setUpdateTable}
+                          />
+                        </Td>
                         <Td>
                           <Delete
                             handleFunction={() => handleDeleteCity(city._id)}
@@ -341,7 +351,14 @@ function City() {
                         <Td>{city.name}</Td>
                         <Td>{city.country?.name}</Td>
                         <Td>{city.state?.name}</Td>
-
+                        <Td>{city.active === true ? "Active" : "Inactive"}</Td>
+                        <Td>
+                          <EditCity
+                            id={city._id}
+                            cities={city}
+                            setUpdateTable={setUpdateTable}
+                          />
+                        </Td>
                         <Td>
                           <Delete
                             handleFunction={() => handleDeleteCity(city._id)}
