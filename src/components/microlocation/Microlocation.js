@@ -37,6 +37,7 @@ import {
   deleteMicrolocations,
 } from "./MicrolocationService";
 import Select from "react-select";
+import EditMicrolocation from "./EditMicrolocation";
 function City() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [loading, setLoading] = useState(false);
@@ -336,6 +337,8 @@ function City() {
                   <Th>Country</Th>
                   <Th>State</Th>
                   <Th>City</Th>
+                  <Th>Status</Th>
+                  <Th>Edit</Th>
                   <Th>Delete</Th>
                 </Tr>
               </Thead>
@@ -364,6 +367,14 @@ function City() {
                         <Td>{micro.country?.name}</Td>
                         <Td>{micro.state?.name}</Td>
                         <Td>{micro.city?.name}</Td>
+                        <Td>{micro.active === true ? "Active" : "Inactive"}</Td>
+                        <Td>
+                          <EditMicrolocation
+                            id={micro._id}
+                            microlocations={micro}
+                            setUpdateTable={setUpdateTable}
+                          />
+                        </Td>
                         <Td>
                           <Delete
                             handleFunction={() =>
@@ -385,6 +396,15 @@ function City() {
                         <Td>{micro.country?.name}</Td>
                         <Td>{micro.state?.name}</Td>
                         <Td>{micro.city?.name}</Td>
+                        <Td>{micro.active === true ? "Active" : "Inactive"}</Td>
+                        <Td>
+                          <EditMicrolocation
+                            id={micro._id}
+                            microlocations={micro}
+                            setUpdateTable={setUpdateTable}
+                            // handleFunction={() => handleEditCountry(countries._id)}
+                          />
+                        </Td>
                         <Td>
                           <Delete
                             handleFunction={() =>

@@ -24,6 +24,7 @@ import EditWorkSpace from "./components/coworking-space/EditWorkSpace";
 import ImageUpload from "./ImageUpload";
 import OurClient from "./components/ourClients/OurClient";
 import TopPrioritySpace from "./components/prioritySpace/TopPrioritySpace";
+import EditMicrolocation from "./components/microlocation/EditMicrolocation";
 function App() {
   const { isLogin } = GpState();
   return (

@@ -153,60 +153,15 @@ function TopPrioritySpace() {
   const [selectedWorkspaces, setSelectedWorkspaces] = useState([]);
   const [isChecked, setIsChecked] = useState(false);
 
-  // const handleCheckboxChange = (workspace) => {
-  //   const isChecked = selectedWorkspaces.some(
-  //     (item) => item._id === workspace._id
-  //   );
-  //   if (isChecked) {
-  //     setSelectedWorkspaces(
-  //       selectedWorkspaces.filter((item) => item._id !== workspace._id)
-  //     );
-  //     handleSavePriority(workspace, 1000);
-  //   } else {
-  //     const updatedWorkspaces = [
-  //       ...selectedWorkspaces,
-  //       { ...workspace, priority: selectedWorkspaces.length + 1 },
-  //     ];
-  //     updatedWorkspaces.forEach((item, index) => {
-  //       item.priority = index + 1;
-  //       handleSavePriority(item, item.priority);
-  //     });
-  //     console.log(updatedWorkspaces);
-  //     setSelectedWorkspaces(updatedWorkspaces);
-  //   }
-
-  //   setIsChecked(!isChecked);
-  // };
-  // const handleSavePriority = (workspace, order) => {
-  //   axios
-  //     .put(`${BASE_URL}/api/workSpace/workSpaces/change-order/priority`, {
-  //       data: {
-  //         is_active: true,
-  //         order: 24,
-  //         city: "5e3e77de936bc06de1f9a5e2",
-  //         name: "",
-  //       },
-  //       id: "641172a36700335e98ca0f9b",
-  //       type: "location",
-  //     })
-  //     .then((response) => {
-  //       const updatedWorkspace = response.data;
-  //       setWorkSpaces(
-  //         workSpaces.map((item) =>
-  //           item._id === updatedWorkspace._id ? updatedWorkspace : item
-  //         )
-  //       );
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error updating workspace priority:", error);
-  //     });
-  // };
   const handleCheckboxChange = async (event, coworkingSpace) => {
     const { checked } = event.target;
 
     try {
       const updatedSpace = {
-        order: checked ? workSpaces.length + 1 : 1000,
+        order: checked
+          ? workSpaces.filter((space) => space.priority.is_active == true)
+              .length + 1
+          : 1000,
         is_active: checked,
       };
 
@@ -214,6 +169,8 @@ function TopPrioritySpace() {
         `${BASE_URL}/api/coworkingspaces/${coworkingSpace._id}`,
         updatedSpace
       );
+      coworkingSpace.priority.is_active = checked;
+      setWorkSpaces([...workSpaces]);
     } catch (error) {
       console.error("An error occurred:", error);
     }
