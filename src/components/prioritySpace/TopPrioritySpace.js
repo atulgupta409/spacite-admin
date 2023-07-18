@@ -20,8 +20,12 @@ import { Link } from "react-router-dom";
 import { getMicrolocationByCity } from "../coworking-space/WorkSpaceService";
 import { getCity } from "../brands/BrandService";
 import Select from "react-select";
-import { getWorkSpaceDataByMicrolocation } from "./TopPriorityService";
+import {
+  getWorkSpaceDataByMicrolocation,
+  getWorkSpaceDataByMicrolocationWithPriority,
+} from "./TopPriorityService";
 import BASE_URL from "../../apiConfig";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 function TopPrioritySpace() {
   const [loading, setLoading] = useState(false);
   const [workSpaces, setWorkSpaces] = useState([]);
@@ -37,6 +41,8 @@ function TopPrioritySpace() {
   const toast = useToast();
   const [selectedMicroLocation, setSelectedMicroLocation] = useState(null);
   const [selectedCity, setSelectedCity] = useState(null);
+  const [priorityWorkSpaces, setPriorityWorkSpaces] = useState([]);
+  const [loadingTable, setLoadingTable] = useState(false);
   const handleFetchCity = async () => {
     await getCity(setCities);
   };
@@ -45,6 +51,13 @@ function TopPrioritySpace() {
   };
   const handleFetchWorkSpaceData = async (name) => {
     await getWorkSpaceDataByMicrolocation(setLoading, setWorkSpaces, name);
+  };
+  const handleFetchPriorityWorkspaces = async (name) => {
+    await getWorkSpaceDataByMicrolocationWithPriority(
+      setLoadingTable,
+      setPriorityWorkSpaces,
+      name
+    );
   };
   const onChangeOptionHandler = (selectedOption, dropdownIdentifier) => {
     switch (dropdownIdentifier) {
@@ -56,6 +69,9 @@ function TopPrioritySpace() {
       case "microLocation":
         setSelectedMicroLocation(selectedOption);
         handleFetchWorkSpaceData(selectedOption ? selectedOption.label : "");
+        handleFetchPriorityWorkspaces(
+          selectedOption ? selectedOption.label : ""
+        );
         break;
       default:
         break;
@@ -150,12 +166,10 @@ function TopPrioritySpace() {
   const getLastPage = () => {
     setCurPage(nPage);
   };
-  const [selectedWorkspaces, setSelectedWorkspaces] = useState([]);
-  const [isChecked, setIsChecked] = useState(false);
 
   const handleCheckboxChange = async (event, coworkingSpace) => {
     const { checked } = event.target;
-
+    handleFetchPriorityWorkspaces(selectedMicroLocation?.label);
     try {
       const updatedSpace = {
         order: checked
@@ -163,6 +177,7 @@ function TopPrioritySpace() {
               .length + 1
           : 1000,
         is_active: checked,
+        microlocationId: selectedMicroLocation?.value,
       };
 
       await axios.put(
@@ -173,6 +188,47 @@ function TopPrioritySpace() {
       setWorkSpaces([...workSpaces]);
     } catch (error) {
       console.error("An error occurred:", error);
+    }
+  };
+  const onDragEnd = async (result) => {
+    const { destination, source } = result;
+
+    if (!destination) return; // Dropped outside the list
+    if (destination.index === source.index) return; // Dropped in the same position
+
+    const reorderedSpaces = Array.from(priorityWorkSpaces);
+    const [movedSpace] = reorderedSpaces.splice(source.index, 1);
+    reorderedSpaces.splice(destination.index, 0, movedSpace);
+
+    // Create the payload with updated priority order for each coworking space
+    const updatedOrderPayload = reorderedSpaces.map((space, index) => ({
+      _id: space._id,
+      priority: {
+        order: index + 1,
+      },
+    }));
+
+    setPriorityWorkSpaces(reorderedSpaces);
+
+    // Send API request to update the priority order on drag and drop
+    try {
+      const response = await fetch(
+        `${BASE_URL}/api/updateCoworkingSpacesPriority`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updatedOrderPayload),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to update priority order.");
+      }
+    } catch (error) {
+      console.error("Error updating priority order:", error);
+      // Handle error (e.g., show an error message to the user)
     }
   };
   return (
@@ -326,27 +382,55 @@ function TopPrioritySpace() {
                     <Thead>
                       <Tr>
                         <Th>Name</Th>
-                        <Th>City</Th>
+
                         <Th>MicroLocation</Th>
                       </Tr>
                     </Thead>
-                    <Tbody>
-                      {selectedWorkspaces.map((space) => (
-                        <Tr key={space._id}>
-                          <Td>{space.name}</Td>
-                          <Td className="city_heading">
-                            {space.location.city
-                              ? space.location.city.name
-                              : ""}
-                          </Td>
-                          <Td>
-                            {space.location.micro_location
-                              ? space.location.micro_location.name
-                              : ""}
-                          </Td>
-                        </Tr>
-                      ))}
-                    </Tbody>
+
+                    <DragDropContext onDragEnd={onDragEnd}>
+                      <Droppable droppableId="coworkingSpaces">
+                        {(provided) => (
+                          <Tbody
+                            ref={provided.innerRef}
+                            {...provided.droppableProps}
+                          >
+                            {loadingTable ? (
+                              <Tr>
+                                <Td colSpan={3} textAlign="center">
+                                  <Spinner size="lg" />
+                                </Td>
+                              </Tr>
+                            ) : (
+                              priorityWorkSpaces.map((space, index) => (
+                                <Draggable
+                                  key={space._id}
+                                  draggableId={space._id}
+                                  index={index}
+                                >
+                                  {(provided) => (
+                                    <Tr
+                                      ref={provided.innerRef}
+                                      {...provided.draggableProps}
+                                    >
+                                      <Td {...provided.dragHandleProps}>
+                                        {space?.name}
+                                      </Td>
+
+                                      <Td>
+                                        {space.location.micro_location
+                                          ? space.location.micro_location.name
+                                          : ""}
+                                      </Td>
+                                    </Tr>
+                                  )}
+                                </Draggable>
+                              ))
+                            )}
+                            {provided.placeholder}
+                          </Tbody>
+                        )}
+                      </Droppable>
+                    </DragDropContext>
                   </Table>
                 </div>
               </div>
