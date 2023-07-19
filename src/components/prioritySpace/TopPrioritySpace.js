@@ -48,6 +48,7 @@ function TopPrioritySpace() {
   };
   const handleFetchWorkSpaceData = async (name) => {
     await getWorkSpaceDataByMicrolocation(setLoading, setWorkSpaces, name);
+    setSearchTerm("");
   };
   const handleFetchPriorityWorkspaces = async (name) => {
     await getWorkSpaceDataByMicrolocationWithPriority(
@@ -150,7 +151,7 @@ function TopPrioritySpace() {
       };
 
       await axios.put(
-        `${BASE_URL}/api/coworkingspaces/${coworkingSpace._id}`,
+        `${BASE_URL}/api/workSpace/coworkingspaces/${coworkingSpace._id}`,
         updatedSpace
       );
       coworkingSpace.priority.is_active = checked;
@@ -162,14 +163,13 @@ function TopPrioritySpace() {
   const onDragEnd = async (result) => {
     const { destination, source } = result;
 
-    if (!destination) return; // Dropped outside the list
-    if (destination.index === source.index) return; // Dropped in the same position
+    if (!destination) return;
+    if (destination.index === source.index) return;
 
     const reorderedSpaces = Array.from(priorityWorkSpaces);
     const [movedSpace] = reorderedSpaces.splice(source.index, 1);
     reorderedSpaces.splice(destination.index, 0, movedSpace);
 
-    // Create the payload with updated priority order for each coworking space
     const updatedOrderPayload = reorderedSpaces.map((space, index) => ({
       _id: space._id,
       priority: {
@@ -178,18 +178,10 @@ function TopPrioritySpace() {
     }));
 
     setPriorityWorkSpaces(reorderedSpaces);
-
-    // Send API request to update the priority order on drag and drop
     try {
-      const response = await fetch(
-        `${BASE_URL}/api/updateCoworkingSpacesPriority`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(updatedOrderPayload),
-        }
+      const response = await axios.put(
+        `${BASE_URL}/api/workSpace/update-priority`,
+        updatedOrderPayload
       );
 
       if (!response.ok) {
@@ -197,7 +189,6 @@ function TopPrioritySpace() {
       }
     } catch (error) {
       console.error("Error updating priority order:", error);
-      // Handle error (e.g., show an error message to the user)
     }
   };
   return (
@@ -205,36 +196,34 @@ function TopPrioritySpace() {
       <Mainpanelnav />
       <div className="table-box">
         <div className="table-top-box">Priority Coworking Spaces Table</div>
-        <TableContainer style={{ overflowX: "hidden" }}>
-          <div className="row my-5">
-            <div className="col-md-3">
+        <div className="row my-5">
+          <div className="col-md-3">
+            <Select
+              placeholder="City*"
+              value={selectedCity}
+              options={cityOptions}
+              onChange={(selectedOption) =>
+                onChangeOptionHandler(selectedOption, "city")
+              }
+              isSearchable
+              required
+            />
+          </div>
+          <div className="col-md-3">
+            <div className="drop_down_box">
               <Select
-                placeholder="City*"
-                value={selectedCity}
-                options={cityOptions}
+                placeholder="Microlocation*"
+                value={selectedMicroLocation}
+                options={microLocationOptions}
                 onChange={(selectedOption) =>
-                  onChangeOptionHandler(selectedOption, "city")
+                  onChangeOptionHandler(selectedOption, "microLocation")
                 }
                 isSearchable
                 required
               />
             </div>
-            <div className="col-md-3">
-              <div className="drop_down_box">
-                <Select
-                  placeholder="Microlocation*"
-                  value={selectedMicroLocation}
-                  options={microLocationOptions}
-                  onChange={(selectedOption) =>
-                    onChangeOptionHandler(selectedOption, "microLocation")
-                  }
-                  isSearchable
-                  required
-                />
-              </div>
-            </div>
           </div>
-        </TableContainer>
+        </div>
       </div>
       <div className="table_container">
         <div className="table-box top_table_box1">

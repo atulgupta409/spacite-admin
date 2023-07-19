@@ -2,18 +2,18 @@ import axios from "axios";
 import BASE_URL from "../../apiConfig";
 
 export const getMicrolocationWithPriority = async (
-  setLoadingMicro,
+  setLoading,
   setPriorityMicrolocation,
   cityId
 ) => {
   try {
-    setLoadingMicro(true);
+    setLoading(true);
     const { data } = await axios.get(
       `${BASE_URL}/api/microlocation/priority/${cityId}`
     );
 
     setPriorityMicrolocation(data);
-    setLoadingMicro(false);
+    setLoading(false);
   } catch (error) {
     console.log(error);
   }
