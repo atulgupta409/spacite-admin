@@ -133,6 +133,12 @@ function Sidebar() {
               </NavLink>
             </li>
             <li className="nav-item">
+              <NavLink to="/priority-microlocation">
+                <IoLocationOutline className="icon" />
+                Priority Micro...
+              </NavLink>
+            </li>
+            <li className="nav-item">
               <NavLink to="/amenities">
                 <HiOutlineCash className="icon" />
                 Amenities

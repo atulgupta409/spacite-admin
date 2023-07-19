@@ -63,7 +63,7 @@ export const uploadFile = async (
 
   // Compress and append each file to the form data
   const options = {
-    maxSizeMB: 1, // Maximum size in megabytes
+    maxSizeMB: 1, // Maximum size in megabytes 1200*756
     maxWidthOrHeight: 800, // Maximum width or height (whichever is larger)
   };
 
