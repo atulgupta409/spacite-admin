@@ -25,6 +25,7 @@ import ImageUpload from "./ImageUpload";
 import OurClient from "./components/ourClients/OurClient";
 import TopPrioritySpace from "./components/prioritySpace/TopPrioritySpace";
 import EditMicrolocation from "./components/microlocation/EditMicrolocation";
+import PriorityMicrolocation from "./components/priorityMicrolocation/PriorityMicrolocation";
 function App() {
   const { isLogin } = GpState();
   return (
@@ -121,6 +122,12 @@ function App() {
               <Route
                 path="/priority"
                 element={isLogin ? <TopPrioritySpace /> : <Navigate to="/" />}
+              />
+              <Route
+                path="/priority-microlocation"
+                element={
+                  isLogin ? <PriorityMicrolocation /> : <Navigate to="/" />
+                }
               />
             </Routes>
           </div>
