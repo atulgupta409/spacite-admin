@@ -17,41 +17,6 @@ export const postConfig = {
   },
 };
 
-// export const uploadFile = async (
-//   files,
-//   setProgress,
-//   setIsUploaded,
-//   previewFile
-// ) => {
-//   const formData = new FormData();
-//   setProgress(0);
-//   files.forEach((file) => {
-//     formData.append("files", file, file.name);
-//   });
-//   await axios
-//     .post(`${BASE_URL}/upload-image`, formData, {
-//       headers: {
-//         "Content-Type": "multipart/form-data",
-//       },
-//       onUploadProgress: (progressEvent) => {
-//         setProgress(
-//           parseInt(
-//             Math.round((progressEvent.loaded * 100) / progressEvent.total)
-//           )
-//         );
-//       },
-//     })
-//     .then((res) => {
-//       previewFile(res.data);
-//       setTimeout(() => {
-//         setProgress(0);
-//       }, 3000);
-//       setIsUploaded(true);
-//     })
-//     .catch((err) => {
-//       console.log(err);
-//     });
-// };
 export const uploadFile = async (
   files,
   setProgress,
@@ -64,7 +29,7 @@ export const uploadFile = async (
   // Compress and append each file to the form data
   const options = {
     maxSizeMB: 1, // Maximum size in megabytes 1200*756
-    maxWidthOrHeight: 800, // Maximum width or height (whichever is larger)
+    maxWidthOrHeight: 1200, // Maximum width or height (whichever is larger)
   };
 
   const compressedFiles = await Promise.all(

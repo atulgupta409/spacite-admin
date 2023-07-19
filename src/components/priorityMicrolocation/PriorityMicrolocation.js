@@ -37,6 +37,7 @@ function PriorityMicrolocation() {
   };
   const handleFetchMicrolocation = async (cityId) => {
     await getMicrolocationByCity(cityId, setMicrolocations, setLoadingAllMicro);
+    setSearchTerm("");
   };
   const handleFetchPriorityMicrolocation = async (cityId) => {
     await getMicrolocationWithPriority(
@@ -63,10 +64,6 @@ function PriorityMicrolocation() {
     value: city._id,
     label: city.name,
   }));
-
-  useEffect(() => {
-    handleFetchCity();
-  }, []);
 
   const [selectItemNum, setSelectItemNum] = useState(10);
   const itemsPerPageHandler = (e) => {
@@ -121,11 +118,12 @@ function PriorityMicrolocation() {
 
   useEffect(() => {
     handleSearch();
+    handleFetchCity();
     setShowAll(searchTerm === "");
   }, [updateTable, searchTerm]);
   const handleCheckboxChange = async (event, micro) => {
     const { checked } = event.target;
-    handleFetchPriorityMicrolocation(selectedCity?.value);
+
     try {
       const updatedMicrolocation = {
         order: checked
@@ -137,11 +135,12 @@ function PriorityMicrolocation() {
       };
 
       await axios.put(
-        `${BASE_URL}/api/priority-microlocation/${micro._id}`,
+        `${BASE_URL}/api/microlocation/priority-microlocation/${micro._id}`,
         updatedMicrolocation
       );
       micro.priority.is_active = checked;
       setMicrolocations([...microlocations]);
+      handleFetchPriorityMicrolocation(selectedCity?.value);
     } catch (error) {
       console.error("An error occurred:", error);
     }
@@ -169,15 +168,9 @@ function PriorityMicrolocation() {
 
     // Send API request to update the priority order on drag and drop
     try {
-      const response = await fetch(
-        `${BASE_URL}/api/updateMicrolocationPriority`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(updatedOrderPayload),
-        }
+      const response = await axios.put(
+        `${BASE_URL}/api/microlocation/update-microlocation-priority`,
+        updatedOrderPayload
       );
 
       if (!response.ok) {
@@ -188,27 +181,26 @@ function PriorityMicrolocation() {
       // Handle error (e.g., show an error message to the user)
     }
   };
+  console.log(priorityMicrolocation);
   return (
     <div className="mx-5 mt-3">
       <Mainpanelnav />
       <div className="table-box">
         <div className="table-top-box">Priority Microlocation Table</div>
-        <TableContainer style={{ overflowX: "hidden" }}>
-          <div className="row my-5">
-            <div className="col-md-3">
-              <Select
-                placeholder="City*"
-                value={selectedCity}
-                options={cityOptions}
-                onChange={(selectedOption) =>
-                  onChangeOptionHandler(selectedOption, "city")
-                }
-                isSearchable
-                required
-              />
-            </div>
+        <div className="row my-5">
+          <div className="col-md-3">
+            <Select
+              placeholder="City*"
+              value={selectedCity}
+              options={cityOptions}
+              onChange={(selectedOption) =>
+                onChangeOptionHandler(selectedOption, "city")
+              }
+              isSearchable
+              required
+            />
           </div>
-        </TableContainer>
+        </div>
       </div>
       <div className="table_container">
         <div className="table-box top_table_box1">
