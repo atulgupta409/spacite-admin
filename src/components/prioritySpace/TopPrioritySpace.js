@@ -31,11 +31,8 @@ function TopPrioritySpace() {
   const [workSpaces, setWorkSpaces] = useState([]);
   const [updateTable, setUpdateTable] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [citySearchTerm, setCitySearchTerm] = useState("");
-  const [microLocationSearchTerm, setMicroLocationSearchTerm] = useState("");
   const [searchedWorkSpaces, setSearchedWorkSpaces] = useState([]);
   const [showAll, setShowAll] = useState(true);
-  const [searchOption, setSearchOption] = useState("");
   const [cities, setCities] = useState([]);
   const [microlocations, setMicrolocations] = useState([]);
   const toast = useToast();
@@ -88,30 +85,10 @@ function TopPrioritySpace() {
 
   const handleSearch = () => {
     const filteredWorkSpaces = workSpaces.filter((workSpace) => {
-      const cityName = workSpace.location.city?.name || "city";
-      const microLocationName =
-        workSpace.location.micro_location?.name || "microlocation";
-      const statusName = workSpace.status;
       const matchName =
         workSpace.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         searchTerm.toLowerCase().includes(workSpace.name.toLowerCase());
-
-      const matchCity =
-        cityName.toLowerCase().includes(citySearchTerm.toLowerCase()) ||
-        citySearchTerm.toLowerCase().includes(cityName.toLowerCase());
-
-      const matchMicroLocation =
-        microLocationName
-          .toLowerCase()
-          .includes(microLocationSearchTerm.toLowerCase()) ||
-        microLocationSearchTerm
-          .toLowerCase()
-          .includes(microLocationName.toLowerCase());
-      const matchStatus =
-        statusName.includes(searchOption) || searchOption === "All"
-          ? workSpace
-          : "";
-      return matchName && matchCity && matchMicroLocation && matchStatus;
+      return matchName;
     });
 
     setSearchedWorkSpaces(filteredWorkSpaces);
@@ -121,21 +98,10 @@ function TopPrioritySpace() {
   useEffect(() => {
     handleSearch();
     handleFetchCity();
-    setShowAll(
-      searchTerm === "" &&
-        citySearchTerm === "" &&
-        microLocationSearchTerm === "" &&
-        searchOption === ""
-    );
-  }, [
-    updateTable,
-    searchTerm,
-    citySearchTerm,
-    microLocationSearchTerm,
-    searchOption,
-  ]);
+    setShowAll(searchTerm === "");
+  }, [updateTable, searchTerm]);
 
-  const [selectItemNum, setSelectItemNum] = useState(5);
+  const [selectItemNum, setSelectItemNum] = useState(10);
   const itemsPerPageHandler = (e) => {
     setSelectItemNum(e.target.value);
   };
@@ -143,7 +109,9 @@ function TopPrioritySpace() {
   const recordsPerPage = selectItemNum;
   const lastIndex = curPage * recordsPerPage;
   const firstIndex = lastIndex - recordsPerPage;
-  const nPage = Math.ceil(searchedWorkSpaces?.length / selectItemNum);
+  const nPage = Math.ceil(
+    (showAll ? workSpaces.length : searchedWorkSpaces?.length) / selectItemNum
+  );
   if (firstIndex > 0) {
     var prePage = () => {
       if (curPage !== firstIndex) {
@@ -151,9 +119,10 @@ function TopPrioritySpace() {
       }
     };
   }
-
   var nextPage = () => {
-    const lastPage = Math.ceil(workSpaces.length / selectItemNum);
+    const lastPage = Math.ceil(
+      (showAll ? workSpaces.length : searchedWorkSpaces.length) / selectItemNum
+    );
     if (curPage < lastPage) {
       setCurPage((prev) => prev + 1);
     }
@@ -251,16 +220,18 @@ function TopPrioritySpace() {
               />
             </div>
             <div className="col-md-3">
-              <Select
-                placeholder="Microlocation*"
-                value={selectedMicroLocation}
-                options={microLocationOptions}
-                onChange={(selectedOption) =>
-                  onChangeOptionHandler(selectedOption, "microLocation")
-                }
-                isSearchable
-                required
-              />
+              <div className="drop_down_box">
+                <Select
+                  placeholder="Microlocation*"
+                  value={selectedMicroLocation}
+                  options={microLocationOptions}
+                  onChange={(selectedOption) =>
+                    onChangeOptionHandler(selectedOption, "microLocation")
+                  }
+                  isSearchable
+                  required
+                />
+              </div>
             </div>
           </div>
         </TableContainer>
@@ -269,6 +240,21 @@ function TopPrioritySpace() {
         <div className="table-box top_table_box1">
           <div className="table-top-box">Coworking Spaces Table</div>
           <TableContainer style={{ overflowX: "hidden" }}>
+            <div className="row search_input">
+              <div className="col-md-3">
+                <div className="form-floating border_field">
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="floatingInput"
+                    placeholder="Search by name"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                  <label htmlFor="floatingInput">Search by name</label>
+                </div>
+              </div>
+            </div>
             <div className="data_table">
               <div className="row">
                 <div className="col-md-12">
@@ -288,38 +274,72 @@ function TopPrioritySpace() {
                             <Spinner size="lg" />
                           </Td>
                         </Tr>
+                      ) : showAll ? (
+                        workSpaces
+                          ?.slice(
+                            (curPage - 1) * selectItemNum,
+                            curPage * selectItemNum
+                          )
+
+                          .map((space) => (
+                            <Tr key={space._id}>
+                              <Td>
+                                <input
+                                  type="checkbox"
+                                  checked={space.priority.is_active}
+                                  onChange={(event) =>
+                                    handleCheckboxChange(event, space)
+                                  }
+                                />
+                              </Td>
+                              <Td>{space?.name}</Td>
+                              <Td className="city_heading">
+                                {space.location.city
+                                  ? space.location.city.name
+                                  : ""}
+                              </Td>
+                              <Td>
+                                {space.location.micro_location
+                                  ? space.location.micro_location.name
+                                  : ""}
+                              </Td>
+                            </Tr>
+                          ))
+                      ) : searchedWorkSpaces.length > 0 ? (
+                        searchedWorkSpaces
+                          .slice(
+                            (curPage - 1) * selectItemNum,
+                            curPage * selectItemNum
+                          )
+
+                          .map((space, index) => (
+                            <Tr key={space._id}>
+                              <Td>
+                                <input
+                                  type="checkbox"
+                                  checked={space.priority.is_active}
+                                  onChange={(event) =>
+                                    handleCheckboxChange(event, space)
+                                  }
+                                />
+                              </Td>
+                              <Td>{space?.name}</Td>
+                              <Td className="city_heading">
+                                {space.location.city
+                                  ? space.location.city.name
+                                  : ""}
+                              </Td>
+                              <Td>
+                                {space.location.micro_location
+                                  ? space.location.micro_location.name
+                                  : ""}
+                              </Td>
+                            </Tr>
+                          ))
                       ) : (
-                        workSpaces.map((space) => (
-                          <Tr key={space._id}>
-                            <Td>
-                              {/* <input
-                                type="checkbox"
-                                checked={selectedWorkspaces.some(
-                                  (item) => item._id === space._id
-                                )}
-                                onChange={() => handleCheckboxChange(space)}
-                              /> */}
-                              <input
-                                type="checkbox"
-                                checked={space.priority.is_active}
-                                onChange={(event) =>
-                                  handleCheckboxChange(event, space)
-                                }
-                              />
-                            </Td>
-                            <Td>{space?.name}</Td>
-                            <Td className="city_heading">
-                              {space.location.city
-                                ? space.location.city.name
-                                : ""}
-                            </Td>
-                            <Td>
-                              {space.location.micro_location
-                                ? space.location.micro_location.name
-                                : ""}
-                            </Td>
-                          </Tr>
-                        ))
+                        <Tr>
+                          <Td colSpan={8}>No matching results found.</Td>
+                        </Tr>
                       )}
                     </Tbody>
                   </Table>
@@ -330,7 +350,7 @@ function TopPrioritySpace() {
           <nav className="mt-5">
             <div
               className="d-flex align-items-center justify-content-between"
-              style={{ width: "51%" }}
+              style={{ width: "70%" }}
             >
               <p className="mb-0">Items per page: </p>
               <div style={{ borderBottom: "1px solid gray" }}>
@@ -340,10 +360,10 @@ function TopPrioritySpace() {
                   value={selectItemNum}
                   onChange={itemsPerPageHandler}
                 >
-                  <option value="5">5</option>
                   <option value="10">10</option>
-                  <option value="15">15</option>
                   <option value="20">20</option>
+                  <option value="25">25</option>
+                  <option value="50">50</option>
                 </select>
               </div>
               <div style={{ width: "110px" }}>
@@ -353,8 +373,11 @@ function TopPrioritySpace() {
                       (curPage - 1) * selectItemNum,
                       curPage * selectItemNum
                     ).length + firstIndex
-                  : searchedWorkSpaces?.length}{" "}
-                of {workSpaces?.length}
+                  : searchedWorkSpaces?.slice(
+                      (curPage - 1) * selectItemNum,
+                      curPage * selectItemNum
+                    ).length + firstIndex}{" "}
+                of {showAll ? workSpaces?.length : searchedWorkSpaces.length}
               </div>
 
               <div className="page-item">

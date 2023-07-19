@@ -13,6 +13,7 @@ import {
   Spinner,
   useToast,
 } from "@chakra-ui/react";
+import "./PriorityMicrolocation.css";
 import axios from "axios";
 import { getMicrolocationByCity } from "./PriorityService";
 import { getCity } from "../brands/BrandService";
@@ -23,10 +24,8 @@ import { getMicrolocationWithPriority } from "./PriorityService";
 function PriorityMicrolocation() {
   const [updateTable, setUpdateTable] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [citySearchTerm, setCitySearchTerm] = useState("");
-  const [microLocationSearchTerm, setMicroLocationSearchTerm] = useState("");
   const [showAll, setShowAll] = useState(true);
-  const [searchOption, setSearchOption] = useState("");
+  const [searchedMicrolocation, setSearchedMicrolocation] = useState([]);
   const [cities, setCities] = useState([]);
   const [microlocations, setMicrolocations] = useState([]);
   const [selectedCity, setSelectedCity] = useState(null);
@@ -69,38 +68,61 @@ function PriorityMicrolocation() {
     handleFetchCity();
   }, []);
 
-  const [selectItemNum, setSelectItemNum] = useState(5);
+  const [selectItemNum, setSelectItemNum] = useState(10);
   const itemsPerPageHandler = (e) => {
     setSelectItemNum(e.target.value);
   };
-  //   const [curPage, setCurPage] = useState(1);
-  //   const recordsPerPage = selectItemNum;
-  //   const lastIndex = curPage * recordsPerPage;
-  //   const firstIndex = lastIndex - recordsPerPage;
-  //   //   const nPage = Math.ceil(searchedWorkSpaces?.length / selectItemNum);
-  //   if (firstIndex > 0) {
-  //     var prePage = () => {
-  //       if (curPage !== firstIndex) {
-  //         setCurPage(curPage - 1);
-  //       }
-  //     };
-  //   }
+  const [curPage, setCurPage] = useState(1);
+  const recordsPerPage = selectItemNum;
+  const lastIndex = curPage * recordsPerPage;
+  const firstIndex = lastIndex - recordsPerPage;
+  const nPage = Math.ceil(
+    (showAll ? microlocations.length : searchedMicrolocation?.length) /
+      recordsPerPage
+  );
 
-  //   var nextPage = () => {
-  //     const lastPage = Math.ceil(workSpaces.length / selectItemNum);
-  //     if (curPage < lastPage) {
-  //       setCurPage((prev) => prev + 1);
-  //     }
-  //   };
+  if (firstIndex > 0) {
+    var prePage = () => {
+      if (curPage !== firstIndex) {
+        setCurPage(curPage - 1);
+      }
+    };
+  }
 
-  //   const getFirstPage = () => {
-  //     setCurPage(1);
-  //   };
+  var nextPage = () => {
+    const lastPage = Math.ceil(
+      (showAll ? microlocations.length : searchedMicrolocation.length) /
+        selectItemNum
+    );
+    if (curPage < lastPage) {
+      setCurPage((prev) => prev + 1);
+    }
+  };
 
-  //   const getLastPage = () => {
-  //     setCurPage(nPage);
-  //   };
+  const getFirstPage = () => {
+    setCurPage(1);
+  };
 
+  const getLastPage = () => {
+    setCurPage(nPage);
+  };
+  const handleSearch = () => {
+    const filteredMicrolocation = microlocations.filter((micro) => {
+      const matchName =
+        micro.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        searchTerm.toLowerCase().includes(micro.name.toLowerCase());
+
+      return matchName;
+    });
+
+    setSearchedMicrolocation(filteredMicrolocation);
+    setCurPage(1);
+  };
+
+  useEffect(() => {
+    handleSearch();
+    setShowAll(searchTerm === "");
+  }, [updateTable, searchTerm]);
   const handleCheckboxChange = async (event, micro) => {
     const { checked } = event.target;
     handleFetchPriorityMicrolocation(selectedCity?.value);
@@ -111,7 +133,7 @@ function PriorityMicrolocation() {
               .length + 1
           : 1000,
         is_active: checked,
-        microlocationId: micro._id,
+        cityId: selectedCity?.value,
       };
 
       await axios.put(
@@ -190,8 +212,23 @@ function PriorityMicrolocation() {
       </div>
       <div className="table_container">
         <div className="table-box top_table_box1">
-          <div className="table-top-box">Coworking Spaces Table</div>
+          <div className="table-top-box">Microlocation Table</div>
           <TableContainer style={{ overflowX: "hidden" }}>
+            <div className="row search_input">
+              <div className="col-md-3">
+                <div className="form-floating border_field">
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="floatingInput"
+                    placeholder="Search by name"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                  <label htmlFor="floatingInput">Search by name</label>
+                </div>
+              </div>
+            </div>
             <div className="data_table">
               <div className="row">
                 <div className="col-md-12">
@@ -205,25 +242,60 @@ function PriorityMicrolocation() {
                     <Tbody>
                       {loadingAllMicro ? (
                         <Tr>
-                          <Td colSpan={8} textAlign="center">
-                            <Spinner size="lg" />
+                          <Td>
+                            <Spinner
+                              size="xl"
+                              w={20}
+                              h={20}
+                              alignSelf="center"
+                              style={{ position: "absolute", left: "482px" }}
+                            />
                           </Td>
                         </Tr>
+                      ) : showAll ? (
+                        microlocations
+                          .slice(
+                            (curPage - 1) * selectItemNum,
+                            curPage * selectItemNum
+                          )
+                          .map((micro) => (
+                            <Tr key={micro._id}>
+                              <Td>
+                                <input
+                                  type="checkbox"
+                                  checked={micro.priority.is_active}
+                                  onChange={(event) =>
+                                    handleCheckboxChange(event, micro)
+                                  }
+                                />
+                              </Td>
+                              <Td>{micro?.name}</Td>
+                            </Tr>
+                          ))
+                      ) : searchedMicrolocation.length > 0 ? (
+                        searchedMicrolocation
+                          .slice(
+                            (curPage - 1) * selectItemNum,
+                            curPage * selectItemNum
+                          )
+                          .map((micro) => (
+                            <Tr key={micro._id}>
+                              <Td>
+                                <input
+                                  type="checkbox"
+                                  checked={micro.priority.is_active}
+                                  onChange={(event) =>
+                                    handleCheckboxChange(event, micro)
+                                  }
+                                />
+                              </Td>
+                              <Td>{micro?.name}</Td>
+                            </Tr>
+                          ))
                       ) : (
-                        microlocations.map((micro) => (
-                          <Tr key={micro._id}>
-                            <Td>
-                              <input
-                                type="checkbox"
-                                checked={micro.priority.is_active}
-                                onChange={(event) =>
-                                  handleCheckboxChange(event, micro)
-                                }
-                              />
-                            </Td>
-                            <Td>{micro?.name}</Td>
-                          </Tr>
-                        ))
+                        <Tr>
+                          <Td colSpan={8}>No matching results found.</Td>
+                        </Tr>
                       )}
                     </Tbody>
                   </Table>
@@ -231,10 +303,10 @@ function PriorityMicrolocation() {
               </div>
             </div>
           </TableContainer>
-          {/* <nav className="mt-5">
+          <nav className="mt-5">
             <div
               className="d-flex align-items-center justify-content-between"
-              style={{ width: "51%" }}
+              style={{ width: "70%" }}
             >
               <p className="mb-0">Items per page: </p>
               <div style={{ borderBottom: "1px solid gray" }}>
@@ -253,12 +325,12 @@ function PriorityMicrolocation() {
               <div style={{ width: "110px" }}>
                 {firstIndex + 1} -{" "}
                 {showAll
-                  ? workSpaces.slice(
+                  ? microlocations.slice(
                       (curPage - 1) * selectItemNum,
                       curPage * selectItemNum
                     ).length + firstIndex
-                  : searchedWorkSpaces?.length}{" "}
-                of {workSpaces?.length}
+                  : searchedMicrolocation?.length}{" "}
+                of {microlocations?.length}
               </div>
 
               <div className="page-item">
@@ -274,7 +346,7 @@ function PriorityMicrolocation() {
                 <BiSkipNext onClick={getLastPage} />
               </div>
             </div>
-          </nav> */}
+          </nav>
         </div>
         <div className="table-box top_table_box2">
           <div className="table-top-box">Top Priority MicroLocation Table</div>
