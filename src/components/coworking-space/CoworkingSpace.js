@@ -441,16 +441,6 @@ function CoworkingSpace() {
                 <option value="100">100</option>
               </select>
             </div>
-            {/* <div style={{ width: "110px" }}>
-              {firstIndex + 1} -{" "}
-              {showAll
-                ? workSpaces.slice(
-                    (curPage - 1) * selectItemNum,
-                    curPage * selectItemNum
-                  ).length + firstIndex
-                : searchedWorkSpaces?.length}{" "}
-              of {workSpaces?.length}
-            </div> */}
             <div style={{ width: "110px" }}>
               {firstIndex + 1} -{" "}
               {showAll
