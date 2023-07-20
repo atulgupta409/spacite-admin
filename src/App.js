@@ -26,6 +26,7 @@ import OurClient from "./components/ourClients/OurClient";
 import TopPrioritySpace from "./components/prioritySpace/TopPrioritySpace";
 import EditMicrolocation from "./components/microlocation/EditMicrolocation";
 import PriorityMicrolocation from "./components/priorityMicrolocation/PriorityMicrolocation";
+import PopularSpace from "./components/popularSpaces/PopularSpace";
 function App() {
   const { isLogin } = GpState();
   return (
@@ -128,6 +129,10 @@ function App() {
                 element={
                   isLogin ? <PriorityMicrolocation /> : <Navigate to="/" />
                 }
+              />
+              <Route
+                path="/popular-spaces"
+                element={isLogin ? <PopularSpace /> : <Navigate to="/" />}
               />
             </Routes>
           </div>

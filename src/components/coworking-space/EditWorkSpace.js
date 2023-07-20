@@ -458,7 +458,7 @@ const EditWorkSpace = () => {
     );
     const initialEditorState = EditorState.createWithContent(contentState);
     setEditorState(initialEditorState);
-  }, [workSpaces]);
+  }, [description]);
 
   const handleFetchCity = async (id) => {
     await getCityByState(id, setCities);
