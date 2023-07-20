@@ -120,7 +120,7 @@ function AddWorkSpace() {
 
   const defautcreatePlans = () => {
     const defaultRowCount = 4;
-    const time = ["Year", "Month", "Month", "Month"];
+    const time = ["month", "month", "year", "month"];
     const newRows = [];
     for (let i = 0; i < defaultRowCount; i++) {
       const newRow = {
@@ -1172,9 +1172,9 @@ function AddWorkSpace() {
                         value={row.duration}
                       >
                         <option>Duration</option>
-                        <option value="Month">Month</option>
-                        <option value="Day">Day</option>
-                        <option value="Year">Year</option>
+                        <option value="month">month</option>
+                        <option value="day">day</option>
+                        <option value="year">year</option>
                       </select>
                     </div>
                   </div>

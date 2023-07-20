@@ -97,6 +97,12 @@ function Sidebar() {
               </NavLink>
             </li>
             <li className="nav-item">
+              <NavLink to="/popular-spaces">
+                <HiOutlineBuildingOffice className="icon" />
+                Popular Spaces
+              </NavLink>
+            </li>
+            <li className="nav-item">
               <NavLink to="/coworking-plan">
                 <HiOutlineBuildingOffice className="icon" />
                 Coworking Plans

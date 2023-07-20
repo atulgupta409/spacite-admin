@@ -92,6 +92,7 @@ function OurClient() {
         name: "",
         logo_url: "",
       });
+      setImages([]);
       setUpdateTable((prev) => !prev);
       onClose();
       toast({
@@ -117,7 +118,8 @@ function OurClient() {
     try {
       setLoading(true);
       const { data } = await axios.get(`${BASE_URL}/api/ourClient/clients`);
-      setOurClient(data);
+      const newData = data.reverse();
+      setOurClient(newData);
       setLoading(false);
     } catch (error) {
       console.log(error);
