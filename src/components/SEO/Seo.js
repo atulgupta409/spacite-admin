@@ -124,7 +124,7 @@ function Seo() {
     <div className="mx-5 mt-3">
       <Mainpanelnav />
       <Link to="/seo/add-seo" className="btnLink">
-        <Addpropertybtn />
+        <Addpropertybtn buttonText={"ADD NEW"} />
       </Link>
       <div className="table-box">
         <div className="table-top-box">SEO Table</div>

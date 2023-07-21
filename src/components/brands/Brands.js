@@ -126,7 +126,7 @@ const Brands = () => {
       <div className="mx-5 mt-3">
         <Mainpanelnav />
         <Link to="/brands/add-brand" className="btnLink">
-          <Addpropertybtn />
+          <Addpropertybtn buttonText={"ADD NEW"} />
         </Link>
         <div className="table-box">
           <div className="table-top-box">Brands Table</div>
