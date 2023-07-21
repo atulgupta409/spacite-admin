@@ -24,9 +24,10 @@ import EditWorkSpace from "./components/coworking-space/EditWorkSpace";
 import ImageUpload from "./ImageUpload";
 import OurClient from "./components/ourClients/OurClient";
 import TopPrioritySpace from "./components/prioritySpace/TopPrioritySpace";
-import EditMicrolocation from "./components/microlocation/EditMicrolocation";
 import PriorityMicrolocation from "./components/priorityMicrolocation/PriorityMicrolocation";
 import PopularSpace from "./components/popularSpaces/PopularSpace";
+import ForgotPassword from "./components/login-page/ForgotPassword";
+import PasswordReset from "./components/login-page/PasswordReset";
 function App() {
   const { isLogin } = GpState();
   return (
@@ -133,6 +134,11 @@ function App() {
               <Route
                 path="/popular-spaces"
                 element={isLogin ? <PopularSpace /> : <Navigate to="/" />}
+              />
+              <Route path="/password-reset" element={<PasswordReset />} />
+              <Route
+                path="/forgotpassword/:id/:token"
+                element={<ForgotPassword />}
               />
             </Routes>
           </div>

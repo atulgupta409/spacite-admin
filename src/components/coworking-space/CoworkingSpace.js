@@ -160,11 +160,11 @@ function CoworkingSpace() {
     <div className="mx-5 mt-3">
       <Mainpanelnav />
       <Link to="/coworking-space/add-coworking-space" className="btnLink">
-        <Addpropertybtn />
+        <Addpropertybtn buttonText={"ADD NEW CW"} />
       </Link>
       <div className="table-box">
-        <div className="table-top-box">Coworking Table</div>
-        <TableContainer style={{ overflowX: "hidden" }}>
+        <div className="table-top-box">Coworking Module</div>
+        <TableContainer overflowX="hidden">
           <div className="row my-5">
             <div className="col-md-3">
               <div className="form-floating border_field">
@@ -176,7 +176,7 @@ function CoworkingSpace() {
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
-                <label htmlFor="floatingInput">Search by name</label>
+                <label htmlFor="floatingInput">Search By CW Name</label>
               </div>
             </div>
             <div className="col-md-3">
@@ -189,7 +189,7 @@ function CoworkingSpace() {
                   value={citySearchTerm}
                   onChange={(e) => setCitySearchTerm(e.target.value)}
                 />
-                <label htmlFor="floatingInput">Search by city</label>
+                <label htmlFor="floatingInput">Search By City</label>
               </div>
             </div>
             <div className="col-md-3">
@@ -202,7 +202,7 @@ function CoworkingSpace() {
                   value={microLocationSearchTerm}
                   onChange={(e) => setMicroLocationSearchTerm(e.target.value)}
                 />
-                <label htmlFor="floatingInput">Search by microlocation</label>
+                <label htmlFor="floatingInput">Search By Location</label>
               </div>
             </div>
 
@@ -230,14 +230,14 @@ function CoworkingSpace() {
                 <Table variant="simple">
                   <Thead>
                     <Tr className="table_heading_row">
-                      <Th className="name_heading">Name</Th>
-                      <Th className="city_heading">City</Th>
-                      <Th className="micro_heading">MicroLocation</Th>
-                      <Th className="time_heading">Added On</Th>
-                      <Th className="status_heading">Status</Th>
-                      <Th className="edit_heading">Edit</Th>
-                      <Th className="preview_heading">Preview</Th>
-                      <Th className="action_heading">Action</Th>
+                      <Th className="name_heading">CW NAME</Th>
+                      <Th className="city_heading">CITY</Th>
+                      <Th className="micro_heading">LOCATION</Th>
+                      <Th className="time_heading">ADDED ON</Th>
+                      <Th className="status_heading">STATUS</Th>
+                      <Th className="edit_heading">EDIT</Th>
+                      <Th className="preview_heading">PREVIEW</Th>
+                      <Th className="action_heading">ACTION</Th>
                     </Tr>
                   </Thead>
                   <Tbody>
@@ -275,8 +275,14 @@ function CoworkingSpace() {
                                 year: "numeric",
                               }).format(new Date(workSpace.createdAt))}
                             </Td>
-                            <Td className="status_heading">
-                              {workSpace.status.toUpperCase()}
+                            <Td className="status_heading" textAlign="center">
+                              {workSpace.status === "approve"
+                                ? "AP"
+                                : workSpace.status === "reject"
+                                ? "RJ"
+                                : workSpace.status === "pending"
+                                ? "PD"
+                                : ""}
                             </Td>
                             <Td className="edit_heading">
                               <Link
@@ -357,8 +363,14 @@ function CoworkingSpace() {
                                 year: "numeric",
                               }).format(new Date(workSpace.createdAt))}
                             </Td>
-                            <Td className="status_heading">
-                              {workSpace.status.toUpperCase()}
+                            <Td className="status_heading" textAlign="center">
+                              {workSpace.status === "approve"
+                                ? "AP"
+                                : workSpace.status === "reject"
+                                ? "RJ"
+                                : workSpace.status === "pending"
+                                ? "PD"
+                                : ""}
                             </Td>
                             <Td className="edit_heading">
                               <Link

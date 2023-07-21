@@ -736,7 +736,7 @@ function AddWorkSpace() {
               <div className="col-md-3">
                 <div>
                   <Select
-                    placeholder="Microlocation*"
+                    placeholder="Location*"
                     value={selectedMicroLocation}
                     options={microLocationOptions}
                     onChange={(selectedOption) =>
@@ -933,22 +933,7 @@ function AddWorkSpace() {
                 </div>
               </div>
             </div>
-            {/* <div className="row mb-5">
-              <div className="col-md-3">
-                <div className="form-floating border_field">
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="floatingInputSeats"
-                    placeholder="No. Of Seats"
-                    name="seats"
-                    value={coSpace.seats}
-                    onChange={handleInputChange}
-                  />
-                  <label htmlFor="floatingInputSeats">No. Of Seats</label>
-                </div>
-              </div>
-            </div> */}
+
             <div className="row">
               <h4 className="property_form_h4">Hours Of Operation</h4>
               <div className="col-md-3">Monday-Friday</div>

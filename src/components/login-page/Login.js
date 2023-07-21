@@ -4,7 +4,7 @@ import "./Login.css";
 import logo from "./spacite-logo.png";
 import axios from "axios";
 import { useToast } from "@chakra-ui/react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, NavLink } from "react-router-dom";
 import { GpState } from "../../context/context";
 import {
   Button,
@@ -120,6 +120,9 @@ function Login() {
                       </Button>
                     </InputRightElement>
                   </InputGroup>
+                  <p className="forgot_password">
+                    <NavLink to="/password-reset">Forgot Password?</NavLink>{" "}
+                  </p>
                   <Button
                     colorScheme="blue"
                     width="100%"
@@ -132,6 +135,7 @@ function Login() {
                 </VStack>
               </div>
             </div>
+
             <div className="col-md-6 px-0">
               <img
                 className="img-fluid"

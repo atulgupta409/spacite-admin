@@ -3,7 +3,6 @@ import { FaUserCircle } from "react-icons/fa";
 import "./Mainpanelnav.css";
 import { useNavigate, Link } from "react-router-dom";
 import { GpState } from "../../context/context";
-import Cookies from "js-cookie";
 function Mainpanelnav() {
   const navigate = useNavigate();
   let { logout, userInfo } = GpState();
@@ -25,10 +24,7 @@ function Mainpanelnav() {
 
   return (
     <div>
-      <div className="mainpanel-nav d-flex justify-content-between">
-        <p style={{ fontSize: "21px", textTransform: "capitalize" }}>
-          {title.replace("-", " ")}
-        </p>
+      <div className="mainpanel-nav d-flex justify-content-end">
         <div className="dropdown">
           <button
             className="dropdown-toggle"

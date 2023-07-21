@@ -139,7 +139,7 @@ function TopPrioritySpace() {
 
   const handleCheckboxChange = async (event, coworkingSpace) => {
     const { checked } = event.target;
-    handleFetchPriorityWorkspaces(selectedMicroLocation?.label);
+
     try {
       const updatedSpace = {
         order: checked
@@ -156,6 +156,7 @@ function TopPrioritySpace() {
       );
       coworkingSpace.priority.is_active = checked;
       setWorkSpaces([...workSpaces]);
+      handleFetchPriorityWorkspaces(selectedMicroLocation?.label);
     } catch (error) {
       console.error("An error occurred:", error);
     }
