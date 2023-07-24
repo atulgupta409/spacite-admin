@@ -150,7 +150,7 @@ const EditSeo = () => {
         <form style={{ textAlign: "left" }} onSubmit={handleEditSeo}>
           <div className="container">
             <div className="row">
-              <div className="col-md-6">
+              <div className="col-md-12">
                 <div
                   className="form-floating border_field"
                   style={{ marginTop: "6px" }}
@@ -167,28 +167,28 @@ const EditSeo = () => {
                   <label htmlFor="floatingInput">Heading*</label>
                 </div>
               </div>
-              <div className="col-md-6">
+            </div>
+            <div className="row mt-4">
+              <div className="col-md-12">
                 <div
                   className="form-floating border_field"
                   style={{ marginTop: "6px" }}
                 >
                   <input
+                    type="text"
                     className="form-control"
                     id="floatingInput"
-                    type="text"
-                    placeholder="Meta Title*"
-                    name="title"
-                    required
-                    onChange={(e) => handleInputChange(e)}
-                    value={title}
+                    placeholder="Header Description"
+                    name="header_description"
+                    // onChange={(e) => handleInputChange(e)}
+                    // value={page_title}
                   />
-                  <label htmlFor="floatingInput">Meta Title*</label>
+                  <label htmlFor="floatingInput">Header Description*</label>
                 </div>
               </div>
             </div>
-
-            <div className="row">
-              <div className="col-md-6">
+            <div className="row mt-4">
+              <div className="col-md-12">
                 <div
                   className="form-floating border_field"
                   style={{ marginTop: "6px" }}
@@ -207,7 +207,27 @@ const EditSeo = () => {
                 </div>
               </div>
             </div>
-            <div className="row">
+            <div className="row mt-4">
+              <div className="col-md-12">
+                <div
+                  className="form-floating border_field"
+                  style={{ marginTop: "6px" }}
+                >
+                  <input
+                    className="form-control"
+                    id="floatingInput"
+                    type="text"
+                    placeholder="Meta Title*"
+                    name="title"
+                    required
+                    onChange={(e) => handleInputChange(e)}
+                    value={title}
+                  />
+                  <label htmlFor="floatingInput">Meta Title*</label>
+                </div>
+              </div>
+            </div>
+            <div className="row mt-4">
               <div className="col-md-12">
                 <div
                   className="form-floating border_field"
@@ -226,21 +246,7 @@ const EditSeo = () => {
                 </div>
               </div>
             </div>
-            <div className="row">
-              {/* <div className="col-md-6">
-                <div
-                  style={{ borderBottom: "1px solid gray", margin: "20px 0" }}
-                >
-                  <select
-                    className="form-select"
-                    aria-label="Default select example"
-                  >
-                    <option>Select status</option>
-                    <option value="active">Active</option>
-                    <option value="inactive">Inactive</option>
-                  </select>
-                </div>
-              </div> */}
+            <div className="row mt-4">
               <div className="col-md-12">
                 <div
                   className="form-floating border_field"
@@ -259,7 +265,7 @@ const EditSeo = () => {
                 </div>
               </div>
             </div>
-            <div className="row">
+            <div className="row mt-4">
               <div className="col-md-6">
                 <div
                   className="form-floating border_field"
@@ -280,7 +286,7 @@ const EditSeo = () => {
                 </div>
               </div>
             </div>
-            <div className="row">
+            <div className="row mt-4">
               <div className="col-md-12">
                 <div
                   className="form-floating border_field"
@@ -302,7 +308,7 @@ const EditSeo = () => {
               </div>
             </div>
 
-            <div className="row">
+            <div className="row mt-4">
               <div className="col-md-12">
                 <div
                   className="form-floating border_field"
@@ -323,7 +329,7 @@ const EditSeo = () => {
                 </div>
               </div>
             </div>
-            <div className="row">
+            <div className="row mt-4">
               <div className="col-md-12">
                 <div
                   className="form-floating border_field"
@@ -348,7 +354,7 @@ const EditSeo = () => {
                 </div>
               </div>
             </div>
-            <div className="row">
+            <div className="row mt-4">
               <div className="col-md-12">
                 <div
                   className="form-floating border_field"
@@ -383,7 +389,7 @@ const EditSeo = () => {
                     className="form-check-label"
                     htmlFor="flexCheckDefault"
                   >
-                    Discourage search engines from indexing this Page
+                    Check for indexing this Page
                   </label>
                 </div>
               </div>

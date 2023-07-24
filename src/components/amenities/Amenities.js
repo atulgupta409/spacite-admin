@@ -207,7 +207,7 @@ function Amenities() {
           </Modal>
         </div>
         <div className="table-box">
-          <div className="table-top-box">Amenities Table</div>
+          <div className="table-top-box">Amenities Module</div>
           <TableContainer
             marginTop="60px"
             variant="striped"

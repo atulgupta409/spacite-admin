@@ -308,7 +308,7 @@ function City() {
           </Modal>
         </div>
         <div className="table-box">
-          <div className="table-top-box">Microlocation Table</div>
+          <div className="table-top-box">Microlocation Module</div>
           <TableContainer
             marginTop="60px"
             variant="striped"

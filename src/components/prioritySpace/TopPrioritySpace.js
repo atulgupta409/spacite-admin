@@ -196,7 +196,7 @@ function TopPrioritySpace() {
     <div className="mx-5 mt-3">
       <Mainpanelnav />
       <div className="table-box">
-        <div className="table-top-box">Priority Coworking Spaces Table</div>
+        <div className="table-top-box">Priority Coworking Spaces Module</div>
         <div className="row my-5">
           <div className="col-md-3">
             <Select
@@ -228,7 +228,7 @@ function TopPrioritySpace() {
       </div>
       <div className="table_container">
         <div className="table-box top_table_box1">
-          <div className="table-top-box">Coworking Spaces Table</div>
+          <div className="table-top-box">Coworking Spaces Module</div>
           <TableContainer style={{ overflowX: "hidden" }}>
             <div className="row search_input">
               <div className="col-md-3">
@@ -386,7 +386,7 @@ function TopPrioritySpace() {
           </nav>
         </div>
         <div className="table-box top_table_box2">
-          <div className="table-top-box">Top Priority Spaces Table</div>
+          <div className="table-top-box">Top Priority Spaces Module</div>
           <TableContainer style={{ overflowX: "hidden" }}>
             <div className="data_table">
               <div className="row">
@@ -394,6 +394,7 @@ function TopPrioritySpace() {
                   <Table variant="simple" className="table_border">
                     <Thead>
                       <Tr>
+                        <Th>Order</Th>
                         <Th>Name</Th>
 
                         <Th>MicroLocation</Th>
@@ -426,10 +427,13 @@ function TopPrioritySpace() {
                                       {...provided.draggableProps}
                                     >
                                       <Td {...provided.dragHandleProps}>
+                                        {index + 1}
+                                      </Td>
+                                      <Td {...provided.dragHandleProps}>
                                         {space?.name}
                                       </Td>
 
-                                      <Td>
+                                      <Td {...provided.dragHandleProps}>
                                         {space.location.micro_location
                                           ? space.location.micro_location.name
                                           : ""}

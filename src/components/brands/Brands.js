@@ -129,7 +129,7 @@ const Brands = () => {
           <Addpropertybtn buttonText={"ADD NEW"} />
         </Link>
         <div className="table-box">
-          <div className="table-top-box">Brands Table</div>
+          <div className="table-top-box">Brands Module</div>
           <TableContainer
             marginTop="60px"
             variant="striped"

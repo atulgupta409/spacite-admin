@@ -16,6 +16,7 @@ function AddSeoForm() {
 
   const [seo, setSeo] = useState({
     heading: "",
+    header_decription: "",
     title: "",
     description: "",
     path: "",
@@ -44,6 +45,7 @@ function AddSeoForm() {
     try {
       const { data } = await axios.post(`${BASE_URL}/api/seo/seos`, {
         title: seo.title,
+
         page_title: seo.heading,
         script: seo.script,
         description: seo.description,
@@ -61,9 +63,11 @@ function AddSeoForm() {
           title: seo.graphTitle,
           description: seo.graphDescription,
         },
+        header_decription: seo.header_decription,
       });
       setSeo({
         heading: "",
+        header_decription: "",
         title: "",
         description: "",
         path: "",
@@ -119,7 +123,7 @@ function AddSeoForm() {
         <form style={{ textAlign: "left" }} onSubmit={handleSaveSeo}>
           <div className="container">
             <div className="row">
-              <div className="col-md-6">
+              <div className="col-md-12">
                 <div className="form-floating border_field">
                   <input
                     type="text"
@@ -134,23 +138,25 @@ function AddSeoForm() {
                   <label htmlFor="floatingInput">Heading*</label>
                 </div>
               </div>
-              <div className="col-md-6">
+            </div>
+            <div className="row mt-4">
+              <div className="col-md-12">
                 <div className="form-floating border_field">
                   <input
                     type="text"
                     className="form-control"
                     id="floatingInput"
-                    placeholder="Meta Title*"
+                    placeholder="Header Description*"
                     required
-                    name="title"
+                    name="header_decription"
                     onChange={handleInputChange}
-                    value={seo.title}
+                    value={seo.header_decription}
                   />
-                  <label htmlFor="floatingInput">Meta Title*</label>
+                  <label htmlFor="floatingInput">Header Decription*</label>
                 </div>
               </div>
             </div>
-            <div className="row my-2">
+            <div className="row mt-4">
               <div className="col-md-12">
                 <div className="form-floating border_field">
                   <input
@@ -166,8 +172,8 @@ function AddSeoForm() {
                 </div>
               </div>
             </div>
-            <div className="row">
-              <div className="col-md-6">
+            <div className="row mt-4">
+              <div className="col-md-12">
                 <div className="form-floating border_field">
                   <input
                     type="text"
@@ -183,7 +189,24 @@ function AddSeoForm() {
                 </div>
               </div>
             </div>
-            <div className="row my-2">
+            <div className="row mt-4">
+              <div className="col-md-12">
+                <div className="form-floating border_field">
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="floatingInput"
+                    placeholder="Meta Title*"
+                    required
+                    name="title"
+                    onChange={handleInputChange}
+                    value={seo.title}
+                  />
+                  <label htmlFor="floatingInput">Meta Title*</label>
+                </div>
+              </div>{" "}
+            </div>
+            <div className="row mt-4">
               <div className="col-md-12">
                 <div className="form-floating border_field">
                   <textarea
@@ -200,7 +223,7 @@ function AddSeoForm() {
                 </div>
               </div>
             </div>
-            <div className="row my-2">
+            <div className="row mt-4">
               <div className="col-md-12">
                 <div className="form-floating border_field">
                   <input
@@ -216,7 +239,7 @@ function AddSeoForm() {
                 </div>
               </div>
             </div>
-            <div className="row">
+            <div className="row mt-4">
               <div className="col-md-12">
                 <div className="form-floating border_field">
                   <textarea
@@ -232,7 +255,7 @@ function AddSeoForm() {
                 </div>
               </div>
             </div>
-            <div className="row">
+            <div className="row mt-4">
               <div className="col-md-12">
                 <div className="form-floating border_field">
                   <input
@@ -248,7 +271,7 @@ function AddSeoForm() {
                 </div>
               </div>
             </div>
-            <div className="row my-2">
+            <div className="row mt-4">
               <div className="col-md-12">
                 <div className="form-floating border_field">
                   <textarea
@@ -264,7 +287,7 @@ function AddSeoForm() {
                 </div>
               </div>
             </div>
-            <div className="row">
+            <div className="row mt-4">
               <div className="col-md-12">
                 <div className="form-floating border_field">
                   <textarea
@@ -295,7 +318,7 @@ function AddSeoForm() {
                     className="form-check-label"
                     htmlFor="flexCheckDefault"
                   >
-                    Discourage search engines from indexing this Page
+                    Check for indexing this Page
                   </label>
                 </div>
               </div>

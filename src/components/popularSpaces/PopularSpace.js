@@ -179,7 +179,7 @@ function PopularSpace() {
     <div className="mx-5 mt-3">
       <Mainpanelnav />
       <div className="table-box">
-        <div className="table-top-box">Popular Coworking Spaces Table</div>
+        <div className="table-top-box">Popular Coworking Spaces Module</div>
         <div className="row my-5">
           <div className="col-md-3">
             <Select
@@ -197,7 +197,7 @@ function PopularSpace() {
       </div>
       <div className="table_container">
         <div className="table-box top_table_box1">
-          <div className="table-top-box">Coworking Spaces Table</div>
+          <div className="table-top-box">Coworking Spaces Module</div>
           <TableContainer style={{ overflowX: "hidden" }}>
             <div className="row search_input">
               <div className="col-md-3">
@@ -363,7 +363,7 @@ function PopularSpace() {
           </nav>
         </div>
         <div className="table-box top_table_box2">
-          <div className="table-top-box">Popular Spaces Table</div>
+          <div className="table-top-box">Popular Spaces Module</div>
           <TableContainer style={{ overflowX: "hidden" }}>
             <div className="data_table">
               <div className="row">
@@ -371,6 +371,7 @@ function PopularSpace() {
                   <Table variant="simple" className="table_border">
                     <Thead>
                       <Tr>
+                        <Th>Order</Th>
                         <Th>Name</Th>
 
                         <Th>City</Th>
@@ -403,12 +404,15 @@ function PopularSpace() {
                                       {...provided.draggableProps}
                                     >
                                       <Td {...provided.dragHandleProps}>
+                                        {index + 1}
+                                      </Td>
+                                      <Td {...provided.dragHandleProps}>
                                         {space?.name.length > 20
                                           ? space?.name.slice(0, 15) + "..."
                                           : space?.name}
                                       </Td>
 
-                                      <Td>
+                                      <Td {...provided.dragHandleProps}>
                                         {space?.location?.city
                                           ? space?.location?.city?.name
                                           : ""}
