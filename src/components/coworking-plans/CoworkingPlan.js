@@ -143,7 +143,7 @@ function ResPropertyType() {
           </Modal>
         </div>
         <div className="table-box">
-          <div className="table-top-box">Coworking Plans Table</div>
+          <div className="table-top-box">Coworking Plans Module</div>
           <TableContainer marginTop="60px" variant="striped" color="teal">
             <Table variant="simple">
               <Thead>

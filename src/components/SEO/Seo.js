@@ -127,7 +127,7 @@ function Seo() {
         <Addpropertybtn buttonText={"ADD NEW"} />
       </Link>
       <div className="table-box">
-        <div className="table-top-box">SEO Table</div>
+        <div className="table-top-box">SEO Module</div>
         <TableContainer
           marginTop="60px"
           variant="striped"
@@ -177,7 +177,11 @@ function Seo() {
                   .slice((curPage - 1) * selectItemNum, curPage * selectItemNum)
                   .map((seo) => (
                     <Tr key={seo._id} id={seo._id}>
-                      <Td>{seo?.path}</Td>
+                      <Td>
+                        {seo?.path.length > 20
+                          ? seo.path.substring(0, 20) + "..."
+                          : seo?.path}
+                      </Td>
                       <Td>
                         {seo?.title.length > 30
                           ? seo?.title.substring(0, 30) + "..."
@@ -207,7 +211,11 @@ function Seo() {
                   .slice((curPage - 1) * selectItemNum, curPage * selectItemNum)
                   .map((seo) => (
                     <Tr key={seo._id} id={seo._id}>
-                      <Td>{seo.path}</Td>
+                      <Td>
+                        {seo?.path.length > 20
+                          ? seo.path.substring(0, 20) + "..."
+                          : seo?.path}
+                      </Td>
                       <Td>
                         {seo?.title.length > 30
                           ? seo?.title.substring(0, 30) + "..."

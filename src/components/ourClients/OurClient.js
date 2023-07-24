@@ -225,7 +225,7 @@ function OurClient() {
           </Modal>
         </div>
         <div className="table-box">
-          <div className="table-top-box">Client Table</div>
+          <div className="table-top-box">Client Module</div>
           <TableContainer marginTop="60px" variant="striped" color="teal">
             <Table variant="simple">
               <Thead>

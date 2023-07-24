@@ -298,7 +298,7 @@ function CoworkingSpace() {
                             </Td>
                             <Td className="preview_heading">
                               <Link
-                                to={`http://spacite.com/coworking/${workSpace.slug}`}
+                                to={`https://spacite.com/coworking/${workSpace.slug}`}
                                 target="_blank"
                               >
                                 <AiOutlineEye
@@ -386,7 +386,7 @@ function CoworkingSpace() {
                             </Td>
                             <Td className="preview_heading">
                               <Link
-                                to={`http://spacite.com/coworking/${workSpace.slug}`}
+                                to={`https://spacite.com/coworking/${workSpace.slug}`}
                                 target="_blank"
                               >
                                 <AiOutlineEye

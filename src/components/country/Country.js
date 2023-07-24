@@ -234,7 +234,7 @@ function Country() {
           </Modal>
         </div>
         <div className="table-box">
-          <div className="table-top-box">Country Table</div>
+          <div className="table-top-box">Country Module</div>
           <TableContainer marginTop="60px" variant="striped" color="teal">
             <Table variant="simple">
               <Thead>

@@ -268,7 +268,7 @@ function City() {
           </Modal>
         </div>
         <div className="table-box">
-          <div className="table-top-box">City Table</div>
+          <div className="table-top-box">City Module</div>
           <TableContainer
             marginTop="60px"
             variant="striped"
