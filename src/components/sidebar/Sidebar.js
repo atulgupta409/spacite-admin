@@ -109,6 +109,25 @@ function Sidebar() {
               </NavLink>
             </li>
             <li className="nav-item">
+              <NavLink to="/priority-microlocation">
+                <IoLocationOutline className="icon" />
+                Priority Location
+              </NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink to="/brands">
+                <MdOutlineRealEstateAgent className="icon" />
+                Brands
+              </NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink to="/seo">
+                <MdOutlineRealEstateAgent className="icon" />
+                SEO
+              </NavLink>
+            </li>
+
+            <li className="nav-item">
               <NavLink to="/media">
                 <MdOutlinePermMedia className="icon" />
                 Media
@@ -138,30 +157,14 @@ function Sidebar() {
                 Microlocation
               </NavLink>
             </li>
-            <li className="nav-item">
-              <NavLink to="/priority-microlocation">
-                <IoLocationOutline className="icon" />
-                Priority Micro...
-              </NavLink>
-            </li>
+
             <li className="nav-item">
               <NavLink to="/amenities">
                 <HiOutlineCash className="icon" />
                 Amenities
               </NavLink>
             </li>
-            <li className="nav-item">
-              <NavLink to="/seo">
-                <MdOutlineRealEstateAgent className="icon" />
-                SEO
-              </NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink to="/brands">
-                <MdOutlineRealEstateAgent className="icon" />
-                Brands
-              </NavLink>
-            </li>
+
             <li className="nav-item">
               <NavLink to="/clients">
                 <MdOutlineRealEstateAgent className="icon" />

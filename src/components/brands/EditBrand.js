@@ -433,7 +433,7 @@ const EditBrand = () => {
                     className="form-check-label"
                     htmlFor="flexCheckDefault"
                   >
-                    Discourage search engines from indexing this Page
+                    Check for indexing this Page
                   </label>
                 </div>
               </div>

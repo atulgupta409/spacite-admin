@@ -43,8 +43,8 @@ function AddSeoForm() {
     e.preventDefault();
     try {
       const { data } = await axios.post(`${BASE_URL}/api/seo/seos`, {
-        title: seo.heading,
-        page_title: seo.title,
+        title: seo.title,
+        page_title: seo.heading,
         script: seo.script,
         description: seo.description,
         robots: indexed,
