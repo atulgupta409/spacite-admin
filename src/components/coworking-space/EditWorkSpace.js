@@ -1,6 +1,6 @@
 import React, { useState, useEffect, Fragment } from "react";
 import axios from "axios";
-import { useToast } from "@chakra-ui/react";
+import { border, useToast } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { Editor } from "react-draft-wysiwyg";
@@ -709,7 +709,7 @@ const EditWorkSpace = () => {
                     <option>Select a brand</option>
                     {brands?.map((brand) => (
                       <option id={brand._id} key={brand._id} value={brand._id}>
-                        {brand.name}
+                        {brand.name.toUpperCase()}
                       </option>
                     ))}
                   </select>
@@ -957,13 +957,26 @@ const EditWorkSpace = () => {
                             <Tr>
                               <Td>{index + 1}</Td>
                               <Td>
-                                <img src={img.image} alt="media" width="80px" />
+                                <img
+                                  src={img.image}
+                                  alt="media"
+                                  width="500px"
+                                  height="250px"
+                                />
                               </Td>
-                              <Td>{img.name}</Td>
                               <Td>
                                 <input
                                   type="text"
-                                  style={{ color: "#000" }}
+                                  className="form-control"
+                                  style={{ color: "#000", border: 0 }}
+                                  value={img.name}
+                                />
+                              </Td>
+                              <Td>
+                                <input
+                                  type="text"
+                                  className="form-control"
+                                  style={{ color: "#000", minWidth: "200px" }}
                                   value={img.alt.split(".")[0]}
                                   onChange={(event) =>
                                     handleAltChange(event, index)
@@ -1163,7 +1176,7 @@ const EditWorkSpace = () => {
               )}
             </div>
             <div className="d-flex w-50 justify-content-between align-items-center">
-              <h4 className="property_form_h4">Plans</h4>
+              <h4 className="property_form_h4">Pricing Plans</h4>
               <IoIosAddCircle
                 onClick={createPlans}
                 className="icon"
@@ -1200,6 +1213,25 @@ const EditWorkSpace = () => {
                     </select>
                   </div>
                 </div>
+
+                <div className="col-md-3">
+                  <div
+                    className="form-floating border_field"
+                    style={{ marginTop: "6px" }}
+                  >
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="floatingInput"
+                      placeholder="Price*"
+                      name="price"
+                      value={row.price}
+                      onChange={(e) => handleInputPlanChange(e, row.id)}
+                      required
+                    />
+                    <label htmlFor="floatingInput">Price*</label>
+                  </div>
+                </div>
                 <div className="col-md-3">
                   <div
                     style={{
@@ -1218,24 +1250,6 @@ const EditWorkSpace = () => {
                       <option value="day">day</option>
                       <option value="year">year</option>
                     </select>
-                  </div>
-                </div>
-                <div className="col-md-3">
-                  <div
-                    className="form-floating border_field"
-                    style={{ marginTop: "6px" }}
-                  >
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="floatingInput"
-                      placeholder="Price*"
-                      name="price"
-                      value={row.price}
-                      onChange={(e) => handleInputPlanChange(e, row.id)}
-                      required
-                    />
-                    <label htmlFor="floatingInput">Price*</label>
                   </div>
                 </div>
                 <div className="col-md-3 d-flex align-items-center">
@@ -1401,7 +1415,7 @@ const EditWorkSpace = () => {
                     className="form-check-label"
                     htmlFor="flexCheckDefault"
                   >
-                    Discourage search engines from indexing this Page
+                    Check for indexing this Page
                   </label>
                 </div>
               </div>

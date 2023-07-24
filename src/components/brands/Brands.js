@@ -182,7 +182,7 @@ const Brands = () => {
                     )
                     .map((brand) => (
                       <Tr key={brand._id} id={brand._id}>
-                        <Td>{brand.name}</Td>
+                        <Td>{brand.name.toUpperCase()}</Td>
                         <Td className="tableDescription">
                           {(brand.description?.length > 50
                             ? brand.description.substring(0, 50) + "..."

@@ -3,9 +3,12 @@ import BASE_URL from "../../apiConfig";
 
 export const getStateByCountry = async (countryId, setStates) => {
   try {
-    const result = await axios.post(`${BASE_URL}/api/state/statesbycountry`, {
-      country_id: countryId,
-    });
+    const result = await axios.get(
+      `${BASE_URL}/api/state/states/priority/${countryId}`,
+      {
+        country_id: countryId,
+      }
+    );
     setStates(result.data);
   } catch (error) {
     console.log(error.message);
@@ -26,7 +29,7 @@ export const getCityByState = async (stateId, setCities) => {
 export const getMicrolocationByCity = async (cityId, setMicrolocations) => {
   try {
     await axios
-      .post(`${BASE_URL}/api/microlocation/microbycity`, { city_id: cityId })
+      .get(`${BASE_URL}/api/microlocation/priority-location/${cityId}`)
       .then((result) => {
         setMicrolocations(result.data);
       });

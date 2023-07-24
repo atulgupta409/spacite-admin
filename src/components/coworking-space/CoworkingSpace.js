@@ -230,7 +230,7 @@ function CoworkingSpace() {
                 <Table variant="simple">
                   <Thead>
                     <Tr className="table_heading_row">
-                      <Th className="name_heading">CW NAME</Th>
+                      <Th className="name_heading">NAME OF CW</Th>
                       <Th className="city_heading">CITY</Th>
                       <Th className="micro_heading">LOCATION</Th>
                       <Th className="time_heading">ADDED ON</Th>

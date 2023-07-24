@@ -209,7 +209,6 @@ function AddWorkSpace() {
   let footer_descript_value = draftToHtml(
     convertToRaw(editorState.getCurrentContent())
   );
-  console.log(footer_descript_value);
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setCoSpace({
@@ -505,6 +504,15 @@ function AddWorkSpace() {
     value: city._id,
     label: city.name,
   }));
+  useEffect(() => {
+    const defaultCountryOption = countryOptions.find(
+      (option) => option.label === "India"
+    );
+    if (defaultCountryOption) {
+      setSelectedCountry(defaultCountryOption);
+      handleFetchStates(defaultCountryOption.value);
+    }
+  }, [country]);
   return (
     <div className="mx-5 mt-3">
       <Mainpanelnav />
@@ -664,7 +672,7 @@ function AddWorkSpace() {
                     <option value="Others">Others</option>
                     {brands?.map((brand) => (
                       <option id={brand._id} key={brand._id} value={brand.name}>
-                        {brand.name}
+                        {brand.name.toUpperCase()}
                       </option>
                     ))}
                   </select>
@@ -884,7 +892,7 @@ function AddWorkSpace() {
                       <Table variant="simple">
                         <Thead>
                           <Tr>
-                            <Th>Order No.</Th>
+                            <Th>No.</Th>
                             <Th>Image</Th>
                             <Th>Name</Th>
                             <Th>Alt</Th>
@@ -901,14 +909,23 @@ function AddWorkSpace() {
                                   <img
                                     src={img.image}
                                     alt="media"
-                                    width="80px"
+                                    width="500px"
+                                    height="250px"
                                   />
                                 </Td>
-                                <Td>{img.name}</Td>
                                 <Td>
                                   <input
                                     type="text"
+                                    className="form-control"
                                     style={{ color: "#000" }}
+                                    value={img.name}
+                                  />
+                                </Td>
+                                <Td>
+                                  <input
+                                    type="text"
+                                    className="form-control"
+                                    style={{ color: "#000", minWidth: "200px" }}
                                     value={img.alt.split(".")[0]}
                                     onChange={(event) =>
                                       handleAltChange(event, index)
@@ -1105,7 +1122,7 @@ function AddWorkSpace() {
               )}
             </div>
             <div className="d-flex w-50 justify-content-between align-items-center">
-              <h4 className="property_form_h4">Plans</h4>
+              <h4 className="property_form_h4">Pricing Plans</h4>
               <IoIosAddCircle
                 onClick={createPlans}
                 className="icon"
@@ -1145,6 +1162,24 @@ function AddWorkSpace() {
                   </div>
                   <div className="col-md-3">
                     <div
+                      className="form-floating border_field"
+                      style={{ marginTop: "6px" }}
+                    >
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="floatingInputPrice"
+                        placeholder="Price*"
+                        name="price"
+                        value={row.price}
+                        onChange={(e) => handleInputPlanChange(e, row.id)}
+                        required
+                      />
+                      <label htmlFor="floatingInputPrice">Price*</label>
+                    </div>
+                  </div>
+                  <div className="col-md-3">
+                    <div
                       style={{
                         borderBottom: "1px solid #cccccc",
                         margin: "20px 0",
@@ -1163,24 +1198,7 @@ function AddWorkSpace() {
                       </select>
                     </div>
                   </div>
-                  <div className="col-md-3">
-                    <div
-                      className="form-floating border_field"
-                      style={{ marginTop: "6px" }}
-                    >
-                      <input
-                        type="text"
-                        className="form-control"
-                        id="floatingInputPrice"
-                        placeholder="Price*"
-                        name="price"
-                        value={row.price}
-                        onChange={(e) => handleInputPlanChange(e, row.id)}
-                        required
-                      />
-                      <label htmlFor="floatingInputPrice">Price*</label>
-                    </div>
-                  </div>
+
                   <div className="col-md-3 d-flex align-items-center">
                     <AiFillDelete
                       className="icon"
@@ -1323,7 +1341,7 @@ function AddWorkSpace() {
                     className="form-check-label"
                     htmlFor="flexCheckDefault"
                   >
-                    Discourage search engines from indexing this Page
+                    Check for indexing this Page
                   </label>
                 </div>
               </div>
