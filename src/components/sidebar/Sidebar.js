@@ -154,7 +154,7 @@ function Sidebar() {
             <li className="nav-item">
               <NavLink to="/microlocation">
                 <IoLocationOutline className="icon" />
-                Microlocation
+                Location
               </NavLink>
             </li>
 

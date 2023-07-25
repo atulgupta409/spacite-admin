@@ -16,7 +16,7 @@ function AddSeoForm() {
 
   const [seo, setSeo] = useState({
     heading: "",
-    header_decription: "",
+    header_description: "",
     title: "",
     description: "",
     path: "",
@@ -48,6 +48,7 @@ function AddSeoForm() {
 
         page_title: seo.heading,
         script: seo.script,
+        header_description: seo.header_description,
         description: seo.description,
         robots: indexed,
         index: isChecked,
@@ -63,11 +64,10 @@ function AddSeoForm() {
           title: seo.graphTitle,
           description: seo.graphDescription,
         },
-        header_decription: seo.header_decription,
       });
       setSeo({
         heading: "",
-        header_decription: "",
+        header_description: "",
         title: "",
         description: "",
         path: "",
@@ -130,7 +130,6 @@ function AddSeoForm() {
                     className="form-control"
                     id="floatingInput"
                     placeholder="Main Heading*"
-                    required
                     name="heading"
                     onChange={handleInputChange}
                     value={seo.heading}
@@ -147,12 +146,11 @@ function AddSeoForm() {
                     className="form-control"
                     id="floatingInput"
                     placeholder="Header Description*"
-                    required
-                    name="header_decription"
+                    name="header_description"
                     onChange={handleInputChange}
-                    value={seo.header_decription}
+                    value={seo.header_description}
                   />
-                  <label htmlFor="floatingInput">Header Decription*</label>
+                  <label htmlFor="floatingInput">Header Decription</label>
                 </div>
               </div>
             </div>
