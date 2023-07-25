@@ -15,6 +15,7 @@ import draftToHtml from "draftjs-to-html";
 import htmlToDraft from "html-to-draftjs";
 const initialValue = {
   page_title: "",
+  header_description: "",
   title: "",
   description: "",
   twitter: { title: "", description: "" },
@@ -35,6 +36,7 @@ const EditSeo = () => {
   const {
     title,
     page_title,
+    header_description,
     description,
     path,
     keywords,
@@ -89,6 +91,7 @@ const EditSeo = () => {
           title,
           page_title,
           script,
+          header_description,
           description,
           robots: indexed,
           index: isChecked,
@@ -180,10 +183,11 @@ const EditSeo = () => {
                     id="floatingInput"
                     placeholder="Header Description"
                     name="header_description"
-                    // onChange={(e) => handleInputChange(e)}
-                    // value={page_title}
+                    onChange={(e) => handleInputChange(e)}
+                    value={header_description}
+                    required={false}
                   />
-                  <label htmlFor="floatingInput">Header Description*</label>
+                  <label htmlFor="floatingInput">Header Description</label>
                 </div>
               </div>
             </div>

@@ -186,7 +186,7 @@ function PriorityMicrolocation() {
     <div className="mx-5 mt-3">
       <Mainpanelnav />
       <div className="table-box">
-        <div className="table-top-box">Priority Microlocation Module</div>
+        <div className="table-top-box">Priority Location Module</div>
         <div className="row my-5">
           <div className="col-md-3">
             <Select
@@ -204,7 +204,7 @@ function PriorityMicrolocation() {
       </div>
       <div className="table_container">
         <div className="table-box top_table_box1">
-          <div className="table-top-box">Microlocation Module</div>
+          <div className="table-top-box">Location Module</div>
           <TableContainer style={{ overflowX: "hidden" }}>
             <div className="row search_input">
               <div className="col-md-3">
@@ -228,7 +228,7 @@ function PriorityMicrolocation() {
                     <Thead>
                       <Tr className="table_heading_row">
                         <Th>Select</Th>
-                        <Th>MicroLocation</Th>
+                        <Th>Location</Th>
                       </Tr>
                     </Thead>
                     <Tbody>
@@ -341,7 +341,7 @@ function PriorityMicrolocation() {
           </nav>
         </div>
         <div className="table-box top_table_box2">
-          <div className="table-top-box">Top Priority MicroLocation Module</div>
+          <div className="table-top-box">Top Priority Location Module</div>
           <TableContainer style={{ overflowX: "hidden" }}>
             <div className="data_table">
               <div className="row">

@@ -254,7 +254,7 @@ function TopPrioritySpace() {
                         <Th>Select</Th>
                         <Th>Name</Th>
                         <Th>City</Th>
-                        <Th>MicroLocation</Th>
+                        <Th>Location</Th>
                       </Tr>
                     </Thead>
                     <Tbody>
@@ -397,7 +397,7 @@ function TopPrioritySpace() {
                         <Th>Order</Th>
                         <Th>Name</Th>
 
-                        <Th>MicroLocation</Th>
+                        <Th>Location</Th>
                       </Tr>
                     </Thead>
 
