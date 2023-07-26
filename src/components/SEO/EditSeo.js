@@ -221,13 +221,15 @@ const EditSeo = () => {
                     className="form-control"
                     id="floatingInput"
                     type="text"
-                    placeholder="Meta Title*"
+                    placeholder="Meta Title*(Max Word 60)"
                     name="title"
                     required
                     onChange={(e) => handleInputChange(e)}
                     value={title}
                   />
-                  <label htmlFor="floatingInput">Meta Title*</label>
+                  <label htmlFor="floatingInput">
+                    Meta Title*(Max Word 60)
+                  </label>
                 </div>
               </div>
             </div>
@@ -241,12 +243,14 @@ const EditSeo = () => {
                     className="form-control"
                     id="floatingInput"
                     type="text"
-                    placeholder="Description"
+                    placeholder="Description(Max Word 160)"
                     name="description"
                     onChange={(e) => handleInputChange(e)}
                     value={description}
                   />
-                  <label htmlFor="floatingInput">Description*</label>
+                  <label htmlFor="floatingInput">
+                    Description(Max Word 160)
+                  </label>
                 </div>
               </div>
             </div>

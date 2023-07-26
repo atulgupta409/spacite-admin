@@ -178,7 +178,7 @@ function PopularSpace() {
   return (
     <div className="mx-5 mt-3">
       <Mainpanelnav />
-      <div className="table-box">
+      <div className="table-box table_top_header">
         <div className="table-top-box">Popular Coworking Spaces Module</div>
         <div className="row my-5">
           <div className="col-md-3">
@@ -373,8 +373,6 @@ function PopularSpace() {
                       <Tr>
                         <Th>Order</Th>
                         <Th>Name</Th>
-
-                        <Th>City</Th>
                       </Tr>
                     </Thead>
 
@@ -407,15 +405,7 @@ function PopularSpace() {
                                         {index + 1}
                                       </Td>
                                       <Td {...provided.dragHandleProps}>
-                                        {space?.name.length > 20
-                                          ? space?.name.slice(0, 15) + "..."
-                                          : space?.name}
-                                      </Td>
-
-                                      <Td {...provided.dragHandleProps}>
-                                        {space?.location?.city
-                                          ? space?.location?.city?.name
-                                          : ""}
+                                        {space?.name}
                                       </Td>
                                     </Tr>
                                   )}

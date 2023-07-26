@@ -4,15 +4,15 @@ import BASE_URL from "../../apiConfig";
 export const getWorkSpaceDataByMicrolocation = async (
   setLoading,
   setWorkSpaces,
-  name
+  id
 ) => {
   try {
     setLoading(true);
     const { data } = await axios.get(
-      `${BASE_URL}/api/workSpace/coworking/${name}`
-    );  
+      `${BASE_URL}/api/workSpace/coworking/${id}`
+    );
 
-    setWorkSpaces(data.coworkingSpaces);
+    setWorkSpaces(data);
     setLoading(false);
   } catch (error) {
     console.log(error);
@@ -22,15 +22,15 @@ export const getWorkSpaceDataByMicrolocation = async (
 export const getWorkSpaceDataByMicrolocationWithPriority = async (
   setLoading,
   setPriorityWorkSpaces,
-  name
+  id
 ) => {
   try {
     setLoading(true);
     const { data } = await axios.get(
-      `${BASE_URL}/api/workSpace/priority-workspace/${name}`
+      `${BASE_URL}/api/workSpace/priority-workspace/${id}`
     );
 
-    setPriorityWorkSpaces(data.coworkingSpaces);
+    setPriorityWorkSpaces(data);
     setLoading(false);
   } catch (error) {
     console.log(error);

@@ -58,7 +58,7 @@ const PasswordReset = () => {
 
   return (
     <>
-      <section>
+      <section className="forgot_section">
         <div className="form_data">
           <div className="form_heading">
             <h1>Enter Your Email</h1>

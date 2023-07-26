@@ -85,7 +85,7 @@ function Seo() {
     setShowAll(searchTerm === "");
   }, [updateTable, searchTerm]);
 
-  const [selectItemNum, setSelectItemNum] = useState(5);
+  const [selectItemNum, setSelectItemNum] = useState(10);
   const itemsPerPageHandler = (e) => {
     setSelectItemNum(e.target.value);
   };
@@ -261,10 +261,11 @@ function Seo() {
                 value={selectItemNum}
                 onChange={itemsPerPageHandler}
               >
-                <option value={5}>5</option>
                 <option value={10}>10</option>
-                <option value={15}>15</option>
                 <option value={20}>20</option>
+                <option value={30}>30</option>
+                <option value={50}>50</option>
+                <option value={100}>100</option>
               </select>
             </div>
             <div style={{ width: "110px" }}>

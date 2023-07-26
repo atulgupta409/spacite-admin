@@ -24,8 +24,9 @@ export const getSeoData = async (setLoading, setSeos) => {
   try {
     setLoading(true);
     const { data } = await axios.get(`${BASE_URL}/api/seo/seos`);
+    const newData = data.reverse();
+    setSeos(newData);
     setLoading(false);
-    setSeos(data);
   } catch (error) {
     console.log(error);
   }
