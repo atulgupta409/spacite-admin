@@ -194,13 +194,15 @@ function AddSeoForm() {
                     type="text"
                     className="form-control"
                     id="floatingInput"
-                    placeholder="Meta Title*"
+                    placeholder="Meta Title*(Max Word 60)"
                     required
                     name="title"
                     onChange={handleInputChange}
                     value={seo.title}
                   />
-                  <label htmlFor="floatingInput">Meta Title*</label>
+                  <label htmlFor="floatingInput">
+                    Meta Title*(Max Word 60)
+                  </label>
                 </div>
               </div>{" "}
             </div>
@@ -211,13 +213,15 @@ function AddSeoForm() {
                     type="text"
                     className="form-control"
                     id="floatingInput"
-                    placeholder="Description*"
+                    placeholder="Description*(Max Word 160)"
                     required
                     name="description"
                     onChange={handleInputChange}
                     value={seo.description}
                   />
-                  <label htmlFor="floatingInput">Description*</label>
+                  <label htmlFor="floatingInput">
+                    Description*(Max Word 160)
+                  </label>
                 </div>
               </div>
             </div>

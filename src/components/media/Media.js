@@ -130,8 +130,9 @@ function Media() {
     try {
       setLoading(true);
       const { data } = await axios.get(`${BASE_URL}/api/image/getimages`);
+      const newData = data.reverse();
+      setImagedata(newData);
       setLoading(false);
-      setImagedata(data);
     } catch (error) {
       console.log(error);
     }

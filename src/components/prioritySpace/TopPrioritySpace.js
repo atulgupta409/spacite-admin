@@ -46,15 +46,15 @@ function TopPrioritySpace() {
   const handleFetchMicrolocation = async (cityId) => {
     await getMicrolocationByCity(cityId, setMicrolocations);
   };
-  const handleFetchWorkSpaceData = async (name) => {
-    await getWorkSpaceDataByMicrolocation(setLoading, setWorkSpaces, name);
+  const handleFetchWorkSpaceData = async (id) => {
+    await getWorkSpaceDataByMicrolocation(setLoading, setWorkSpaces, id);
     setSearchTerm("");
   };
-  const handleFetchPriorityWorkspaces = async (name) => {
+  const handleFetchPriorityWorkspaces = async (id) => {
     await getWorkSpaceDataByMicrolocationWithPriority(
       setLoadingTable,
       setPriorityWorkSpaces,
-      name
+      id
     );
   };
   const onChangeOptionHandler = (selectedOption, dropdownIdentifier) => {
@@ -66,9 +66,9 @@ function TopPrioritySpace() {
         break;
       case "microLocation":
         setSelectedMicroLocation(selectedOption);
-        handleFetchWorkSpaceData(selectedOption ? selectedOption.label : "");
+        handleFetchWorkSpaceData(selectedOption ? selectedOption.value : "");
         handleFetchPriorityWorkspaces(
-          selectedOption ? selectedOption.label : ""
+          selectedOption ? selectedOption.value : ""
         );
         break;
       default:
@@ -111,7 +111,7 @@ function TopPrioritySpace() {
   const lastIndex = curPage * recordsPerPage;
   const firstIndex = lastIndex - recordsPerPage;
   const nPage = Math.ceil(
-    (showAll ? workSpaces.length : searchedWorkSpaces?.length) / selectItemNum
+    (showAll ? workSpaces?.length : searchedWorkSpaces?.length) / selectItemNum
   );
   if (firstIndex > 0) {
     var prePage = () => {
@@ -122,7 +122,8 @@ function TopPrioritySpace() {
   }
   var nextPage = () => {
     const lastPage = Math.ceil(
-      (showAll ? workSpaces.length : searchedWorkSpaces.length) / selectItemNum
+      (showAll ? workSpaces?.length : searchedWorkSpaces?.length) /
+        selectItemNum
     );
     if (curPage < lastPage) {
       setCurPage((prev) => prev + 1);
@@ -156,7 +157,7 @@ function TopPrioritySpace() {
       );
       coworkingSpace.priority.is_active = checked;
       setWorkSpaces([...workSpaces]);
-      handleFetchPriorityWorkspaces(selectedMicroLocation?.label);
+      handleFetchPriorityWorkspaces(selectedMicroLocation?.value);
     } catch (error) {
       console.error("An error occurred:", error);
     }
@@ -195,7 +196,7 @@ function TopPrioritySpace() {
   return (
     <div className="mx-5 mt-3">
       <Mainpanelnav />
-      <div className="table-box">
+      <div className="table-box table_top_header">
         <div className="table-top-box">Priority Coworking Spaces Module</div>
         <div className="row my-5">
           <div className="col-md-3">
@@ -253,7 +254,7 @@ function TopPrioritySpace() {
                       <Tr className="table_heading_row">
                         <Th>Select</Th>
                         <Th>Name</Th>
-                        <Th>City</Th>
+
                         <Th>Location</Th>
                       </Tr>
                     </Thead>
@@ -283,11 +284,7 @@ function TopPrioritySpace() {
                                 />
                               </Td>
                               <Td>{space?.name}</Td>
-                              <Td className="city_heading">
-                                {space.location.city
-                                  ? space.location.city.name
-                                  : ""}
-                              </Td>
+
                               <Td>
                                 {space.location.micro_location
                                   ? space.location.micro_location.name
@@ -314,11 +311,7 @@ function TopPrioritySpace() {
                                 />
                               </Td>
                               <Td>{space?.name}</Td>
-                              <Td className="city_heading">
-                                {space.location.city
-                                  ? space.location.city.name
-                                  : ""}
-                              </Td>
+
                               <Td>
                                 {space.location.micro_location
                                   ? space.location.micro_location.name
@@ -396,8 +389,6 @@ function TopPrioritySpace() {
                       <Tr>
                         <Th>Order</Th>
                         <Th>Name</Th>
-
-                        <Th>Location</Th>
                       </Tr>
                     </Thead>
 
@@ -431,12 +422,6 @@ function TopPrioritySpace() {
                                       </Td>
                                       <Td {...provided.dragHandleProps}>
                                         {space?.name}
-                                      </Td>
-
-                                      <Td {...provided.dragHandleProps}>
-                                        {space.location.micro_location
-                                          ? space.location.micro_location.name
-                                          : ""}
                                       </Td>
                                     </Tr>
                                   )}

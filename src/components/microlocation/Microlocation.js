@@ -363,7 +363,7 @@ function City() {
                     )
                     .map((micro) => (
                       <Tr key={micro._id} id={micro._id}>
-                        <Td>{micro.name}</Td>
+                        <Td>{micro?.name}</Td>
                         <Td>{micro.country?.name}</Td>
                         <Td>{micro.state?.name}</Td>
                         <Td>{micro.city?.name}</Td>
@@ -392,7 +392,7 @@ function City() {
                     )
                     .map((micro) => (
                       <Tr key={micro._id} id={micro._id}>
-                        <Td>{micro.name}</Td>
+                        <Td>{micro?.name}</Td>
                         <Td>{micro.country?.name}</Td>
                         <Td>{micro.state?.name}</Td>
                         <Td>{micro.city?.name}</Td>
@@ -402,7 +402,6 @@ function City() {
                             id={micro._id}
                             microlocations={micro}
                             setUpdateTable={setUpdateTable}
-                            // handleFunction={() => handleEditCountry(countries._id)}
                           />
                         </Td>
                         <Td>

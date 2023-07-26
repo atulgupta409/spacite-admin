@@ -185,7 +185,7 @@ function PriorityMicrolocation() {
   return (
     <div className="mx-5 mt-3">
       <Mainpanelnav />
-      <div className="table-box">
+      <div className="table-box table_top_header">
         <div className="table-top-box">Priority Location Module</div>
         <div className="row my-5">
           <div className="col-md-3">

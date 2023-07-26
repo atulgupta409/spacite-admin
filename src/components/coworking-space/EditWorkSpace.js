@@ -398,7 +398,6 @@ const EditWorkSpace = () => {
             latitude: location.latitude,
             longitude: location.longitude,
           },
-          // no_of_seats,
           hours_of_operation: {
             monday_friday: {
               from: hours_of_operation.monday_friday.from,
@@ -418,11 +417,6 @@ const EditWorkSpace = () => {
           },
           plans: allplans,
           contact_details: allContact,
-          priority: {
-            location: {
-              city: selectedCity.value,
-            },
-          },
           brand,
           slug,
         }
