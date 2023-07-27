@@ -115,11 +115,19 @@ function CoworkingSpace() {
     }
   };
 
-  const handleApprove = (id) => {
-    changeWorkSpaceStatus(id, "approve", setUpdateTable, toast);
+  const handleApprove = async (id) => {
+    await changeWorkSpaceStatus(id, "approve", setUpdateTable, toast);
+    setSearchTerm("");
+    setCitySearchTerm("");
+    setMicroLocationSearchTerm("");
+    setSearchOption("");
   };
-  const handleReject = (id) => {
-    changeWorkSpaceStatus(id, "reject", setUpdateTable, toast);
+  const handleReject = async (id) => {
+    await changeWorkSpaceStatus(id, "reject", setUpdateTable, toast);
+    setSearchTerm("");
+    setCitySearchTerm("");
+    setMicroLocationSearchTerm("");
+    setSearchOption("");
   };
   const [selectItemNum, setSelectItemNum] = useState(10);
   const itemsPerPageHandler = (e) => {

@@ -22,7 +22,11 @@ import {
   getCityByState,
   getStateByCountry,
 } from "./MicrolocationService";
-const EditMicrolocation = ({ microlocations, setUpdateTable }) => {
+const EditMicrolocation = ({
+  microlocations,
+  setUpdateTable,
+  setSearchTerm,
+}) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [name, setName] = useState(microlocations.name);
   const [description, setDiscription] = useState(microlocations.description);
@@ -46,6 +50,7 @@ const EditMicrolocation = ({ microlocations, setUpdateTable }) => {
         }
       );
       setUpdateTable((prev) => !prev);
+      setSearchTerm("");
       onClose();
       toast({
         title: "Update Successfully!",

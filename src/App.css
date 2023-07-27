@@ -71,7 +71,7 @@ tbody {
 }
 .form-footer {
   display: flex;
-  width: 25%;
+  width: 35%;
   margin: auto;
   justify-content: space-between;
   padding: 20px 0;
@@ -131,14 +131,15 @@ input[type="file"]::file-selector-button:active {
 .table-top-box {
   position: absolute;
   width: 95%;
-  background: mediumpurple;
-  color: white;
+  background: #f4fafe;
+  color: black;
   height: 74px;
   padding: 14px;
   font-size: 20px;
+  font-weight: 600;
   border-radius: 8px;
   top: -26px;
-  box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px;
+  box-shadow: rgba(0, 0, 0, 0.45) 0px 17px 20px -20px;
 }
 .page-item {
   font-size: 26px;
