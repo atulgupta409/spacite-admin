@@ -373,6 +373,7 @@ function City() {
                             id={micro._id}
                             microlocations={micro}
                             setUpdateTable={setUpdateTable}
+                            setSearchTerm={setSearchTerm}
                           />
                         </Td>
                         <Td>
@@ -402,6 +403,7 @@ function City() {
                             id={micro._id}
                             microlocations={micro}
                             setUpdateTable={setUpdateTable}
+                            setSearchTerm={setSearchTerm}
                           />
                         </Td>
                         <Td>

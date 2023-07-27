@@ -1,7 +1,7 @@
 import React, { useState, useEffect, Fragment } from "react";
 import axios from "axios";
 import { border, useToast } from "@chakra-ui/react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
@@ -1415,7 +1415,11 @@ const EditWorkSpace = () => {
               </div>
             </div>
           </div>
+
           <div className="form-footer">
+            <Link to={`https://spacite.com/coworking/${slug}`} target="_blank">
+              <div className="preview_btn">Preview</div>
+            </Link>
             <button type="submit" className="saveproperty-btn">
               Save
             </button>

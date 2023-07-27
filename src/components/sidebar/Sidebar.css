@@ -35,8 +35,8 @@
   background-color: rgba(235, 233, 233, 0.34);
 }
 .active {
-  background-color: #a55bea !important;
-  color: white !important;
+  background-color: #f4fafe !important;
+  color: black !important;
   box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.14),
     0 7px 10px -5px rgba(0, 188, 212, 0.4);
 }

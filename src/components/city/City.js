@@ -331,6 +331,7 @@ function City() {
                             id={city._id}
                             cities={city}
                             setUpdateTable={setUpdateTable}
+                            setSearchTerm={setSearchTerm}
                           />
                         </Td>
                         <Td>
@@ -357,6 +358,7 @@ function City() {
                             id={city._id}
                             cities={city}
                             setUpdateTable={setUpdateTable}
+                            setSearchTerm={setSearchTerm}
                           />
                         </Td>
                         <Td>

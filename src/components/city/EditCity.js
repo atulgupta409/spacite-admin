@@ -21,7 +21,7 @@ import {
   getCountry,
   getStateByCountry,
 } from "../microlocation/MicrolocationService";
-const EditCity = ({ cities, setUpdateTable }) => {
+const EditCity = ({ cities, setUpdateTable, setSearchTerm }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [name, setName] = useState(cities.name);
   const [description, setDiscription] = useState(cities.description);
@@ -43,6 +43,7 @@ const EditCity = ({ cities, setUpdateTable }) => {
         }
       );
       setUpdateTable((prev) => !prev);
+      setSearchTerm("");
       onClose();
       toast({
         title: "Update Successfully!",
