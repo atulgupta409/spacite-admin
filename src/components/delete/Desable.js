@@ -30,11 +30,11 @@ const Desable = ({ handleFunction }) => {
         <AlertDialogOverlay>
           <AlertDialogContent>
             <AlertDialogHeader fontSize="lg" fontWeight="bold">
-              Desable
+              Disable
             </AlertDialogHeader>
 
             <AlertDialogBody>
-              Are you sure? You want to Desable this Space.
+              Are you sure? You want to Disable this Space.
             </AlertDialogBody>
 
             <AlertDialogFooter>
@@ -42,7 +42,7 @@ const Desable = ({ handleFunction }) => {
                 Cancel
               </Button>
               <Button colorScheme="red" onClick={handleFunction} ml={3}>
-                Desable
+                Disable
               </Button>
             </AlertDialogFooter>
           </AlertDialogContent>

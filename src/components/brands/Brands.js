@@ -125,10 +125,10 @@ const Brands = () => {
     <>
       <div className="mx-5 mt-3">
         <Mainpanelnav />
-        <Link to="/brands/add-brand" className="btnLink">
+        <Link to="/brands/add-brand" className="btnLink mt-2">
           <Addpropertybtn buttonText={"ADD NEW"} />
         </Link>
-        <div className="table-box">
+        <div className="table-box space-table-box">
           <div className="table-top-box">Brands Module</div>
           <TableContainer
             marginTop="60px"
@@ -190,7 +190,10 @@ const Brands = () => {
                         </Td>
 
                         <Td>
-                          <Link to={`/brands/edit-brand/${brand._id}`}>
+                          <Link
+                            to={`/brands/edit-brand/${brand._id}`}
+                            target="_blank"
+                          >
                             <AiFillEdit
                               style={{ fontSize: "22px", cursor: "pointer" }}
                             />
@@ -219,7 +222,10 @@ const Brands = () => {
                         </Td>
 
                         <Td>
-                          <Link to={`/brands/edit-brand/${brand._id}`}>
+                          <Link
+                            to={`/brands/edit-brand/${brand._id}`}
+                            target="_blank"
+                          >
                             <AiFillEdit
                               style={{ fontSize: "22px", cursor: "pointer" }}
                             />

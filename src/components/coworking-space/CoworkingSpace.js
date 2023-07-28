@@ -167,10 +167,10 @@ function CoworkingSpace() {
   return (
     <div className="mx-5 mt-3">
       <Mainpanelnav />
-      <Link to="/coworking-space/add-coworking-space" className="btnLink">
+      <Link to="/coworking-space/add-coworking-space" className="btnLink mt-2">
         <Addpropertybtn buttonText={"ADD NEW CW"} />
       </Link>
-      <div className="table-box">
+      <div className="table-box space-table-box">
         <div className="table-top-box">Coworking Module</div>
         <TableContainer overflowX="hidden">
           <div className="row my-5">
@@ -295,6 +295,7 @@ function CoworkingSpace() {
                             <Td className="edit_heading">
                               <Link
                                 to={`/coworking-space/edit-workspace/${workSpace._id}`}
+                                target="_blank"
                               >
                                 <AiFillEdit
                                   style={{
@@ -383,6 +384,7 @@ function CoworkingSpace() {
                             <Td className="edit_heading">
                               <Link
                                 to={`/coworking-space/edit-workspace/${workSpace._id}`}
+                                target="_blank"
                               >
                                 <AiFillEdit
                                   style={{

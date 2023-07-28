@@ -134,7 +134,7 @@ function AddSeoForm() {
                     onChange={handleInputChange}
                     value={seo.heading}
                   />
-                  <label htmlFor="floatingInput">Heading*</label>
+                  <label htmlFor="floatingInput">Heading</label>
                 </div>
               </div>
             </div>
@@ -166,7 +166,7 @@ function AddSeoForm() {
                     onChange={handleInputChange}
                     value={seo.keywords}
                   />
-                  <label htmlFor="floatingInput">Keywords*</label>
+                  <label htmlFor="floatingInput">Keywords</label>
                 </div>
               </div>
             </div>
@@ -298,11 +298,10 @@ function AddSeoForm() {
                     id="floatingInput"
                     placeholder="Script tag*"
                     name="script"
-                    required
                     onChange={handleInputChange}
                     value={seo.script}
                   />
-                  <label htmlFor="floatingInput">Script tag*</label>
+                  <label htmlFor="floatingInput">Script tag</label>
                 </div>
               </div>
             </div>
@@ -342,7 +341,7 @@ function AddSeoForm() {
               </div>
             </div>
             <h6>Footer description</h6>
-            <div className="row">
+            <div className="row mt-4">
               <div className="col-md-12">
                 <Editor
                   // editorState={editorState}

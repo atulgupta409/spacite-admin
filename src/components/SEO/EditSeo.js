@@ -167,7 +167,7 @@ const EditSeo = () => {
                     onChange={(e) => handleInputChange(e)}
                     value={page_title}
                   />
-                  <label htmlFor="floatingInput">Heading*</label>
+                  <label htmlFor="floatingInput">Heading</label>
                 </div>
               </div>
             </div>
@@ -185,7 +185,6 @@ const EditSeo = () => {
                     name="header_description"
                     onChange={(e) => handleInputChange(e)}
                     value={header_description}
-                    required={false}
                   />
                   <label htmlFor="floatingInput">Header Description</label>
                 </div>
@@ -269,7 +268,7 @@ const EditSeo = () => {
                     onChange={(e) => handleInputChange(e)}
                     value={keywords}
                   />
-                  <label htmlFor="floatingInput">Keywords*</label>
+                  <label htmlFor="floatingInput">Keywords</label>
                 </div>
               </div>
             </div>
@@ -290,7 +289,7 @@ const EditSeo = () => {
                     }
                     value={twitter.title}
                   />
-                  <label htmlFor="floatingInput">Twitter Title*</label>
+                  <label htmlFor="floatingInput">Twitter Title</label>
                 </div>
               </div>
             </div>
@@ -311,7 +310,7 @@ const EditSeo = () => {
                     }
                     value={twitter.description}
                   />
-                  <label htmlFor="floatingInput">Twitter Description*</label>
+                  <label htmlFor="floatingInput">Twitter Description</label>
                 </div>
               </div>
             </div>
@@ -333,7 +332,7 @@ const EditSeo = () => {
                     }
                     value={open_graph.title}
                   />
-                  <label htmlFor="floatingInput">Open Graph Title*</label>
+                  <label htmlFor="floatingInput">Open Graph Title</label>
                 </div>
               </div>
             </div>
@@ -358,7 +357,7 @@ const EditSeo = () => {
                     }
                     value={open_graph.description}
                   />
-                  <label htmlFor="floatingInput">Open Graph Description*</label>
+                  <label htmlFor="floatingInput">Open Graph Description</label>
                 </div>
               </div>
             </div>
@@ -375,11 +374,10 @@ const EditSeo = () => {
                     id="floatingInput"
                     placeholder="Script tag"
                     name="script"
-                    required
                     onChange={(e) => handleInputChange(e)}
                     value={script}
                   ></textarea>
-                  <label htmlFor="floatingInput">Script*</label>
+                  <label htmlFor="floatingInput">Script</label>
                 </div>
               </div>
             </div>
@@ -422,7 +420,7 @@ const EditSeo = () => {
               </div>
             </div>
             <h6>Footer description</h6>
-            <div className="row">
+            <div className="row mt-4">
               <div className="col-md-12">
                 <Editor
                   editorState={editorState}

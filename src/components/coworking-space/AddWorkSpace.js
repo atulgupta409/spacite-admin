@@ -357,7 +357,7 @@ function AddWorkSpace() {
         seats: "",
       });
       setUpdateTable((prev) => !prev);
-      navigate("/coworking-space");
+
       toast({
         title: "Saved Successfully!",
         status: "success",
