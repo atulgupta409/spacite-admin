@@ -123,10 +123,10 @@ function Seo() {
   return (
     <div className="mx-5 mt-3">
       <Mainpanelnav />
-      <Link to="/seo/add-seo" className="btnLink">
+      <Link to="/seo/add-seo" className="btnLink mt-2">
         <Addpropertybtn buttonText={"ADD NEW"} />
       </Link>
-      <div className="table-box">
+      <div className="table-box space-table-box">
         <div className="table-top-box">SEO Module</div>
         <TableContainer
           marginTop="60px"
@@ -154,7 +154,6 @@ function Seo() {
               <Tr>
                 <Th>Path</Th>
                 <Th>Title</Th>
-                <Th>Description</Th>
                 <Th>Edit</Th>
                 <Th>Delete</Th>
               </Tr>
@@ -177,23 +176,14 @@ function Seo() {
                   .slice((curPage - 1) * selectItemNum, curPage * selectItemNum)
                   .map((seo) => (
                     <Tr key={seo._id} id={seo._id}>
+                      <Td>{seo?.path}</Td>
                       <Td>
-                        {seo?.path.length > 20
-                          ? seo.path.substring(0, 20) + "..."
-                          : seo?.path}
-                      </Td>
-                      <Td>
-                        {seo?.title.length > 30
-                          ? seo?.title.substring(0, 30) + "..."
+                        {seo?.title.length > 35
+                          ? seo?.title.substring(0, 35) + "..."
                           : seo.title}
                       </Td>
-                      <Td className="tableDescription">
-                        {seo.description.length > 100
-                          ? seo.description.substring(0, 100) + "..."
-                          : seo.description}
-                      </Td>
                       <Td>
-                        <Link to={`/seo/editseo/${seo._id}`}>
+                        <Link to={`/seo/editseo/${seo._id}`} target="_blank">
                           <AiFillEdit
                             style={{ fontSize: "22px", cursor: "pointer" }}
                           />
@@ -211,23 +201,15 @@ function Seo() {
                   .slice((curPage - 1) * selectItemNum, curPage * selectItemNum)
                   .map((seo) => (
                     <Tr key={seo._id} id={seo._id}>
+                      <Td>{seo?.path}</Td>
                       <Td>
-                        {seo?.path.length > 20
-                          ? seo.path.substring(0, 20) + "..."
-                          : seo?.path}
-                      </Td>
-                      <Td>
-                        {seo?.title.length > 30
-                          ? seo?.title.substring(0, 30) + "..."
+                        {seo?.title.length > 35
+                          ? seo?.title.substring(0, 35) + "..."
                           : seo.title}
                       </Td>
-                      <Td className="tableDescription">
-                        {seo.description.length > 100
-                          ? seo.description.substring(0, 100) + "..."
-                          : seo.description}
-                      </Td>
+
                       <Td>
-                        <Link to={`/seo/editseo/${seo._id}`}>
+                        <Link to={`/seo/editseo/${seo._id}`} target="_blank">
                           <AiFillEdit
                             style={{ fontSize: "22px", cursor: "pointer" }}
                           />

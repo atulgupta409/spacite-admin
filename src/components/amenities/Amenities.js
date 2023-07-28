@@ -74,8 +74,9 @@ function Amenities() {
     try {
       setLoading(true);
       const { data } = await axios.get(`${BASE_URL}/api/amenity/amenities`);
+      const newData = data.reverse();
+      setAmenities(newData);
       setLoading(false);
-      setAmenities(data);
     } catch (error) {
       console.log(error);
     }

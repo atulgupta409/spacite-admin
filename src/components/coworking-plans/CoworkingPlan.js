@@ -72,8 +72,9 @@ function ResPropertyType() {
       const { data } = await axios.get(
         `${BASE_URL}/api/propertyType/propertyTypes`
       );
+      const newData = data.reverse();
+      setPropertyTypes(newData);
       setLoading(false);
-      setPropertyTypes(data);
     } catch (error) {
       console.log(error);
     }
