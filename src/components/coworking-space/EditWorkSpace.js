@@ -423,7 +423,7 @@ const EditWorkSpace = () => {
       );
       setWorkSpaces(data);
       setUpdateTable((prev) => !prev);
-      navigate("/coworking-space");
+      // navigate("/coworking-space");
       toast({
         title: "Update Successfully!",
         status: "success",
@@ -521,12 +521,14 @@ const EditWorkSpace = () => {
     setFileName((prev) => [...prev, ...fileNames]);
   };
   useEffect(() => {
-    const combinedArray = allimage.map((image, index) => ({
-      image,
-      name: fileName[index],
-      alt: fileName[index],
-    }));
-    setMergedArray([...images, ...combinedArray]);
+    if (images) {
+      const combinedArray = allimage.map((image, index) => ({
+        image,
+        name: fileName[index],
+        alt: fileName[index],
+      }));
+      setMergedArray([...images, ...combinedArray]);
+    }
   }, [allimage, fileName, images]);
 
   const removePreviewImage = (index) => {
@@ -549,7 +551,7 @@ const EditWorkSpace = () => {
     setIsChecked(checked);
     setIndexed(checked ? "index, follow" : "noindex, nofollow");
   };
-  if (loading) {
+  if (!name) {
     return <Loader />;
   }
 
@@ -964,6 +966,9 @@ const EditWorkSpace = () => {
                                   className="form-control"
                                   style={{ color: "#000", border: 0 }}
                                   value={img.name}
+                                  onChange={(event) =>
+                                    handleAltChange(event, index)
+                                  }
                                 />
                               </Td>
                               <Td>

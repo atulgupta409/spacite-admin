@@ -144,7 +144,7 @@ const EditBrand = () => {
       });
       setBrands(data);
       setUpdateTable((prev) => !prev);
-      navigate("/brands");
+      // navigate("/brands");
       toast({
         title: "Update Successfully!",
         status: "success",
@@ -166,8 +166,10 @@ const EditBrand = () => {
     );
   };
   useEffect(() => {
-    const selectCities = cities.map((city) => city._id);
-    setSelectedOptions(selectCities);
+    if (cities) {
+      const selectCities = cities.map((city) => city._id);
+      setSelectedOptions(selectCities);
+    }
   }, [cities]);
   const handleFetchCity = async () => {
     await getCity(setAllCity);
@@ -220,7 +222,7 @@ const EditBrand = () => {
     setIsChecked(checked);
     setIndexed(checked ? "index, follow" : "noindex, nofollow");
   };
-  if (loading) {
+  if (!name) {
     return <Loader />;
   }
   return (
@@ -261,7 +263,7 @@ const EditBrand = () => {
               </div>
             </div>
             <div className="row pt-4">
-              <div className="col-md-6">
+              <div className="col-md-9">
                 <div
                   style={{
                     borderBottom: "1px solid #cccccc",
