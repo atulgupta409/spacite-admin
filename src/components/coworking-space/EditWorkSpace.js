@@ -5,7 +5,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import { EditorState, convertToRaw, ContentState } from "draft-js";
+import { EditorState, convertToRaw, ContentState, Modifier } from "draft-js";
 import { IoIosAddCircle } from "react-icons/io";
 import Mainpanelnav from "../mainpanel-header/Mainpanelnav";
 import { AiFillDelete } from "react-icons/ai";
@@ -439,7 +439,21 @@ const EditWorkSpace = () => {
   const onEditorStateChange = (editorState) => {
     setEditorState(editorState);
   };
-
+  const handlePastedText = (text, html, editorState) => {
+    const plainText = text.replace(/(<([^>]+)>)/gi, ""); // Remove HTML tags
+    const contentState = ContentState.createFromText(plainText);
+    const newContentState = Modifier.replaceWithFragment(
+      editorState.getCurrentContent(),
+      editorState.getSelection(),
+      contentState.getBlockMap()
+    );
+    const newEditorState = EditorState.push(
+      editorState,
+      newContentState,
+      "insert-fragment"
+    );
+    setEditorState(newEditorState);
+  };
   const footer_descrip = draftToHtml(
     convertToRaw(editorState.getCurrentContent())
   );
@@ -860,6 +874,7 @@ const EditWorkSpace = () => {
                   toolbarClassName="toolbarClassName"
                   wrapperClassName="wrapperClassName"
                   editorClassName="editorClassName"
+                  handlePastedText={handlePastedText}
                   onEditorStateChange={onEditorStateChange}
                 />
               </div>
