@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Mainpanelnav from "../mainpanel-header/Mainpanelnav";
-import { EditorState, convertToRaw } from "draft-js";
+import { EditorState, convertToRaw, ContentState, Modifier } from "draft-js";
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { useToast } from "@chakra-ui/react";
@@ -130,7 +130,21 @@ function Addbrand() {
   const onEditorStateChange = (editorState) => {
     setEditorState(editorState);
   };
-
+  const handlePastedText = (text, html, editorState) => {
+    const plainText = text.replace(/(<([^>]+)>)/gi, ""); // Remove HTML tags
+    const contentState = ContentState.createFromText(plainText);
+    const newContentState = Modifier.replaceWithFragment(
+      editorState.getCurrentContent(),
+      editorState.getSelection(),
+      contentState.getBlockMap()
+    );
+    const newEditorState = EditorState.push(
+      editorState,
+      newContentState,
+      "insert-fragment"
+    );
+    setEditorState(newEditorState);
+  };
   let footer_descript_value = draftToHtml(
     convertToRaw(editorState.getCurrentContent())
   );
@@ -395,6 +409,7 @@ function Addbrand() {
                   toolbarClassName="toolbarClassName"
                   wrapperClassName="wrapperClassName"
                   editorClassName="editorClassName"
+                  handlePastedText={handlePastedText}
                   onEditorStateChange={(editorState) =>
                     onEditorStateChange(editorState)
                   }

@@ -6,7 +6,7 @@ import { useParams } from "react-router-dom";
 import { Editor } from "react-draft-wysiwyg";
 import Mainpanelnav from "../mainpanel-header/Mainpanelnav";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import { EditorState, convertToRaw, ContentState } from "draft-js";
+import { EditorState, convertToRaw, ContentState, Modifier } from "draft-js";
 import Loader from "../loader/Loader";
 import { getSeoDataById } from "./SeoService";
 import BASE_URL from "../../apiConfig";
@@ -51,13 +51,7 @@ const EditSeo = () => {
   const toast = useToast();
   const navigate = useNavigate();
   const { id } = useParams();
-  const postConfig = {
-    headers: {
-      "Content-type": "application/json",
 
-      Authorization: `Bearer ${Cookies.get("token")}`,
-    },
-  };
   const handleInputChange = (e) => {
     setSeos({ ...seos, [e.target.name]: e.target.value });
   };
@@ -76,6 +70,21 @@ const EditSeo = () => {
   const onEditorStateChange = (editorState) => {
     setEditorState(editorState);
   };
+  const handlePastedText = (text, html, editorState) => {
+    const plainText = text.replace(/(<([^>]+)>)/gi, ""); // Remove HTML tags
+    const contentState = ContentState.createFromText(plainText);
+    const newContentState = Modifier.replaceWithFragment(
+      editorState.getCurrentContent(),
+      editorState.getSelection(),
+      contentState.getBlockMap()
+    );
+    const newEditorState = EditorState.push(
+      editorState,
+      newContentState,
+      "insert-fragment"
+    );
+    setEditorState(newEditorState);
+  };
 
   const footer_descrip = draftToHtml(
     convertToRaw(editorState.getCurrentContent())
@@ -84,29 +93,25 @@ const EditSeo = () => {
   const handleEditSeo = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await axios.put(
-        `${BASE_URL}/api/seo/seos/${id}`,
-        {
-          id,
-          title,
-          page_title,
-          script,
-          header_description,
-          description,
-          robots: indexed,
-          index: isChecked,
-          keywords,
-          path,
-          footer_title,
-          footer_description: footer_descrip,
-          twitter,
-          open_graph,
-        },
-        postConfig
-      );
+      const { data } = await axios.put(`${BASE_URL}/api/seo/seos/${id}`, {
+        id,
+        title,
+        page_title,
+        script,
+        header_description,
+        description,
+        robots: indexed,
+        index: isChecked,
+        keywords,
+        path,
+        footer_title,
+        footer_description: footer_descrip,
+        twitter,
+        open_graph,
+      });
       setSeos(data);
       setUpdateTable((prev) => !prev);
-      navigate("/seo");
+      // navigate("/seo");
       toast({
         title: "Update Successfully!",
         status: "success",
@@ -142,7 +147,7 @@ const EditSeo = () => {
     setIsChecked(checked);
     setIndexed(checked ? "index, follow" : "noindex, nofollow");
   };
-  if (loading) {
+  if (!title) {
     return <Loader />;
   }
 
@@ -427,6 +432,7 @@ const EditSeo = () => {
                   toolbarClassName="toolbarClassName"
                   wrapperClassName="wrapperClassName"
                   editorClassName="editorClassName"
+                  handlePastedText={handlePastedText}
                   onEditorStateChange={onEditorStateChange}
                 />
               </div>

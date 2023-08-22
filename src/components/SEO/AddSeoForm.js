@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Mainpanelnav from "../mainpanel-header/Mainpanelnav";
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import { EditorState, convertToRaw } from "draft-js";
+import { EditorState, convertToRaw, Modifier, ContentState } from "draft-js";
 import axios from "axios";
 import { useDisclosure, Spinner, useToast } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
@@ -102,6 +102,22 @@ function AddSeoForm() {
   };
   const onEditorStateChange = (editorState) => {
     setEditorState(editorState);
+  };
+
+  const handlePastedText = (text, html, editorState) => {
+    const plainText = text.replace(/(<([^>]+)>)/gi, ""); // Remove HTML tags
+    const contentState = ContentState.createFromText(plainText);
+    const newContentState = Modifier.replaceWithFragment(
+      editorState.getCurrentContent(),
+      editorState.getSelection(),
+      contentState.getBlockMap()
+    );
+    const newEditorState = EditorState.push(
+      editorState,
+      newContentState,
+      "insert-fragment"
+    );
+    setEditorState(newEditorState);
   };
 
   let footer_descript_value = draftToHtml(
@@ -348,6 +364,7 @@ function AddSeoForm() {
                   toolbarClassName="toolbarClassName"
                   wrapperClassName="wrapperClassName"
                   editorClassName="editorClassName"
+                  handlePastedText={handlePastedText}
                   onEditorStateChange={(editorState) =>
                     onEditorStateChange(editorState)
                   }

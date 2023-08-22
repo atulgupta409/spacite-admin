@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import { EditorState, convertToRaw, ContentState } from "draft-js";
+import { EditorState, convertToRaw, ContentState, Modifier } from "draft-js";
 import Select from "react-dropdown-select";
 import ImageUpload from "../../ImageUpload";
 import { getBrandsDataById, getCity } from "./BrandService";
@@ -105,7 +105,21 @@ const EditBrand = () => {
   const onEditorStateChange = (editorState) => {
     setEditorState(editorState);
   };
-
+  const handlePastedText = (text, html, editorState) => {
+    const plainText = text.replace(/(<([^>]+)>)/gi, ""); // Remove HTML tags
+    const contentState = ContentState.createFromText(plainText);
+    const newContentState = Modifier.replaceWithFragment(
+      editorState.getCurrentContent(),
+      editorState.getSelection(),
+      contentState.getBlockMap()
+    );
+    const newEditorState = EditorState.push(
+      editorState,
+      newContentState,
+      "insert-fragment"
+    );
+    setEditorState(newEditorState);
+  };
   const footer_descrip = draftToHtml(
     convertToRaw(editorState.getCurrentContent())
   );
@@ -144,7 +158,7 @@ const EditBrand = () => {
       });
       setBrands(data);
       setUpdateTable((prev) => !prev);
-      navigate("/brands");
+      // navigate("/brands");
       toast({
         title: "Update Successfully!",
         status: "success",
@@ -166,8 +180,10 @@ const EditBrand = () => {
     );
   };
   useEffect(() => {
-    const selectCities = cities.map((city) => city._id);
-    setSelectedOptions(selectCities);
+    if (cities) {
+      const selectCities = cities.map((city) => city._id);
+      setSelectedOptions(selectCities);
+    }
   }, [cities]);
   const handleFetchCity = async () => {
     await getCity(setAllCity);
@@ -220,7 +236,7 @@ const EditBrand = () => {
     setIsChecked(checked);
     setIndexed(checked ? "index, follow" : "noindex, nofollow");
   };
-  if (loading) {
+  if (!name) {
     return <Loader />;
   }
   return (
@@ -261,7 +277,7 @@ const EditBrand = () => {
               </div>
             </div>
             <div className="row pt-4">
-              <div className="col-md-6">
+              <div className="col-md-9">
                 <div
                   style={{
                     borderBottom: "1px solid #cccccc",
@@ -465,6 +481,7 @@ const EditBrand = () => {
                   toolbarClassName="toolbarClassName"
                   wrapperClassName="wrapperClassName"
                   editorClassName="editorClassName"
+                  handlePastedText={handlePastedText}
                   onEditorStateChange={onEditorStateChange}
                 />
               </div>
