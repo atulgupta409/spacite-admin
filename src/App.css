@@ -20,6 +20,9 @@
 .admin_main .col-md-9 {
   width: calc(100% - 269px);
 }
+.admin_main{
+  height: 100vh;
+}
 .mainpanel {
   position: relative;
   float: right;

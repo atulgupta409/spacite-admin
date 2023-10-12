@@ -181,7 +181,6 @@ function PriorityMicrolocation() {
       // Handle error (e.g., show an error message to the user)
     }
   };
-  console.log(priorityMicrolocation);
   return (
     <div className="mx-5 mt-3">
       <Mainpanelnav />
