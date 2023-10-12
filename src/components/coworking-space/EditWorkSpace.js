@@ -33,6 +33,8 @@ import { uploadFile } from "../../services/Services";
 import BASE_URL from "../../apiConfig";
 import draftToHtml from "draftjs-to-html";
 import Select from "react-select";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import Delete from "../delete/Delete";
 const initialValue = {
   name: "",
   description: "",
@@ -540,6 +542,7 @@ const EditWorkSpace = () => {
         image,
         name: fileName[index],
         alt: fileName[index],
+        order: index+1,
       }));
       setMergedArray([...images, ...combinedArray]);
     }
@@ -564,6 +567,36 @@ const EditWorkSpace = () => {
     const { checked } = event.target;
     setIsChecked(checked);
     setIndexed(checked ? "index, follow" : "noindex, nofollow");
+  };
+  const onDragEnd = async (result) => {
+    const { destination, source } = result;
+
+    if (!destination) return; // Dropped outside the list
+    if (destination.index === source.index) return; // Dropped in the same position
+
+    const recordedimage = Array.from(mergedArray);
+    const [movedSpace] = recordedimage.splice(source.index, 1);
+    recordedimage.splice(destination.index, 0, movedSpace);
+
+    // Create the payload with updated priority order for each coworking space
+    const updatedOrderPayload = recordedimage.map((image, index) => ({
+      _id: image._id,
+       order: index + 1,
+       image: image.image,
+       alt: image.alt,
+       name: image.name
+    }));
+
+    setMergedArray(updatedOrderPayload);
+  };
+  const handleDelete = async (imageId ) => {
+    try {
+      const response = await axios.delete(`${BASE_URL}/api/workSpace/${id}/images/${imageId}`);
+      setMergedArray((prevImages) => prevImages.filter((image) => image._id !== imageId));
+       
+    } catch (error) {
+      console.error('Error deleting image:', error.message);
+    }
   };
   if (!name) {
     return <Loader />;
@@ -962,21 +995,37 @@ const EditWorkSpace = () => {
                           <Th>Delete</Th>
                         </Tr>
                       </Thead>
-                      <Tbody>
-                        {mergedArray?.map((img, index) => (
-                          <Fragment key={index}>
-                            <Tr>
-                              <Td>{index + 1}</Td>
-                              <Td>
-                                <img
+                        <DragDropContext onDragEnd={onDragEnd}>
+                      <Droppable droppableId="images">
+                        {(provided) => (
+                          <Tbody
+                            ref={provided.innerRef}
+                            {...provided.droppableProps}
+                          >
+                            { mergedArray.map((img, index) => (
+                                <Draggable
+                                  key={img._id}
+                                  draggableId={img._id}
+                                  index={index}
+                                >
+                                  {(provided) => (
+                                    <Tr
+                                      ref={provided.innerRef}
+                                      {...provided.draggableProps}
+                                    >
+                                      <Td {...provided.dragHandleProps}>
+                                        {index + 1}
+                                      </Td>
+                                      <Td {...provided.dragHandleProps}>
+                                      <img
                                   src={img.image}
                                   alt="media"
                                   width="500px"
                                   height="250px"
                                 />
-                              </Td>
-                              <Td>
-                                <input
+                                      </Td>
+                                      <Td {...provided.dragHandleProps}>
+                                      <input
                                   type="text"
                                   className="form-control"
                                   style={{ color: "#000", border: 0 }}
@@ -985,8 +1034,8 @@ const EditWorkSpace = () => {
                                     handleAltChange(event, index)
                                   }
                                 />
-                              </Td>
-                              <Td>
+                                      </Td>
+                                      <Td {...provided.dragHandleProps}>
                                 <input
                                   type="text"
                                   className="form-control"
@@ -997,18 +1046,20 @@ const EditWorkSpace = () => {
                                   }
                                 />
                               </Td>
-
                               <Td>
-                                <AiFillDelete
-                                  onClick={() => removePreviewImage(index)}
-                                  className="icon"
-                                  style={{ color: "red" }}
-                                />
+                            <Delete handleFunction={() => handleDelete(img._id)}/>
                               </Td>
-                            </Tr>
-                          </Fragment>
-                        ))}
-                      </Tbody>
+                                    </Tr>
+                                  )}
+                                </Draggable>
+                              ))
+                            }
+                            {provided.placeholder}
+                          </Tbody>
+                        )}
+                      </Droppable>
+                    </DragDropContext>
+                
                     </Table>
                   </TableContainer>
                 </div>

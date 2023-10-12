@@ -32,6 +32,7 @@ import {
 } from "@chakra-ui/react";
 import Select from "react-select";
 import { GpState } from "../../context/context";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 function AddWorkSpace() {
   const [plans, setPlans] = useState([]);
   const [editorState, setEditorState] = useState(() =>
@@ -449,6 +450,7 @@ function AddWorkSpace() {
       image,
       name: fileName[index],
       alt: fileName[index],
+      order: index+1,
     }));
     setImageData([...combinedArray]);
   }, [images, fileName]);
@@ -528,6 +530,28 @@ function AddWorkSpace() {
       handleFetchStates(defaultCountryOption.value);
     }
   }, [country]);
+  const onDragEnd = async (result) => {
+    const { destination, source } = result;
+
+    if (!destination) return; // Dropped outside the list
+    if (destination.index === source.index) return; // Dropped in the same position
+
+    const recordedimage = Array.from(imageData);
+    const [movedSpace] = recordedimage.splice(source.index, 1);
+    recordedimage.splice(destination.index, 0, movedSpace);
+
+    // Create the payload with updated priority order for each coworking space
+    const updatedOrderPayload = recordedimage.map((image, index) => ({
+      _id: image._id,
+       order: index + 1,
+       image: image.image,
+       alt: image.alt,
+       name: image.name
+    }));
+
+    setImageData(updatedOrderPayload);
+  };
+
   return (
     <div className="mx-5 mt-3">
       <Mainpanelnav />
@@ -916,50 +940,74 @@ function AddWorkSpace() {
                             <Th>Delete</Th>
                           </Tr>
                         </Thead>
-                        <Tbody>
-                          {imageData?.map((img, index) => (
-                            <Fragment key={index}>
-                              <Tr>
-                                <Td>{index + 1}</Td>
-                                <Td>
-                                  <img
-                                    src={img.image}
-                                    alt="media"
-                                    width="500px"
-                                    height="250px"
-                                  />
-                                </Td>
-                                <Td>
-                                  <input
-                                    type="text"
-                                    className="form-control"
-                                    style={{ color: "#000" }}
-                                    value={img.name}
-                                  />
-                                </Td>
-                                <Td>
-                                  <input
-                                    type="text"
-                                    className="form-control"
-                                    style={{ color: "#000", minWidth: "200px" }}
-                                    value={img.alt.split(".")[0]}
-                                    onChange={(event) =>
-                                      handleAltChange(event, index)
-                                    }
-                                  />
-                                </Td>
-
-                                <Td>
-                                  <AiFillDelete
-                                    onClick={() => removePreviewImage(index)}
-                                    className="icon"
-                                    style={{ color: "red" }}
-                                  />
-                                </Td>
-                              </Tr>
-                            </Fragment>
-                          ))}
-                        </Tbody>
+                        <DragDropContext onDragEnd={onDragEnd}>
+                      <Droppable droppableId="images">
+                        {(provided) => (
+                          <Tbody
+                            ref={provided.innerRef}
+                            {...provided.droppableProps}
+                          >
+                            { imageData.map((img, index) => (
+                                <Draggable
+                                  key={img._id}
+                                  draggableId={img._id}
+                                  index={index}
+                                >
+                                  {(provided) => (
+                                    <Tr
+                                      ref={provided.innerRef}
+                                      {...provided.draggableProps}
+                                    >
+                                      <Td {...provided.dragHandleProps}>
+                                        {index + 1}
+                                      </Td>
+                                      <Td {...provided.dragHandleProps}>
+                                      <img
+                                  src={img.image}
+                                  alt="media"
+                                  width="500px"
+                                  height="250px"
+                                />
+                                      </Td>
+                                      <Td {...provided.dragHandleProps}>
+                                      <input
+                                  type="text"
+                                  className="form-control"
+                                  style={{ color: "#000", border: 0 }}
+                                  value={img.name}
+                                  onChange={(event) =>
+                                    handleAltChange(event, index)
+                                  }
+                                />
+                                      </Td>
+                                      <Td {...provided.dragHandleProps}>
+                                <input
+                                  type="text"
+                                  className="form-control"
+                                  style={{ color: "#000", minWidth: "200px" }}
+                                  value={img.alt.split(".")[0]}
+                                  onChange={(event) =>
+                                    handleAltChange(event, index)
+                                  }
+                                />
+                              </Td>
+                              <Td>
+                                <AiFillDelete
+                                  onClick={() => removePreviewImage(index)}
+                                  className="icon"
+                                  style={{ color: "red" }}
+                                />
+                              </Td>
+                                    </Tr>
+                                  )}
+                                </Draggable>
+                              ))
+                            }
+                            {provided.placeholder}
+                          </Tbody>
+                        )}
+                      </Droppable>
+                    </DragDropContext>
                       </Table>
                     </TableContainer>
                   </div>
